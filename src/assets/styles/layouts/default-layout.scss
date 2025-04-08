@@ -1,0 +1,20 @@
+@use '@/assets/styles/main.scss' as *;
+//---------------------------------------------------------------------------------------------//
+//======================================== layout =============================================//
+//---------------------------------------------------------------------------------------------//
+
+#layout {
+  // overflow: hidden;
+
+  //- responsive font size -//
+  & > * { font-size: var(--resizer) }
+
+  .v-main {
+    position: relative;
+    background-color: #F8F8F8;
+    padding-top: 80px;
+    & > * {
+      @include media(max, small) { font-size: var(--resizer-mobile) }
+    }
+  }
+}

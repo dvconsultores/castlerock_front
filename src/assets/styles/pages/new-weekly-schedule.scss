@@ -1,0 +1,253 @@
+@use "@/assets/styles/main.scss" as *;
+//---------------------------------------------------------------------------------------------//
+//========================================= New Plan   ========================================//
+//---------------------------------------------------------------------------------------------//
+
+#new-plan {
+  background-color: #F8F8F8;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-inline: 30px;
+  padding-block: 32px;
+
+  .form-div{
+    width: 100%;
+    max-height: max-content;
+
+    .textfield-registration{    
+      i{
+        color: #3C3C434D;
+        opacity: .6;
+      }
+
+      .v-field{
+        border-radius: 16px;
+        transition: all .5s ease-in-out;
+        ::placeholder{
+          color: #3C3C434D;
+          opacity: .6;
+        }
+      }
+
+      .v-field--active{
+        border: 1px solid #7583D9;
+
+        i{
+          color: #46464C;
+        }
+      }
+      
+      .v-input__control{
+        height: 56px;
+      }
+  
+      .v-field__input{
+        padding-block: 5px;
+        height: 56px!important;
+        min-height: 1px!important;
+      }
+    }
+
+    .autocomplete-register{
+      .v-field{
+        border-radius: 16px;
+      }
+
+      .v-field--active{
+        border: 1px solid #7583D9;
+
+        i{
+          color: #46464C;
+        }
+      }
+    }
+  }
+
+  .card-rounded{
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    padding: 0px 32px 32px 32px;
+    width: 100%;
+    height: max-content;
+    margin-top: 12px;
+
+    .div-container-weeks-cards:nth-child(odd) .slider-div .v-card .div-header {
+      background-color: #7583D9;  
+    }
+
+    .div-container-weeks-cards{
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 100%;
+      h3{
+        color: #262262;
+        font-size: 24px;
+        font-family: var(--font-2);
+        text-align: left;
+        margin-top: 32px;
+      }
+
+      .slider-div{
+        display: flex;
+        gap: 16px;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        overflow-x: scroll;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        
+        .v-card .div-header {
+          background-color: #6BBDAE;  
+        }
+
+        .v-card{
+          min-width: 224px;
+          height: 242px;
+          background-color: #F8F8F8;
+          border-radius: 8px;
+          position: relative;
+          overflow: hidden;
+          padding-top: 56px;
+  
+          .div-header{
+            position: absolute;
+            top: 0;
+            height: 40px;
+            width: 100%;
+            display: grid;
+            place-items: center;
+  
+            span{
+              font-family: var(--font-2);
+              font-size: 16px;
+              color: #FFFFFF;
+            }
+          }
+  
+          .techaer-div{
+            margin-inline: 16px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
+            align-items: center;
+  
+            .rounder-avatar{
+              border: 1px solid #7583D9;
+              border-radius: 50%;
+              overflow: hidden;
+              display: grid;
+              place-items: center;
+              width: 40px;
+              height: 40px;
+              
+              img{
+                width: 40px;
+                height: 40px;
+                object-fit: cover;
+              }
+            }
+          }
+  
+          .students-div{
+            width: 100%;
+            margin-inline: 16px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+  
+            .students-img-div{
+              display: flex;
+              
+              .img-student-card{
+                border: 2px solid #6BBDAE;
+                border-radius: 50%;
+                overflow: hidden;
+                display: grid;
+                place-items: center;
+                width: 32px;
+                height: 32px;
+                
+                img{
+                  width: 32px;
+                  height: 32px;
+                  object-fit: cover;
+                }
+              }
+  
+              
+              .img-student-card:nth-child(1){
+                position: relative;
+                z-index: 1;
+              }
+              .img-student-card:nth-child(2){
+                position: relative;
+                z-index: 2;
+                left: -15px;
+              }
+              .img-student-card:nth-child(3){
+                position: relative;
+                z-index: 3;
+                left: -30px;
+              }
+              .img-student-card:nth-child(4){
+                position: relative;
+                z-index: 4;
+                left: -50px;
+              }
+              .img-student-card:nth-child(5){
+                position: relative;
+                z-index: 5;
+                left: -65px;
+              }
+            }
+  
+            .attendance-div{
+              display: flex;
+              flex-direction: column;
+              justify-content: flex-start;
+              align-items: flex-end;
+              position: relative;
+              left: -40px;
+              top: 0px;
+  
+              .v-sheet{
+                width: 38px;
+                height: 28px;
+                border-radius: 8px;
+                border: 1px solid rgba(#000000, 0.1);
+                display: grid;
+                place-items: center;
+              }
+            }
+          }
+  
+          .time-zone-div{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 16px;
+            margin-inline: 16px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(#000000, 0.1);
+          }
+        }
+      }
+    }
+  }
+}
+
+.rounded-menu {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}

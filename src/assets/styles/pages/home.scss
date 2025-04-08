@@ -1,0 +1,386 @@
+@use "@/assets/styles/main.scss" as *;
+//---------------------------------------------------------------------------------------------//
+//========================================= Home    ===========================================//
+//---------------------------------------------------------------------------------------------//
+
+#home {
+  background-color: #F8F8F8;
+  height: max-content;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-inline: 20px;
+  padding-block: 32px;
+
+  .title-home-div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    .div1 h3{
+      font-family: var(--font-2);
+      font-size: 32px;
+      margin-bottom: 0px;
+      color: #262B63;
+    }
+
+    .div2{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      text-align: end;
+
+      h3{
+        color: #262B63;
+        margin-bottom: 0px;
+        font-size: 32px;
+        font-family: var(--font-2);
+      }
+
+      span{
+        color: #262B63;
+        line-height: 38px;
+      }
+    }
+  }
+
+  .sheet-menu-div{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 18px;
+    width: 100%;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    .sheet-menu{
+      width: 300px;
+      min-width: 300px;
+      height: 105px;
+      border-radius: 11px;
+      padding: 12px;
+      background-color: #FCE1F9;
+      color: #4E444B;
+
+
+      img{
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .sheet-menu:nth-child(1) { background-color: #FCE1F9; }
+    .sheet-menu:nth-child(2) { background-color: #DEE1FF; }
+    .sheet-menu:nth-child(3) { background-color: #E9FBD7; }
+    .sheet-menu:nth-child(4) { background-color: #DEEEFC; }
+    .sheet-menu:nth-child(5) { background-color: #D5F7E7; }
+  }
+
+  .h3-on{
+    font-family: var(--font-2);
+    font-size: 32px;
+    color: #4E444B;
+    margin-bottom: 24px;
+  }
+
+  .ongoing-classes-div{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    margin-top: 24px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    .cards-ongoing-div{
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 16px;
+
+      .v-card:nth-child(odd) .div-header {
+        background-color: #7583D9;  
+      }
+      
+      .v-card:nth-child(even) .div-header {
+        background-color: #6BBDAE;  
+      }
+
+      .v-card{
+        width: 224px;
+        height: 242px;
+        background-color: #FFFFFF;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        padding-top: 56px;
+
+        .div-header{
+          position: absolute;
+          top: 0;
+          height: 40px;
+          width: 100%;
+          display: grid;
+          place-items: center;
+
+          span{
+            font-family: var(--font-2);
+            font-size: 16px;
+            color: #FFFFFF;
+          }
+        }
+
+        .techaer-div{
+          margin-inline: 16px;
+          display: flex;
+          gap: 10px;
+          justify-content: flex-start;
+          align-items: center;
+
+          .rounder-avatar{
+            border: 1px solid #7583D9;
+            border-radius: 50%;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            width: 40px;
+            height: 40px;
+            
+            img{
+              width: 40px;
+              height: 40px;
+              object-fit: cover;
+            }
+          }
+        }
+
+        .students-div{
+          width: 100%;
+          margin-inline: 16px;
+          display: flex;
+          justify-content: space-between;
+          margin-top: 12px;
+
+          .students-img-div{
+            display: flex;
+            
+            .img-student-card{
+              border: 2px solid #6BBDAE;
+              border-radius: 50%;
+              overflow: hidden;
+              display: grid;
+              place-items: center;
+              width: 32px;
+              height: 32px;
+              
+              img{
+                width: 32px;
+                height: 32px;
+                object-fit: cover;
+              }
+            }
+
+            
+            .img-student-card:nth-child(1){
+              position: relative;
+              z-index: 1;
+            }
+            .img-student-card:nth-child(2){
+              position: relative;
+              z-index: 2;
+              left: -15px;
+            }
+            .img-student-card:nth-child(3){
+              position: relative;
+              z-index: 3;
+              left: -30px;
+            }
+            .img-student-card:nth-child(4){
+              position: relative;
+              z-index: 4;
+              left: -50px;
+            }
+            .img-student-card:nth-child(5){
+              position: relative;
+              z-index: 5;
+              left: -65px;
+            }
+          }
+
+          .attendance-div{
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-end;
+            position: relative;
+            left: -40px;
+            top: -8px;
+
+            .v-sheet{
+              width: 38px;
+              height: 28px;
+              border-radius: 8px;
+              border: 1px solid rgba(#000000, 0.1);
+              display: grid;
+              place-items: center;
+            }
+          }
+        }
+
+        .time-zone-div{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          margin-top: 16px;
+          margin-inline: 16px;
+          padding-bottom: 4px;
+          border-bottom: 1px solid rgba(#000000, 0.1);
+        }
+      }
+    }
+  }
+
+  .before-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border-radius: 16px;
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 195px;
+    padding: 24px 32px;
+
+    .div-sheet{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 16px;
+      align-items: center;
+      background-color: transparent;
+      width: 100%;
+      overflow-x: scroll;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      .sheet-teachers{
+        background-color: #FFFFFF;
+        border-radius: 16px;
+        border: 1px solid #262262;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        min-width: 170px;
+        height: 96px;
+  
+        hr{
+          width: 100%;
+          height: 1px;
+          border: 1px solid rgba(#000000, 0.2);
+          margin-block: 4px;
+        }
+  
+        .teacher-info-div{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 12px;
+  
+          .img-teacher-card{
+            border: 2px solid #7583D9;
+            border-radius: 50%;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            width: 32px;
+            height: 32px;
+            
+            img{
+              width: 32px;
+              height: 32px;
+              object-fit: cover;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .absences-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border-radius: 16px;
+    background-color: #FFFFFF;
+    width: 100%;
+    height: max-content;
+    padding: 24px 32px;
+
+    .div-sheet-absences{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 16px;
+      align-items: center;
+      background-color: transparent;
+      width: 100%;
+      flex-wrap: wrap;
+
+      .sheet-absences{
+        background-color: #FFFFFF;
+        border-radius: 16px;
+        border: 1px solid #262262;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        min-width: 210px;
+        width: 210px;
+        height: max-content;
+  
+        .absences-info-div{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 12px;
+  
+          .img-absences-card{
+            border: 2px solid #7583D9;
+            border-radius: 50%;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            width: 32px;
+            height: 32px;
+            
+            img{
+              width: 32px;
+              height: 32px;
+              object-fit: cover;
+            }
+          }
+        }
+      }
+    }
+  }
+}

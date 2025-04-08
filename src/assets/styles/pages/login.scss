@@ -1,0 +1,222 @@
+@use "@/assets/styles/main.scss" as *;
+//---------------------------------------------------------------------------------------------//
+//========================================= login   ===========================================//
+//---------------------------------------------------------------------------------------------//
+
+#login {
+  background-color: #e8e8e8;
+  height: 100vh;
+  width: 100vw;
+  // margin-top: -20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  .img-left-up{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 45%;
+  }
+
+  .img-left-bottom{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 11.5%;
+  }
+
+  .img-right-bottom{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 36%;
+  }
+
+
+  section{
+    padding: 20px;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+
+    @include media(max, 560px) {
+      max-width: 260px;
+      padding: 0;
+    }
+
+    .logo{
+      width: 242px;
+      height: 282px;
+
+      @include media(max, 560px) {
+        max-width: 200px;
+        height: 240px;
+      }
+    }
+
+    .login-textfield{    
+      i{
+        color: #3C3C434D;
+        opacity: .6;
+      }
+
+      .v-field{
+        border-radius: 16px;
+        transition: all .5s ease-in-out;
+        ::placeholder{
+          color: #3C3C434D;
+          opacity: .6;
+        }
+      }
+
+      .v-field--active{
+        border: 1px solid #7583D9;
+
+        i{
+          color: #46464C;
+        }
+      }
+      .v-input{
+        max-width: 470px;
+        width: 470px;
+
+        @include media(max, 560px) {
+          max-width: 260px;
+          width: 260px;
+        }    
+      }
+      .v-input__control{
+        height: 56px;
+        max-width: 470px;
+        width: 470px;
+
+        @include media(max, 560px) {
+          max-width: 260px;
+          width: 260px;
+        }    
+      }
+  
+      .v-field__input{
+        max-width: 470px;
+        width: 470px;
+        padding-block: 5px;
+        height: 56px!important;
+        min-height: 1px!important;
+
+        @include media(max, 560px) {
+          max-width: 260px;
+          width: 260px;
+        }    
+      }
+    }
+
+    .checkbox{
+      label{
+        color: #3C3C434D;
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
+
+    .btn-divs{
+      gap: 25px;
+
+      .btn{
+        width: 80%;
+
+        @include media(max, 560px) {
+          width: 65%;
+        }
+      }
+
+      .btn-2{
+        width: 70px;
+
+        @include media(max, 560px) {
+          width: 25%;
+        }
+      }
+    }
+  }
+}
+
+
+////////////////// Dialog ///////////////////
+
+.v-dialog{
+  .card-dialog{
+    display: flex;
+    flex-direction: column;
+    padding: 36px 28px 36px 28px;
+    border-radius: 24px!important;
+    justify-content: center;
+    align-items: center;
+    width: 85%;
+    margin-inline: auto;
+
+    h2{
+      font-family: var(--font-2);
+      font-size: 2.2em;
+      color: #474649;
+    }
+
+    span{
+      font-size: 16px;
+      color: #474649;
+    }
+
+    hr{
+      width: 100%;
+      color: #474649;
+      margin-block: 24px 36px;
+    }
+
+    .div-cards{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 36px;
+      flex-wrap: wrap;
+
+      .v-card{
+        border: 2px solid transparent; 
+        background-color: #F8F8F8;
+        border-radius: 16px!important;
+        padding: 24px;
+        width: 314px;
+        height: 276px;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease-in-out;
+
+        h3{
+          text-align: center;
+          font-family: var(--font-2);
+          color: var(--font-color);
+          font-size: 22px;
+        }
+
+        @include media(max, 895px) {
+          height: 150px;
+          width: 260px;
+
+          img{
+            display: none;
+          }
+        }
+      }
+
+      .v-card:hover{
+        border-color: #6BBDAE;
+        box-shadow: 0px 0px 15px 3px rgba(#000000, .1);
+      }
+    }
+  }
+}

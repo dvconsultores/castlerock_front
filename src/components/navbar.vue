@@ -30,15 +30,18 @@ const route = useRoute();
 
 const pageTitles = {
   '/home': 'Dashboard',
-  '/students': 'Students Management',
-  '/student-registration': 'Students',
-  '/programs': 'Management of Additional Programs',
-  '/additional-program': 'New Additional Programs',
-  '/classrooms': 'Classrooms',
-  '/new-classroom': 'Classroom',
-  '/new-weekly-schedule': 'Classrooms Schedule',
-  '/daily-schedule': 'Daily Schedule',
-  '/student-profile': 'Student Profile',
+  '/home/students': 'Students Management',
+  '/home/student-registration': 'Students',
+  '/home/programs': 'Management of Additional Programs',
+  '/home/additional-program': 'New Additional Programs',
+  '/home/classrooms': 'Classrooms',
+  '/home/new-classroom': 'Classroom',
+  '/home/new-weekly-schedule': 'Classrooms Schedule',
+  '/home/daily-schedule': 'Daily Schedule',
+  '/home/centers': 'Centers',
+  '/home/new-center': 'New Center',
+  '/home/teachers': 'Teachers',
+  '/home/new-teacher': 'New Teacher',
 };
 
 const currentTitle = computed(() => {
@@ -47,15 +50,19 @@ const currentTitle = computed(() => {
 
 const subTitle = {
   '/home': 'Home',
-  '/students': 'Organize and Administer',
-  '/student-registration': 'Registration',
-  '/programs': 'Organize and Manage the Programs',
-  '/additional-program': 'Add and customize a new program',
-  '/classrooms': 'Organize and Administer',
-  '/new-classroom': 'Register',
-  '/new-weekly-schedule': 'Organize your class efficiently',
-  '/daily-schedule': 'Organize Your Day',
-  '/student-profile': 'Profile',
+  '/home/students': 'Organize and Administer',
+  '/home/student-registration': 'Registration',
+  '/home/programs': 'Organize and Manage the Programs',
+  '/home/additional-program': 'Add and customize a new program',
+  '/home/classrooms': 'Organize and Administer',
+  '/home/new-classroom': 'Register',
+  '/home/new-weekly-schedule': 'Organize your class efficiently',
+  '/home/daily-schedule': 'Organize Your Day',
+  '/home/student-profile': 'Profile',
+  '/home/centers': 'Centers',
+  '/home/new-center': 'Add a new center',
+  '/home/teachers': 'Teachers',
+  '/home/new-teacher': 'Add a new teacher',
 }
 
 const currentSubTitle = computed(() => {

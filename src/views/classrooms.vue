@@ -34,14 +34,14 @@
 
       <template v-slot:item.actions="{ item }">
         <div class="flex center gap2">
-          <v-icon color="#474649" size="24" class="pointer" @click="$router.push('/new-weekly-schedule')">mdi-calendar</v-icon>
+          <v-icon color="#474649" size="24" class="pointer" @click="$router.push('/home/new-weekly-schedule')">mdi-calendar</v-icon>
           <v-icon color="#474649" size="24" class="pointer">mdi-pencil-outline</v-icon>
           <v-icon color="#474649" size="24" class="pointer" @click="openDelete">mdi-trash-can-outline</v-icon>
         </div>
       </template>
     </v-data-table>
 
-    <v-btn flat class="btn-floating" @click="$router.push('/new-classroom')">
+    <v-btn flat class="btn-floating" @click="$router.push('/home/new-classroom')">
       <img src="@/assets/sources/icons/plus.svg" alt="Btn">
     </v-btn>
 
@@ -68,7 +68,7 @@
           <v-btn flat class="btn1">Management</v-btn>
           <v-btn flat class="btn2" @click="closeConfirmation">New Classroom</v-btn>
         </div>
-        <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home')">Go home</span>
+        <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home/home')">Go home</span>
       </v-card>
     </v-dialog>
   </div>

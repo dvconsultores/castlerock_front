@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer :width="156" :mobile-breakpoint="1000">
+  <v-navigation-drawer :width="156" :mobile-breakpoint="1000" color="#F8F8F8" floating>
     <img src="@/assets/sources/logos/logo.svg" alt="Logo" class="logo mb-0">
     
     
@@ -9,27 +9,27 @@
         <span class="w600 f14" style="color: #262262;">Home</span>
       </div>
 
-      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/centers') }">
+      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/centers') || isRouteActive('/home/new-center')}" @click="$router.push('/home/centers')">
         <img src="@/assets/sources/icons/centers.svg" alt="Centers">
         <span class="w600 f14" style="color: #262262;">Centers</span>
       </div>
 
-      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/students') || isRouteActive('/student-registration')  }" @click="$router.push('/students')">
+      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/home/students') || isRouteActive('/home/student-registration')  }" @click="$router.push('/home/students')">
         <img src="@/assets/sources/icons/students.svg" alt="Students">
         <span class="w600 f14" style="color: #262262;">Students</span>
       </div>
 
-      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/classrooms') || isRouteActive('/new-classroom') }" @click="$router.push('/classrooms')">
+      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/home/classrooms') || isRouteActive('/home/new-classroom') }" @click="$router.push('/home/classrooms')">
         <img src="@/assets/sources/icons/classroms.svg" alt="Classroms">
         <span class="w600 f14" style="color: #262262;">Classroms</span>
       </div>
 
-      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/teacher') }">
+      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/home/teachers') || isRouteActive('home/new-teacher')}" @click="$router.push('/home/teachers')">
         <img src="@/assets/sources/icons/teachers.svg" alt="Teacher">
         <span class="w600 f14" style="color: #262262;">Teacher</span>
       </div>
 
-      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/programs') || isRouteActive('/additional-program') }" @click="$router.push('/programs')">
+      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/home/programs') || isRouteActive('/home/additional-program') }" @click="$router.push('/home/programs')">
         <img src="@/assets/sources/icons/programs.svg" alt="Programs">
         <span class="w600 f14 tcenter" style="color: #262262; line-height: 100%;">Additional <br> Programs</span>
       </div>

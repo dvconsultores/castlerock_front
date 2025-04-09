@@ -1,13 +1,13 @@
 <template>
-  <div id="new-classroom">
-    <h3 class="font2 f32 tleft mt-6" style="color: #262B63;">New Classroom</h3>
+  <div id="new-center">
+    <h3 class="font2 f32 tleft mt-6" style="color: #262B63;">New Center</h3>
     <v-form class="form-div">
       <v-row>
         <v-col cols="12" sm="9" class="pb-0">
           <v-text-field
-            v-model="classroom_name"
+            v-model="center_name"
             class="textfield-registration"
-            placeholder="Classroom Name"
+            placeholder="Center Name"
             variant="solo" 
             flat
             hide-details
@@ -16,43 +16,24 @@
 
         <v-col cols="12" sm="3" class="pb-0">
           <v-text-field
-            v-model="number_students"
+            v-model="number_center"
             class="textfield-registration"
-            placeholder="Number of students"
+            placeholder="Number of the center"
             variant="solo" 
             flat
             hide-details
           ></v-text-field>
         </v-col>
 
-        <v-col cols="12" sm="6" class="pb-0">
-          <v-autocomplete
-            v-model="program_combo"
-            placeholder="Program"
+        <v-col cols="12" class="pb-0">
+          <v-text-field
+            v-model="location"
+            class="textfield-registration"
+            placeholder="Location"
+            variant="solo" 
             flat
-            class="autocomplete-register"
-            menu-icon="mdi-chevron-up"
-            :items="['Primary', 'Toddler']"
-            variant="solo"
-            :menu-props="{
-              contentClass: 'rounded-menu',
-            }"
-          ></v-autocomplete>
-        </v-col>
-
-        <v-col cols="12" sm="6" class="pb-0">
-          <v-autocomplete
-            v-model="select_center"
-            placeholder="Select Center"
-            flat
-            class="autocomplete-register"
-            menu-icon="mdi-chevron-up"
-            :items="['Center 1', 'Center 2']"
-            variant="solo"
-            :menu-props="{
-              contentClass: 'rounded-menu',
-            }"
-          ></v-autocomplete>
+            hide-details
+          ></v-text-field>
         </v-col>
       </v-row>
 
@@ -80,7 +61,7 @@
             <v-btn @click="triggerFileInput">Upload</v-btn>
 
             <v-file-input 
-            ref="fileInput" v-model="selectedImgClassroom" flat variant="solo" 
+            ref="fileInput" v-model="selectedImgCenter" flat variant="solo" 
             class="input-file" prepend-icon="none" hide-details @update:modelValue="handleFileChange"
             ></v-file-input>
           </v-card>
@@ -89,33 +70,33 @@
 
       <v-row class="mt-10">
         <v-col cols="12" align="right">
-          <v-btn flat class="btn-save" @click="openSaveClassroom">Save</v-btn>
+          <v-btn flat class="btn-save" @click="openSaveCenter">Save</v-btn>
         </v-col>
       </v-row>
     </v-form>
 
-    <v-dialog v-model="dialogAddClassroom" content-class="dialogAdd" persistent>
+    <v-dialog v-model="dialogAddCenter" content-class="dialogAdd" persistent>
       <v-card class="card-add-program">
         <img src="@/assets/sources/icons/save.svg" alt="Save">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to create this new classroom?</span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to create this new center?</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400"><span class="w500" style="color: #7583D9;">Lions,</span> Center 1 </span>
+        <span class="f16 w400"><span class="w500" style="color: #7583D9;">Center New,</span> Center 1 </span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1" @click="openConfirmationClassroom">Yes, add</v-btn>
-          <v-btn flat class="btn2" @click="closeAddClassroom">No, cancel</v-btn>
+          <v-btn flat class="btn1" @click="openConfirmationCenter">Yes, add</v-btn>
+          <v-btn flat class="btn2" @click="closeAddCenter">No, cancel</v-btn>
         </div>
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="dialogConfirmationClassroom" content-class="dialogConfirmationClassroom" persistent>
+    <v-dialog v-model="dialogConfirmationCenter" content-class="dialogConfirmationCenter" persistent>
       <v-card class="card-confirmation-program">
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
         <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully saved!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The new class <span class="w600" style="color: #7583D9;">(Lions)</span> has been successfully created</span>
+        <span class="f16 w400 tcenter">The new center <span class="w600" style="color: #7583D9;">(Center New)</span> has been successfully created</span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1" @click="$router.push('/home/classrooms')">Classrooms</v-btn>
-          <v-btn flat class="btn2" @click="closeConfirmationClassroom">New Classrooms</v-btn>
+          <v-btn flat class="btn1" @click="$router.push('/home/centers')">Centers</v-btn>
+          <v-btn flat class="btn2" @click="closeConfirmationCenter">New Center</v-btn>
         </div>
         <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home')">Go home</span>
       </v-card>
@@ -127,7 +108,7 @@
 import { ref } from 'vue';
 
 const fileInput = ref(null);
-const selectedImgClassroom = ref(null);
+const selectedImgCenter = ref(null);
 const imagePreview = ref(null);
 
 const handleFileChange = (file) => {
@@ -142,28 +123,28 @@ const triggerFileInput = () => {
   fileInput.value.$el.querySelector('input[type="file"]').click();
 };
 
-const dialogAddClassroom = ref(false);
-const dialogConfirmationClassroom = ref(false);
+const dialogAddCenter = ref(false);
+const dialogConfirmationCenter = ref(false);
 
-const openConfirmationClassroom = () => {
-  dialogAddClassroom.value = false;
-  dialogConfirmationClassroom.value = true;
+const openConfirmationCenter = () => {
+  dialogAddCenter.value = false;
+  dialogConfirmationCenter.value = true;
 };
 
-const closeConfirmationClassroom = () => {
-  dialogConfirmationClassroom.value = false;
+const closeConfirmationCenter = () => {
+  dialogConfirmationCenter.value = false;
 };
 
-const openSaveClassroom = () => {
-  dialogAddClassroom.value = true;
+const openSaveCenter = () => {
+  dialogAddCenter.value = true;
 };
 
-const closeAddClassroom = () => {
-  dialogAddClassroom.value = false;
+const closeAddCenter = () => {
+  dialogAddCenter.value = false;
 };
 
 </script>
 
 <style lang="scss">
-@import '@/assets/styles/pages/new-classroom.scss';
+@import '@/assets/styles/pages/new-center.scss';
 </style>

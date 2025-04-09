@@ -34,7 +34,7 @@
       </template>
     </v-data-table>
 
-    <v-btn flat class="btn-floating" @click="$router.push('/additional-program')">
+    <v-btn flat class="btn-floating" @click="$router.push('/home/additional-program')">
       <img src="@/assets/sources/icons/plus.svg" alt="Btn">
     </v-btn>
 

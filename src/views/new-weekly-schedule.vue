@@ -98,7 +98,7 @@
       <div v-for="(week, weekIndex) in monthlySchedule" :key="weekIndex" class="div-container-weeks-cards">
         <h3>{{ week.weekTitle }}</h3>
         <div class="slider-div">
-          <v-card flat v-for="(day, dayIndex) in week.days" :key="dayIndex" @click="$router.push('/daily-schedule')">
+          <v-card flat v-for="(day, dayIndex) in week.days" :key="dayIndex" @click="$router.push('/home/daily-schedule')">
             <div class="div-header">
               <span>{{ day.date }}</span>
             </div>

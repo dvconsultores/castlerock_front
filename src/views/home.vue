@@ -335,29 +335,31 @@ const dataSheets = ref([
     imgIcon: calendar,
     titleSheet: 'New schedule',
     subTitleSheet: 'Plan Your Week',
-    route: "/new-weekly-schedule",
+    route: "/home/new-weekly-schedule",
   },
   {
     imgIcon: classroms,
     titleSheet: 'Create a Class',
     subTitleSheet: 'Add class',
-    route: '/new-classroom',
+    route: '/home/new-classroom',
   },
   {
     imgIcon: students,
     titleSheet: 'New Student',
     subTitleSheet: 'Register a Student',
-    route: '/student-registration',
+    route: '/home/student-registration',
   },
   {
     imgIcon: teachers,
     titleSheet: 'New Teacher',
     subTitleSheet: 'Register a Teacher',
+    route: '/home/teachers'
   },
   {
     imgIcon: centers,
     titleSheet: 'New Center',
     subTitleSheet: 'Register a Center',
+    route: '/home/centers'
   }
 ]);
 

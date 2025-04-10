@@ -4,7 +4,7 @@ import AuthLayout from '@/layouts/auth-layout.vue'
 import LoginPage from '@/views/login.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL), // Usa la variable de entorno
+  history: createWebHistory(import.meta.env.VITE_BASE_URL), // Usa la variable de entorno  
   routes: [
     {
       path: '/',

@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
       vue(),
     ],
     define: {
+      global: 'window',
       // Expose all VITE_* environment variables to client
       'process.env': env
     },

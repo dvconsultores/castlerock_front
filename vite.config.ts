@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
 
   return {
+    base: env.VITE_BASE_URL || '/', // Set the base URL from the environment variable
     plugins: [
       inject({ Buffer: ['buffer', 'Buffer'] }),
       vue(),

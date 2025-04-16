@@ -54,13 +54,13 @@
 
     <v-dialog v-model="dialogHome" content-class="dialog-home">
       <v-card class="card-dialog">
-        <h2>Welcome</h2>
-        <span>Select the center you want to see</span>
+        <h2 class="tcenter">Welcome</h2>
+        <span class="tcenter">Select the center you want to see</span>
 
         <hr>
 
         <div class="jspace div-cards">
-          <v-card flat class="pointer" @click="$router.push('/home')">
+          <v-card flat class="pointer">
             <img src="@/assets/sources/images/banner_1.png" alt="Banner">
 
             <h3 class="mb-1 mt-4">Center 1</h3>
@@ -84,7 +84,7 @@
             </span>
           </v-card>
 
-          <v-card flat class="pointer">
+          <v-card flat class="pointer" @click="$router.push('/home')">
             <img src="@/assets/sources/images/banner_3.png" alt="Banner">
 
             <h3 class="mb-1 mt-4">All</h3>

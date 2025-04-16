@@ -2,7 +2,7 @@
   <div id="classrooms">
     <v-data-table :items="dataClassrooms" :headers="headers" hide-default-footer>
       <template v-slot:top>
-        <div class="flex gap4 center" style="background-color: #F8F8F8;">
+        <div class="flex gap4 center" style="background-color: #F0F0F0 ;">
           <v-text-field
             v-model="searchQuery"
             class="login-textfield"
@@ -15,7 +15,11 @@
 
           <v-btn flat id="btn-search">
             <v-icon color="#FFFFFF" class="mr-3">mdi-calendar</v-icon>
-            New Weekly Schedule
+            New Weekly Enrollment
+          </v-btn>
+
+          <v-btn flat id="btn-search-mobile">
+            <v-icon color="#FFFFFF" class="mr-3">mdi-calendar</v-icon>
           </v-btn>
         </div>
       </template>

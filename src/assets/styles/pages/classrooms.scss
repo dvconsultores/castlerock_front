@@ -4,9 +4,11 @@
 //---------------------------------------------------------------------------------------------//
 
 #classrooms {
-  background-color: #F8F8F8;
+  background-color: #F0F0F0 ;
   height: 100%;
   width: 100%;
+  max-width: 1560px;
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -37,6 +39,10 @@
       height: 40px;
       min-height: 40px;
       border-radius: 32px;
+      
+      @include media(max, 1000px){
+        display: none;
+      }
 
       .v-btn__content{
         color: #FFFFFF;
@@ -45,8 +51,26 @@
       }
     }
 
+    #btn-search-mobile{
+      background-color: #6BBDAE;
+      width: 60px;
+      height: 40px;
+      min-height: 40px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      
+      @include media(min, 1000px){
+        display: none;
+      }
+
+      .v-icon{
+        margin-left: 12px;
+      }
+    }
+
     .v-input{
-      background-color: #F8F8F8;
+      background-color: #F0F0F0 ;
     }
     .login-textfield{    
       i{
@@ -93,12 +117,12 @@
       table {
         border-collapse: separate;
         border-spacing: 0px;
-        background-color: #F8F8F8;
+        background-color: #F0F0F0 ;
       }
     }
 
     tr th{
-      background-color: #F8F8F8;
+      background-color: #F0F0F0 ;
       color: #262262;
       font-size: 16px;
       font-weight: 700!important;
@@ -115,7 +139,7 @@
     }
     
     tr:nth-child(even){
-      background: #F8F8F8!important;
+      background: #F0F0F0 !important;
 
       .color-font-center{
         color: #262262;

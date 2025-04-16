@@ -4,9 +4,11 @@
 //---------------------------------------------------------------------------------------------//
 
 #programs {
-  background-color: #F8F8F8;
+  background-color: #F0F0F0 ;
   height: 100%;
   width: 100%;
+  max-width: 1560px;
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -32,7 +34,7 @@
 
   .v-data-table{
     .v-input{
-      background-color: #F8F8F8;
+      background-color: #F0F0F0 ;
     }
     .login-textfield{    
       i{
@@ -79,12 +81,12 @@
       table {
         border-collapse: separate;
         border-spacing: 0px;
-        background-color: #F8F8F8;
+        background-color: #F0F0F0 ;
       }
     }
 
     tr th{
-      background-color: #F8F8F8;
+      background-color: #F0F0F0 ;
       color: #262262;
       font-size: 16px;
       font-weight: 700!important;
@@ -101,7 +103,7 @@
     }
     
     tr:nth-child(even){
-      background: #F8F8F8!important;
+      background: #F0F0F0 !important;
 
       .color-font-center{
         color: #262262;

@@ -1,6 +1,6 @@
 <template>
   <div id="new-plan">
-    <h3 class="font2" style="color: #262B63">New Weekly Schedule</h3>
+    <h3 class="font2" style="color: #262B63">New Weekly Enrollment</h3>
 
     <v-row class="form-div" no-gutters>
       <v-col cols="12" sm="4" class="pb-0 pl-1 pr-1 pt-1">

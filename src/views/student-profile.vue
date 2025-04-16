@@ -5,7 +5,7 @@
         <v-col cols="12" align="left">
           <div class="custom-toggle">
             <v-btn value="teachers" flat class="toggle-btn" @click="activeData" :class="{ 'active-toggle': data_btn }"> 
-              Student data 
+              Student profile 
             </v-btn>
             <v-btn value="students" flat class="toggle-btn" @click="activeAttendance" :class="{'active-toggle': attendance_btn}"> 
               Attendance 
@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" align="left">
           <h3 class="font2 tleft" style="color: #262B63;">
-            Student data
+            Student profile
           </h3>
         </v-col>
         <v-col sm="2" cols="12" :rows="2" align="center" class="pl-0">
@@ -118,7 +118,7 @@
           <v-text-field
             v-model="mothers_name"
             class="login-textfield"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Mother's Name"
             variant="solo" 
             flat
@@ -129,7 +129,7 @@
           <v-text-field
             v-model="fathers_name"
             class="login-textfield"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Father's Name"
             variant="solo" 
             flat
@@ -140,7 +140,7 @@
           <v-text-field
             v-model="mothers_number"
             class="login-textfield"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Mother's contact number"
             variant="solo" 
             flat
@@ -152,7 +152,7 @@
           <v-text-field
             v-model="fathers_number"
             class="login-textfield"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Father's contact number"
             variant="solo" 
             flat
@@ -171,7 +171,7 @@
           <v-text-field
             v-model="contact_name"
             class="login-textfield"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Contact Name 1"
             variant="solo" 
             flat
@@ -183,7 +183,7 @@
           <v-text-field
             v-model="contact_name2"
             class="login-textfield"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Contact Name 2"
             variant="solo" 
             flat
@@ -196,7 +196,7 @@
             v-model="type_relationship1"
             placeholder="Type of Relationship 1"
             flat
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="autocomplete-register"
             menu-icon="mdi-chevron-up"
             hide-details
@@ -213,7 +213,7 @@
             v-model="type_relationship2"
             placeholder="Type of Relationship 2"
             flat
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="autocomplete-register"
             hide-details
             menu-icon="mdi-chevron-up"
@@ -229,7 +229,7 @@
           <v-text-field
             v-model="contact_number"
             class="login-textfield"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Contact Number 1"
             variant="solo" 
             append-inner-icon="mdi-phone-outline"
@@ -242,7 +242,7 @@
           <v-text-field
             v-model="contact_number2"
             class="login-textfield"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Contact Number 2"
             variant="solo" 
             append-inner-icon="mdi-phone-outline"
@@ -252,10 +252,26 @@
         </v-col>
       </v-row>
 
+      <v-row class="container-for-text mt-10">
+        <v-col cols="12" align="left" class="pb-0 pt-0">
+          <h5 class="font2 tleft" style="color: #262262;">Additional Notes</h5>
+        </v-col>
+
+        <v-col cols="12" class="pa-0">
+          <v-textarea 
+          placeholder="Notes" variant="solo"
+          flat
+          hide-details
+          bg-color="#F0F0F0"
+          class="text-area"
+          ></v-textarea>
+        </v-col>
+      </v-row>
+
       <v-row class="fullw mt-10 mb-10">
         <v-col cols="12" align="left" class="pa-2">
           <h3 class="font2 tleft" style="color: #262B63;">
-            Schedule
+            Enrollment
           </h3>
         </v-col>
 
@@ -263,7 +279,7 @@
           <v-text-field
             v-model="start_date_class"
             class="login-textfield"
-            placeholder="Start Date of Classes"
+            placeholder="First Day of School"
             variant="solo" 
             append-inner-icon="mdi-calendar"
             flat
@@ -290,12 +306,12 @@
         <v-col cols="12" sm="4" class="pa-2">
           <v-autocomplete
             v-model="days"
-            placeholder="Every day"
+            placeholder="Schedule"
             flat
             class="autocomplete-register"
             hide-details
             menu-icon="mdi-chevron-up"
-            :items="['Every day', '1 Day', '2 Days']"
+            :items="['1 Day', '2 Days', '3 Days', '4 Days', '5 Days']"
             variant="solo"
             :menu-props="{
               contentClass: 'rounded-menu',
@@ -327,13 +343,13 @@
 
         <v-col cols="12" sm="3" class="pa-2">
           <v-autocomplete
-            placeholder="Every day"
+            placeholder="Schedule"
             flat
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="autocomplete-register"
             hide-details
             menu-icon="mdi-chevron-up"
-            :items="['1 Day', '2 Days']"
+            :items="['1 Day', '2 Days', '3 Days', '4 Days', '5 Days']"
             variant="solo"
             :menu-props="{
               contentClass: 'rounded-menu',
@@ -343,13 +359,13 @@
 
         <v-col cols="12" sm="3" class="pa-2">
           <v-autocomplete
-            placeholder="Every day"
+            placeholder="Schedule"
             flat
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="autocomplete-register"
             hide-details
             menu-icon="mdi-chevron-up"
-            :items="['1 Day', '2 Days']"
+            :items="['1 Day', '2 Days', '3 Days', '4 Days', '5 Days']"
             variant="solo"
             :menu-props="{
               contentClass: 'rounded-menu',
@@ -361,7 +377,7 @@
           <v-autocomplete
             placeholder="Dance"
             flat
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="autocomplete-register"
             hide-details
             menu-icon="mdi-chevron-up"
@@ -375,13 +391,13 @@
 
         <v-col cols="12" sm="3" class="pa-2">
           <v-autocomplete
-            placeholder="Every day"
+            placeholder="Schedule"
             flat
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="autocomplete-register"
             hide-details
             menu-icon="mdi-chevron-up"
-            :items="['1 Day', '2 Days']"
+            :items="['1 Day', '2 Days', '3 Days', '4 Days', '5 Days']"
             variant="solo"
             :menu-props="{
               contentClass: 'rounded-menu',
@@ -468,7 +484,7 @@
         <v-col cols="12" align="left">
           <div class="custom-toggle">
             <v-btn value="teachers" flat class="toggle-btn" @click="activeData" :class="{ 'active-toggle': data_btn }"> 
-              Student data 
+              Student profile 
             </v-btn>
             <v-btn value="students" flat class="toggle-btn" @click="activeAttendance" :class="{'active-toggle': attendance_btn}"> 
               Attendance 

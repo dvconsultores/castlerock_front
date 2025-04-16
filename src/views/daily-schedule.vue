@@ -24,7 +24,7 @@
               v-model="searchQueryTeachers"
               class="login-textfield"
               placeholder="Search Teacher"
-              bg-color="#F8F8F8"
+              bg-color="#F0F0F0 "
               variant="solo" 
               flat
               hide-details
@@ -56,7 +56,7 @@
               v-model="searchQueryStudents"
               class="login-textfield"
               placeholder="Search Student"
-              bg-color="#F8F8F8"
+              bg-color="#F0F0F0 "
               variant="solo" 
               flat
               hide-details
@@ -211,7 +211,7 @@
           <v-text-field
             class="login-textfield mt-16"
             placeholder="You can add a note here (optional)"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             variant="solo" 
             flat
             hide-details

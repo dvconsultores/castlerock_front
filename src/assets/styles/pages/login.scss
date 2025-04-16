@@ -4,7 +4,7 @@
 //---------------------------------------------------------------------------------------------//
 
 #login {
-  background-color: #F8F8F8;
+  background-color: #E8E8E8;
   height: 100vh;
   width: 100vw;
   // margin-top: -20px;
@@ -46,7 +46,7 @@
     position: relative;
 
     @include media(max, 560px) {
-      max-width: 260px;
+      max-width: 280px;
       padding: 0;
     }
 
@@ -55,8 +55,8 @@
       height: 282px;
 
       @include media(max, 560px) {
-        max-width: 200px;
-        height: 240px;
+        max-width: 160px;
+        height: 200px;
       }
     }
 
@@ -87,8 +87,8 @@
         width: 470px;
 
         @include media(max, 560px) {
-          max-width: 260px;
-          width: 260px;
+          max-width: 280px;
+          width: 280px;
         }    
       }
       .v-input__control{
@@ -97,8 +97,9 @@
         width: 470px;
 
         @include media(max, 560px) {
-          max-width: 260px;
-          width: 260px;
+          max-width: 280px;
+          width: 280px;
+          height: 45px;
         }    
       }
   
@@ -112,6 +113,7 @@
         @include media(max, 560px) {
           max-width: 260px;
           width: 260px;
+          height: 45px!important;
         }    
       }
     }
@@ -129,6 +131,10 @@
 
       .btn{
         width: 80%;
+
+        .v-btn__content{
+          text-transform: none;
+        }
 
         @include media(max, 560px) {
           width: 65%;
@@ -164,17 +170,30 @@
       font-family: var(--font-2);
       font-size: 2.2em;
       color: #474649;
+
+      @include media(max, 895px){
+        font-size: 24px!important;
+        margin-bottom: 4px;
+      }
     }
 
     span{
       font-size: 16px;
       color: #474649;
+
+      @include media(max, 895px){
+        font-size: 14px!important;
+      }
     }
 
     hr{
       width: 100%;
       color: #474649;
       margin-block: 24px 36px;
+
+      @include media(max, 895px){
+        margin-block: 16px;
+      }
     }
 
     .div-cards{
@@ -187,7 +206,7 @@
 
       .v-card{
         border: 2px solid transparent; 
-        background-color: #F8F8F8;
+        background-color: #F0F0F0 ;
         border-radius: 16px!important;
         padding: 24px;
         width: 314px;
@@ -196,16 +215,30 @@
         flex-direction: column;
         transition: all 0.3s ease-in-out;
 
+        span{
+          @include media(max, 895px){
+            font-size: 12px!important;
+          }
+        }
+
         h3{
           text-align: center;
           font-family: var(--font-2);
           color: var(--font-color);
           font-size: 22px;
+
+          @include media(max, 895px) {
+            font-size: 18px;
+            margin-top: 0px!important;
+          }
         }
 
         @include media(max, 895px) {
-          height: 150px;
+          height: 100px;
           width: 260px;
+          justify-content: center;
+          align-items: center;
+
 
           img{
             display: none;

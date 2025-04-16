@@ -2,7 +2,7 @@
   <div id="teachers">
     <v-data-table :items="dataTeachers" :headers="headers" hide-default-footer>
       <template v-slot:top>
-        <div class="flex gap4 center" style="background-color: #F8F8F8;">
+        <div class="flex gap4 center" style="background-color: #F0F0F0 ;">
           <v-text-field
             v-model="searchQuery"
             class="login-textfield"

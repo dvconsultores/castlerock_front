@@ -16,10 +16,10 @@
         <div class="flexstart flexcol">
           <img :src="item.imgIcon" alt="Calendar">
           <div class="jspace fullw">
-            <span class="f22 w600  mt-1">{{ item.titleSheet }}</span>
+            <span class="f18 f14-mobile w600  mt-1">{{ item.titleSheet }}</span>
             <v-icon>mdi-chevron-right</v-icon>
           </div>
-          <span class="f14 w400">{{ item.subTitleSheet }}</span>
+          <span class="f14 f10-mobile w400">{{ item.subTitleSheet }}</span>
         </div>
       </v-sheet>
     </div>
@@ -84,7 +84,7 @@
     </div>
     
     <div class="before-div mt-6">
-      <h3 class="f24 font2 tleft" style="color: #4E444B;">Before</h3>      
+      <h3 class="font2 tleft" style="color: #4E444B;">Before</h3>      
 
       <div class="div-sheet">
         <v-sheet v-for="(item, index) in sheetDataTeachers" :key="index" class="sheet-teachers">
@@ -112,8 +112,8 @@
     </div>
 
     <div class="absences-div mt-6">
-      <h3 class="f24 font2 tleft mb-2" style="color: #4E444B;">Today's Absences</h3>      
-      <span class="f20 w400 tleft mb-6" style="color: #262B63;">Monday ( March 24, 2025 )</span>
+      <h3 class="font2 tleft mb-2" style="color: #4E444B;">Today's Absences</h3>      
+      <span class="f18 w400 tleft mb-6" style="color: #262B63;">Monday ( March 24, 2025 )</span>
 
       <div class="div-sheet-absences">
         <v-sheet v-for="(item, index) in sheetDataAbsences" :key="index" class="sheet-absences">
@@ -333,7 +333,7 @@ const dataClasses = ref([
 const dataSheets = ref([
   {
     imgIcon: calendar,
-    titleSheet: 'New schedule',
+    titleSheet: 'New Enrollment',
     subTitleSheet: 'Plan Your Week',
     route: "/home/new-weekly-schedule",
   },

@@ -78,7 +78,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="mother_name"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="textfield-registration"
             placeholder="Mother's Name"
             variant="solo" 
@@ -90,7 +90,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="father_name"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="textfield-registration"
             placeholder="Father's Name"
             variant="solo" 
@@ -102,7 +102,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="mother_number"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="textfield-registration"
             placeholder="Mother's contact number"
             append-inner-icon="mdi-phone-outline"
@@ -115,7 +115,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="father_number"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="textfield-registration"
             placeholder="Father's contact number"
             append-inner-icon="mdi-phone-outline"
@@ -134,7 +134,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="contact_name1"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="textfield-registration"
             placeholder="Contact name 1"
             variant="solo" 
@@ -146,7 +146,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="contact_name2"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="textfield-registration"
             placeholder="Contact name 2"
             variant="solo" 
@@ -158,7 +158,7 @@
         <v-col cols="12" sm="6">
           <v-autocomplete
             v-model="type_relationship1"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Type of Relationship 1"
             flat
             class="autocomplete-register"
@@ -174,7 +174,7 @@
         <v-col cols="12" sm="6">
           <v-autocomplete
             v-model="type_relationship2"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Type of Relationship 2"
             flat
             class="autocomplete-register"
@@ -190,7 +190,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="contact_number1"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="textfield-registration"
             placeholder="Contact number 1"
             append-inner-icon="mdi-phone-outline"
@@ -203,7 +203,7 @@
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="contact_number2"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             class="textfield-registration"
             placeholder="Contact number 2"
             append-inner-icon="mdi-phone-outline"
@@ -214,7 +214,7 @@
         </v-col>
       </v-row>
 
-      <h3 class="font2 f32 tleft mt-12" style="color: #262B63;">Schedule</h3>
+      <h3 class="font2 f32 tleft mt-12" style="color: #262B63;">Enrollment</h3>
 
       <v-row>
         <v-col cols="12" md="4" sm="6">
@@ -268,7 +268,7 @@
         <v-col cols="12" md="3" sm="6">
           <v-autocomplete
             v-model="before_school"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Before School"
             flat
             class="autocomplete-register"
@@ -284,7 +284,7 @@
         <v-col cols="12" md="3" sm="6">
           <v-autocomplete
             v-model="after_school"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="After School"
             flat
             class="autocomplete-register"
@@ -300,7 +300,7 @@
         <v-col cols="12" md="3" sm="6">
           <v-autocomplete
             v-model="enrichment_enrolled"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Enrichment Enrolled"
             flat
             class="autocomplete-register"
@@ -316,7 +316,7 @@
         <v-col cols="12" md="3" sm="6">
           <v-autocomplete
             v-model="pizza"
-            bg-color="#F8F8F8"
+            bg-color="#F0F0F0 "
             placeholder="Pizza"
             flat
             class="autocomplete-register"

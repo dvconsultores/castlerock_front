@@ -1,7 +1,7 @@
 <template>
   <nav id="navbar">
     <div class="left-container">
-      <v-icon @click="$router.push(-1)">mdi-chevron-left</v-icon>
+      <v-icon @click="$router.go(-1)">mdi-chevron-left</v-icon>
       <div class="flexcol">
         <h3>
           {{ currentTitle  }}
@@ -13,6 +13,12 @@
     </div>
 
     <div class="rigth-container">
+      <v-btn @click="toggleDrawer" class="btn-menu" flat>
+        <v-icon>
+          mdi-menu
+        </v-icon>
+      </v-btn>
+
       <img src="@/assets/sources/icons/bell-notification.svg" alt="Bell" class="img-bell">
 
       <div class="div-img-user">
@@ -25,12 +31,14 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { toggleDrawer } from '@/store/drawerState.js';
+
 
 const route = useRoute();
 
 const pageTitles = {
   '/home': 'Dashboard',
-  '/home/students': 'Students Management',
+  '/home/students': 'Student Management',
   '/home/student-registration': 'Students',
   '/home/programs': 'Management of Additional Programs',
   '/home/additional-program': 'New Additional Programs',
@@ -50,11 +58,11 @@ const currentTitle = computed(() => {
 
 const subTitle = {
   '/home': 'Home',
-  '/home/students': 'Organize and Administer',
+  '/home/students': '',
   '/home/student-registration': 'Registration',
   '/home/programs': 'Organize and Manage the Programs',
   '/home/additional-program': 'Add and customize a new program',
-  '/home/classrooms': 'Organize and Administer',
+  '/home/classrooms': '',
   '/home/new-classroom': 'Register',
   '/home/new-weekly-schedule': 'Organize your class efficiently',
   '/home/daily-schedule': 'Organize Your Day',
@@ -66,7 +74,7 @@ const subTitle = {
 }
 
 const currentSubTitle = computed(() => {
-  return subTitle[route.path] || 'Dashboard';
+  return subTitle[route.path] || '';
 });
 </script>
 
@@ -74,7 +82,7 @@ const currentSubTitle = computed(() => {
 
 #navbar{
   width: calc(100% - 156px);
-  background-color: #F8F8F8;
+  background-color: #F0F0F0 ;
   height: 80px;
   display: flex;
   justify-content: space-between;
@@ -120,6 +128,25 @@ const currentSubTitle = computed(() => {
     gap: 10px;
     justify-content: center;
     align-items: center;
+
+    .btn-menu{
+     background-color: transparent;
+     width: 36px;
+     min-width: 36px;
+     height: 36px;
+     min-height: 36px;
+
+     .v-icon{
+       color: #7583D9;
+     }
+    }
+
+    @media screen and (min-width: 1000px) {
+      .btn-menu{
+        display: none;
+      }
+      
+    }
 
     .img-bell{
       width: 24px;

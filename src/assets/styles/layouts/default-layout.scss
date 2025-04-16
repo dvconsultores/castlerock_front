@@ -11,7 +11,7 @@
 
   .v-main {
     position: relative;
-    background-color: #F8F8F8;
+    background-color: #F0F0F0;
     padding-top: 80px;
     & > * {
       @include media(max, small) { font-size: var(--resizer-mobile) }

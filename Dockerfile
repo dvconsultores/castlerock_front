@@ -8,7 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Copy the .env file into the container
-COPY .env .env
+# Copy the .env file into the container
+COPY .env /app/.env
 
 # Install dependencies
 RUN npm install

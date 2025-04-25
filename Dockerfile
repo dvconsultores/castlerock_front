@@ -4,11 +4,16 @@ FROM node:18-alpine AS build
 # Set the working directory
 WORKDIR /app
 
+# Pass environment variables as build arguments
+ARG VITE_BASE_URL
+ARG VITE_BASE_URL_API
+
+# Set environment variables
+ENV VITE_BASE_URL=$VITE_BASE_URL
+ENV VITE_BASE_URL_API=$VITE_BASE_URL_API
+
 # Copy package.json and package-lock.json
 COPY package*.json ./
-
-# Copy the .env file into the container
-COPY .env ./
 
 # Install dependencies
 RUN npm install

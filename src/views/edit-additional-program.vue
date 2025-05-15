@@ -1,9 +1,9 @@
 <template>
   <div id="additional-program">
-    <h3 class="font2 f32 tleft mt-6" style="color: #262B63;">New Additional Programs</h3>
+    <h3 class="font2 f32 tleft mt-6" style="color: #262B63;">Edit Additional Programs</h3>
     <v-form class="form-div">
       <v-row>
-        <v-col cols="12" sm="6" class="pb-0">
+        <v-col cols="12" sm="6" class="pb-0 pl-0">
           <v-text-field
             v-model="name"
             class="textfield-registration"
@@ -106,11 +106,11 @@
     <v-dialog v-model="dialogAddProgram" content-class="dialogAdd" persistent>
       <v-card class="card-add-program">
         <img src="@/assets/sources/icons/save.svg" alt="Save">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to add the new program</span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to update the program:</span>
         <hr class="mt-2 mb-5">
         <span class="f16 w500" style="color: #7583D9;">{{ name }}</span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1" @click="createProgram" :loading="loadingProgram">Yes, register</v-btn>
+          <v-btn flat class="btn1" @click="updateProgram" :loading="loadingProgram">Yes, update</v-btn>
           <v-btn flat class="btn2" @click="dialogAddProgram = false">No, cancel</v-btn>
         </div>
       </v-card>
@@ -119,12 +119,12 @@
     <v-dialog v-model="dialogConfirmationProgram" content-class="dialogConfirmationProgram" persistent>
       <v-card class="card-confirmation-program">
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully deleted!</span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully update!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The new additional program <span class="w600" style="color: #7583D9;">({{ name }})</span> has been successfully saved</span>
+        <span class="f16 w400 tcenter">The additional program <span class="w600" style="color: #7583D9;">({{ name }})</span> has been successfully update.</span>
         <div class="btn-divs mt-8">
           <v-btn flat class="btn1" @click="$router.push('/home/programs')">Additional Programs</v-btn>
-          <v-btn flat class="btn2" @click="closeConfirmationProgram">New Additional Programs</v-btn>
+          <v-btn flat class="btn2" @click="dialogConfirmationProgram = false">Edit Additional Programs</v-btn>
         </div>
         <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home')">Go home</span>
       </v-card>
@@ -135,7 +135,10 @@
 <script setup>
 import { ref, inject, onMounted, computed } from 'vue';
 import axiosInstance from '@/plugins/axios';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
+const programId = ref(route.params.id);
 const fileInput = ref(null);
 const selectedImgProgram = ref(null);
 const imagePreview = ref(null);
@@ -200,7 +203,7 @@ const openSaveProgram = () => {
   }
 };
 
-const createProgram = async () => {
+const updateProgram = async () => {
   loadingProgram.value = true;
   try {
     const formData = new FormData();
@@ -222,7 +225,7 @@ const createProgram = async () => {
     if (selectedImgProgram.value) {4
       formData.append('image', selectedImgProgram.value);
     }
-    const response = await axiosInstance.post('/additional-programs', formData, {
+    const response = await axiosInstance.patch(`/additional-programs/${programId.value}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -252,8 +255,55 @@ const getCenters = async () => {
   }
 };
 
+const loadDataProgram = async () => {
+ try {
+    const response = await axiosInstance.get(`/additional-programs/${programId.value}`);
+    const program = response.data.result;
+    console.log('Program data:', program);
+
+    name.value = program.name;
+    imagePreview.value = program.image;
+    // select_center.value = program.campus.name;
+    monday.value = false;
+    tuesday.value = false;
+    wednesday.value = false;
+    thursday.value = false;
+    friday.value = false;
+    saturday.value = false;
+    sunday.value = false;
+    program.days.forEach(day => {
+      switch (day) {
+        case 'Monday':
+          monday.value = true;
+          break;
+        case 'Tuesday':
+          tuesday.value = true;
+          break;
+        case 'Wednesday':
+          wednesday.value = true;
+          break;
+        case 'Thursday':
+          thursday.value = true;
+          break;
+        case 'Friday':
+          friday.value = true;
+          break;
+        case 'Saturday':
+          saturday.value = true;
+          break;
+        case 'Sunday':
+          sunday.value = true;
+          break;
+      }
+    });
+  } catch (error) {
+    console.error('Failed to load center data', error);
+  }
+}
+
 onMounted(() => {
   getCenters();
+  loadDataProgram();
 });
 
 </script>

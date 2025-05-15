@@ -205,7 +205,7 @@ button.btn-2, .v-btn.btn-2, .btn-2 {
 .tleft{text-align: left;}
 
 
-
+.font1{font-family: var(--font-1)!important;}
 .font2{font-family: var(--font-2)!important;}
 
 .btn-save{
@@ -220,5 +220,13 @@ button.btn-2, .v-btn.btn-2, .btn-2 {
     font-size: 16px;
     font-weight: 600;
     text-transform: none;
+  }
+}
+
+.v-data-table-footer{
+  background-color: #F0F0F0;
+  border-top: 0px solid #E0E0E0!important;
+  .v-data-table-footer__items-per-page{
+    display: none;      
   }
 }

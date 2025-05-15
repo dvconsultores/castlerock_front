@@ -1,25 +1,18 @@
 <template>
   <div id="new-teacher">
-    <h3 class="font2 f32 tleft mt-6" style="color: #262B63;">New Teacher</h3>
+    <h3 class="font2 f32 tleft mt-6" style="color: #262B63;">Edit Teacher</h3>
     <v-form class="form-div">
       <v-row>
-        <v-col cols="12" class="pb-0">
-          <v-autocomplete
-            v-model.number="select_teacher"
-            placeholder="Select a Teacher"
+        <v-col cols="12">
+          <v-text-field
+            v-model="teacher_name"
+            class="textfield-registration"
+            placeholder="Teacher Name"
+            variant="solo" 
             flat
-            class="autocomplete-register"
-            menu-icon="mdi-chevron-up"
-            :items="selectTeacherItems"
-            item-value="id"
-            item-title="user_name"
-            return-object
-            @update:modelValue="val => select_teacher = val?.id"
-            variant="solo"
-            :menu-props="{
-              contentClass: 'rounded-menu',
-            }"
-          ></v-autocomplete>
+            readonly
+            hide-details
+          ></v-text-field>
         </v-col>
 
         <v-col cols="12" class="pb-0 pt-0">
@@ -116,14 +109,14 @@
     <v-dialog v-model="dialogAddTeacher" content-class="dialogAdd" persistent>
       <v-card class="card-add-program">
         <img src="@/assets/sources/icons/save.svg" alt="Save">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to create this new teacher?</span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to update this teacher?</span>
         <hr class="mt-2 mb-5">
         <span class="f16 w400">
-          <span class="w500" style="color: #7583D9;">{{ selectedTeacherName }},</span>
+          <span class="w500" style="color: #7583D9;">{{ teacher_name }},</span>
           {{ selectedCenterName }}
         </span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1" @click="createTeacher" :loading="loadingCreate">Yes, add</v-btn>
+          <v-btn flat class="btn1" @click="updateTeacher" :loading="loadingCreate">Yes, update</v-btn>
           <v-btn flat class="btn2" @click="dialogAddTeacher = false">No, cancel</v-btn>
         </div>
       </v-card>
@@ -134,10 +127,10 @@
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
         <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully saved!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The new center <span class="w600" style="color: #7583D9;">{{ selectedTeacherName }}</span> has been successfully created</span>
+        <span class="f16 w400 tcenter">The Teacher <span class="w600" style="color: #7583D9;">{{ teacher_name }}</span> has been successfully updated.</span>
         <div class="btn-divs mt-8">
           <v-btn flat class="btn1" @click="$router.push('/home/teachers')">Teachers</v-btn>
-          <v-btn flat class="btn2" @click="closeConfirmationTeacher">New Teacher</v-btn>
+          <v-btn flat class="btn2" @click="dialogConfirmationTeacher = false">Edit Teacher</v-btn>
         </div>
         <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home')">Go home</span>
       </v-card>
@@ -148,6 +141,7 @@
 <script setup>
 import { ref, inject, onMounted, computed } from 'vue';
 import axiosInstance from '@/plugins/axios';
+import { useRoute } from 'vue-router';
 
 // const fileInput = ref(null);
 // const selectedImgTeacher = ref(null);
@@ -165,50 +159,42 @@ import axiosInstance from '@/plugins/axios';
 //   fileInput.value.$el.querySelector('input[type="file"]').click();
 // };
 
+const route = useRoute();
 const showAlert = inject('showAlert');
 const dialogAddTeacher = ref(false);
 const dialogConfirmationTeacher = ref(false);
 const selectCenterItems = ref([]);
 const dataCenters = ref([]);
 const select_center = ref('Select a Center');
-const dataUsers = ref([]);
 const select_teacher = ref('Select a Teacher');
 const selectTeacherItems = ref([]);
 const loadingCreate = ref(false);
-
-const selectedTeacherName = computed(() => {
-  return selectTeacherItems.value.find(t => t.id === select_teacher.value)?.user_name;
-});
+const teacherId = ref(route.params.id);
+const teacher_name = ref('');
 
 const selectedCenterName = computed(() => {
   return selectCenterItems.value.find(c => c.id === select_center.value)?.name;
 });
 
-const createTeacher = async () => {
+const updateTeacher = async () => {
   dialogAddTeacher.value = false;
   loadingCreate.value = true;
 
   try{
-    const response = await axiosInstance.post('/teachers',{
-      user: select_teacher.value,
-      campus: select_center.value,
-    })
+    console.log('Selected Center:', select_center.value);
+    const response = await axiosInstance.patch(`/teachers/${teacherId.value}`, {
+      campus: select_center.value
+    });
     loadingCreate.value = false;
     dialogConfirmationTeacher.value = true;
   }catch(error){
-    showAlert('Failed to create new teacher', 'error');
+    showAlert('Failed to update teacher', 'error');
     loadingCreate.value = false;
   }
 };
 
-const closeConfirmationTeacher = () => {
-  select_teacher.value = 'Select a Teacher';
-  select_center.value = 'Select a Center';
-  dialogConfirmationTeacher.value = false;
-};
-
 const openSaveTeacher = () => {
-  if(!selectedTeacherName.value || !selectedCenterName.value ) {
+  if(!selectedCenterName.value ) {
     showAlert('Please select a teacher and a center', 'error');
     return;
   }else{
@@ -231,24 +217,21 @@ const getCenters = async () => {
   }
 };
 
-const getUsers = async () => {
+const getTeacher = async () => {
   try {
-    const response = await axiosInstance.get('/users');
-
-    dataUsers.value = response.data.result.filter(user => user.role === "TEACHER").map(user => ({
-        id: user.id,
-        user_name: user.firstName + ' ' + user.lastName,
-      }));
-
-    selectTeacherItems.value = dataUsers.value;
+    const response = await axiosInstance.get(`/teachers/${teacherId.value}`);
+    const teacher = response.data.result;
+    
+    teacher_name.value = teacher.user.firstName + ' ' + teacher.user.lastName;
+    // select_center.value = teacher.campus.name;
   } catch (error) {
-    showAlert('Error fetching users', 'error');
+    console.error('Failed to load center data', error);
   }
 };
 
 onMounted(() => {
   getCenters();
-  getUsers();
+  getTeacher();
 });
 </script>
 

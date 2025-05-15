@@ -1,6 +1,6 @@
 <template>
   <div id="new-classroom">
-    <h3 class="font2 f32 tleft mt-6" style="color: #262B63;">New Classroom</h3>
+    <h3 class="font2 f32 tleft mt-6" style="color: #262B63;">Edit Classroom</h3>
     <v-form class="form-div">
       <v-row>
         <v-col cols="12" sm="9" class="pb-0">
@@ -107,7 +107,7 @@
         <hr class="mt-2 mb-5">
         <span class="w500" style="color: #7583D9;">{{ name }}</span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1" @click="createClass" :loading="loadingClass">Yes, add</v-btn>
+          <v-btn flat class="btn1" @click="updateClass" :loading="loadingClass">Yes, add</v-btn>
           <v-btn flat class="btn2" @click="dialogAddClassroom = false">No, cancel</v-btn>
         </div>
       </v-card>
@@ -116,12 +116,12 @@
     <v-dialog v-model="dialogConfirmationClassroom" content-class="dialogConfirmationClassroom" persistent>
       <v-card class="card-confirmation-program">
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully saved!</span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully updated!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The new class <span class="w600" style="color: #7583D9;">{{ name }}</span> has been successfully created</span>
+        <span class="f16 w400 tcenter">The class <span class="w600" style="color: #7583D9;">{{ name }}</span> has been successfully update.</span>
         <div class="btn-divs mt-8">
           <v-btn flat class="btn1" @click="$router.push('/home/classrooms')">Classrooms</v-btn>
-          <v-btn flat class="btn2" @click="closeConfirmationClassroom">New Classrooms</v-btn>
+          <v-btn flat class="btn2" @click="dialogConfirmationClassroom = false">Edit Classrooms</v-btn>
         </div>
         <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home')">Go home</span>
       </v-card>
@@ -147,6 +147,8 @@ const showAlert = inject('showAlert');
 const selectCenterItems = ref([]);
 const dialogAddClassroom = ref(false);
 const dialogConfirmationClassroom = ref(false);
+const route = useRoute();
+const classroomId = ref(route.params.id);
 
 const handleFileChange = (file) => {
   if (file) {
@@ -158,17 +160,6 @@ const handleFileChange = (file) => {
 
 const triggerFileInput = () => {
   fileInput.value.$el.querySelector('input[type="file"]').click();
-};
-
-const closeConfirmationClassroom = () => {
-  name.value = '';
-  maxCapacity.value = '';
-  program.value = null;
-  select_center.value = null;
-  imagePreview.value = null;
-  selectedImgClassroom.value = null;
-  fileInput.value = null;
-  dialogConfirmationClassroom.value = false;
 };
 
 const openSaveClassroom = () => {
@@ -200,7 +191,22 @@ const getCenters = async () => {
   }
 };
 
-const createClass = async () => {
+const loadClassroomData = async () => {
+  try {
+    const response = await axiosInstance.get(`/classes/${classroomId.value}`);
+    const classroom = response.data.result;
+    
+    name.value = classroom.name;
+    maxCapacity.value = classroom.maxCapacity;
+    program.value = classroom.program;
+    imagePreview.value = classroom.image;
+    // select_center.value = classroom.campus.name;
+  } catch (error) {
+    console.error('Failed to load center data', error);
+  }
+};
+
+const updateClass = async () => {
   loadingClass.value = true;
   try {
     const formData = new FormData();
@@ -213,7 +219,7 @@ const createClass = async () => {
       formData.append('image', selectedImgClassroom.value);
     }
 
-    const response = await axiosInstance.post('/classes', formData, {
+    const response = await axiosInstance.patch(`/classes/${classroomId.value}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -231,6 +237,7 @@ const createClass = async () => {
 
 onMounted(() => {
   getCenters();
+  loadClassroomData();
 });
 
 </script>

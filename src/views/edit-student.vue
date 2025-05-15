@@ -439,6 +439,7 @@
         <v-checkbox v-model="sunday_after" density="compact" hide-details label="Sunday" color="#3C3C434D"></v-checkbox>
       </v-col>
     </v-row>
+    
     <v-row class="fullw mt-10 big-checkboxes-container">
       <v-col cols="12" align="left">
         <span class="font2 f24 tleft" style="color: #262262;">Additional Programs</span>
@@ -590,7 +591,7 @@
 
     <v-row class="fullw mt-8 mb-2">
       <v-col cols="12" align="right">
-        <v-btn class="btn-save" :loading="savingStudent" @click="createStudent">
+        <v-btn class="btn-save" :loading="savingStudent" @click="updateStudent">
           Save
         </v-btn>
       </v-col>
@@ -599,12 +600,12 @@
     <v-dialog v-model="dialogConfirmationStudent" content-class="dialogConfirmationStudent" persistent>
       <v-card class="card-confirmation">
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully saved!</span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully updated!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The new student <span class="w600" style="color: #7583D9;">{{ firstName + ' ' + lastName }}</span> has been successfully created.</span>
+        <span class="f16 w400 tcenter">The student <span class="w600" style="color: #7583D9;">{{ firstName + ' ' + lastName }}</span> has been successfully updated.</span>
         <div class="btn-divs mt-8">
           <v-btn flat class="btn1" @click="$router.push('/home/students')">Go to Students</v-btn>
-          <v-btn flat class="btn2" @click="$router.go(0)">New Student</v-btn>
+          <v-btn flat class="btn2" @click="dialogConfirmationStudent">Edit Student</v-btn>
         </div>
         <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home')">Go home</span>
       </v-card>
@@ -615,7 +616,12 @@
 <script setup>
 import { ref, inject, onMounted, computed, watch } from 'vue'
 import axiosInstance from '@/plugins/axios';
+import { useRoute } from 'vue-router';
 
+const id = ref(null);
+const route = useRoute();
+const studentId = ref(route.params.id);
+const dataStudents = ref([]);
 const dialogConfirmationStudent = ref(false);
 const savingStudent = ref(false);
 const fileInputStudent = ref(null);
@@ -655,6 +661,7 @@ const contact_number = ref('');
 const contact_number2 = ref('');
 const type_relationship1 = ref(null);
 const type_relationship2 = ref(null);
+const nothing = ref(false);
 
 const monday_enrolled = ref(false);
 const tuesday_enrolled = ref(false);
@@ -744,7 +751,97 @@ const triggerfileInputMother = () => {
   fileInputMother.value.$el.querySelector('input[type="file"]').click();
 };
 
-const createStudent = async () => {
+const getPrograms = async () => {
+  try {
+    const response = await axiosInstance.get('/additional-programs');
+    
+    dataPrograms.value = response.data.result.map(program => ({
+      id: program.id,
+      name: program.name,
+    }));
+
+    selectProgramItem.value = dataPrograms.value;
+  } catch (error) {
+    showAlert('Error fetching programs', 'error');
+  }
+};
+
+const getCenters = async () => {
+  try {
+    const response = await axiosInstance.get('/campus');
+    
+    dataCenters.value = response.data.result.map(center => ({
+      id: center.id,
+      name: center.name,
+    }));
+
+    selectCenterItems.value = dataCenters.value;
+  } catch (error) {
+    showAlert('Error fetching centers', 'error');
+  }
+};
+
+
+const getDataStudent = async () => {
+  try {
+    const response = await axiosInstance.get(`/students/${studentId.value}`);
+    const student = response.data.result;
+    id.value = student.id;
+    firstName.value = student.firstName;
+    lastName.value = student.lastName;
+    gender.value = student.gender;
+    dateOfBirth.value = student.dateOfBirth;
+    selectedImgStudent.value = student.image;
+    imagePreviewStudent.value = student.image;
+    notes.value = student.notes;
+    start_date_class.value = student.startDateOfClasses;
+    monday_enrolled.value = student.daysEnrolled.includes('Monday');
+    tuesday_enrolled.value = student.daysEnrolled.includes('Tuesday');
+    wednesday_enrolled.value = student.daysEnrolled.includes('Wednesday');
+    thursday_enrolled.value = student.daysEnrolled.includes('Thursday');
+    friday_enrolled.value = student.daysEnrolled.includes('Friday');
+    saturday_enrolled.value = student.daysEnrolled.includes('Saturday');
+    sunday_enrolled.value = student.daysEnrolled.includes('Sunday');
+    monday_before.value = student.beforeSchoolDays.includes('Monday');
+    tuesday_before.value = student.beforeSchoolDays.includes('Tuesday');
+    wednesday_before.value = student.beforeSchoolDays.includes('Wednesday');
+    thursday_before.value = student.beforeSchoolDays.includes('Thursday');
+    friday_before.value = student.beforeSchoolDays.includes('Friday');
+    saturday_before.value = student.beforeSchoolDays.includes('Saturday');
+    sunday_before.value = student.beforeSchoolDays.includes('Sunday');
+    monday_after.value = student.afterSchoolDays.includes('Monday');
+    tuesday_after.value = student.afterSchoolDays.includes('Tuesday');
+    wednesday_after.value = student.afterSchoolDays.includes('Wednesday');
+    thursday_after.value = student.afterSchoolDays.includes('Thursday');
+    friday_after.value = student.afterSchoolDays.includes('Friday');
+    saturday_after.value = student.afterSchoolDays.includes('Saturday');
+    sunday_after.value = student.afterSchoolDays.includes('Sunday');
+    select_center.value = student.campus.id;
+    mothers_name.value = student.contacts.find(contact => contact.relation === 'Mother')?.fullName || '';
+    mothers_number.value = student.contacts.find(contact => contact.relation === 'Mother')?.phone || '';
+    mothers_role.value = student.contacts.find(contact => contact.relation === 'Mother')?.role || '';
+    imagePreviewMother.value = student.contacts.find(contact => contact.relation === 'Mother')?.image || '';
+    selectedImgMother.value = student.contacts.find(contact => contact.relation === 'Mother')?.image || '';
+    fathers_name.value = student.contacts.find(contact => contact.relation === 'Father')?.fullName || '';
+    fathers_number.value = student.contacts.find(contact => contact.relation === 'Father')?.phone || '';
+    fathers_role.value = student.contacts.find(contact => contact.relation === 'Father')?.role || '';
+    selectedImgFather.value = student.contacts.find(contact => contact.relation === 'Father')?.image || '';
+    imagePreviewFather.value = student.contacts.find(contact => contact.relation === 'Father')?.image || '';
+    contact_name.value = student.contacts.find(contact => contact.role === 'EMERGENCY_1')?.fullName || '';
+    contact_number.value = student.contacts.find(contact => contact.role === 'EMERGENCY_1')?.phone || '';
+    type_relationship1.value = student.contacts.find(contact => contact.role === 'EMERGENCY_1')?.relation || '';
+    contact_name2.value = student.contacts.find(contact => contact.role === 'EMERGENCY_2')?.fullName || '';
+    contact_number2.value = student.contacts.find(contact => contact.role === 'EMERGENCY_2')?.phone || '';
+    type_relationship2.value = student.contacts.find(contact => contact.role === 'EMERGENCY_2')?.relation || '';
+    dataForProgram.value = student.additionalPrograms.map(program => ({
+      selected_program: program.id,
+    }));
+  } catch (error) {
+    showAlert(error, 'error');
+  }
+}
+
+const updateStudent = async () => {
   savingStudent.value = true;
   if (!firstName.value || 
   !lastName.value || 
@@ -752,10 +849,7 @@ const createStudent = async () => {
   !gender.value || 
   !notes.value ||
   !start_date_class.value ||
-  !select_center.value ||
-  !selectedImgFather.value ||
-  !selectedImgMother.value ||
-  !selectedImgStudent.value ) {
+  !select_center.value ) {
     showAlert('Please fill in all required fields', 'error');
     savingStudent.value = false;
     return;
@@ -837,16 +931,24 @@ const createStudent = async () => {
         });
       }
       formData.append('contacts', JSON.stringify(contactsData));
-      if (selectedImgStudent.value) {
+      if (selectedImgStudent.value && typeof selectedImgStudent.value !== 'string') {
+        formData.append('image', selectedImgStudent.value);
+      } else if (typeof selectedImgStudent.value === 'string') {
         formData.append('image', selectedImgStudent.value);
       }
-      if (selectedImgMother.value) {
+
+      if (selectedImgMother.value && typeof selectedImgMother.value !== 'string') {
         formData.append('imageContactPrimary', selectedImgMother.value);
-      }
-      if (selectedImgFather.value) {
+      } else if(typeof selectedImgMother.value === 'string') {
+        nothing.value=true;
+      } 
+
+      if (selectedImgFather.value && typeof selectedImgFather.value !== 'string') {
         formData.append('imageContactSecondary', selectedImgFather.value);
-      }
-      const response = await axiosInstance.post('/students', formData, {
+      } else if(typeof selectedImgFather.value === 'string') {
+        nothing.value=true;
+      } 
+      const response = await axiosInstance.patch(`/students/${studentId.value}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -860,39 +962,10 @@ const createStudent = async () => {
   }
 };
 
-const getPrograms = async () => {
-  try {
-    const response = await axiosInstance.get('/additional-programs');
-    
-    dataPrograms.value = response.data.result.map(program => ({
-      id: program.id,
-      name: program.name,
-    }));
-
-    selectProgramItem.value = dataPrograms.value;
-  } catch (error) {
-    showAlert('Error fetching programs', 'error');
-  }
-};
-
-const getCenters = async () => {
-  try {
-    const response = await axiosInstance.get('/campus');
-    
-    dataCenters.value = response.data.result.map(center => ({
-      id: center.id,
-      name: center.name,
-    }));
-
-    selectCenterItems.value = dataCenters.value;
-  } catch (error) {
-    showAlert('Error fetching centers', 'error');
-  }
-};
-
 onMounted(() => {
   getPrograms();
   getCenters();
+  getDataStudent();
 });
 </script>
 

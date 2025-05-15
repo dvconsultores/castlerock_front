@@ -19,20 +19,59 @@
         </v-icon>
       </v-btn>
 
-      <img src="@/assets/sources/icons/bell-notification.svg" alt="Bell" class="img-bell">
+      <v-menu
+        transition="scale-transition"
+      >
+        <template v-slot:activator="{ props }">
+          <img v-bind="props" src="@/assets/sources/icons/bell-notification.svg" alt="Bell" class="img-bell pointer">
+        </template>
+
+        <v-list v-for="(item, index) in dataNotes" :key="index">
+          <v-list-item :class="`${item.status === 'unread' ? 'shadow' : ''}`">
+            <v-list-item-title class="f14 font1 w500" style="color: #4E444B;">{{ item.title }}</v-list-item-title>
+            <v-list-item-subtitle class="f12 font1" style="color: #4E444B;">{{ item.message }}</v-list-item-subtitle>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
 
       <div class="div-img-user">
-        <img src="@/assets/sources/images/user.png" alt="">
+        <img :src="imageUser" alt="User Img">
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { toggleDrawer } from '@/store/drawerState.js';
+import axiosInstance from '@/plugins/axios';
 
+const dataNotes = ref([]);
+const imageUser = ref(null);
+
+const getNotes = async () => {
+  try {
+    const response = await axiosInstance.get('/notifications');
+    dataNotes.value = response.data.result.map((notifications) =>{
+      return {
+        id: notifications.id,
+        title: notifications.title, 
+        message: notifications.message,
+        status: notifications.status,
+      }
+    });;
+    console.log('Notifications:', response.data.result);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+  }
+};
+
+const getImg = async () =>{
+  imageUser.value = localStorage.getItem('userImage')
+};
 
 const route = useRoute();
 
@@ -48,11 +87,35 @@ const pageTitles = {
   '/home/daily-schedule': 'Daily Schedule',
   '/home/centers': 'Centers',
   '/home/new-center': 'New Center',
+  '/home/edit-center': 'Edit Center',
   '/home/teachers': 'Teachers',
   '/home/new-teacher': 'New Teacher',
 };
 
 const currentTitle = computed(() => {
+  if (route.path.startsWith('/home/edit-center')) {
+    return 'Edit Center';
+  } else if (route.path.startsWith('/home/view-center')) {
+    return 'View Center';
+  } else if (route.path.startsWith('/home/edit-teacher')) {
+    return 'Edit Teacher';
+  } else if (route.path.startsWith('/home/view-teacher')) {
+    return 'View Teacher';
+  } else if (route.path.startsWith('/home/student-profile')) {
+    return 'Student Profile';
+  } else if (route.path.startsWith('/home/classroom-profile')) {
+    return 'Classroom Profile';
+  } else if (route.path.startsWith('/home/teacher-profile')) {
+    return 'Teacher Profile';
+  } else if (route.path.startsWith('/home/edit-student')) {
+    return 'Edit Student';
+  } else if (route.path.startsWith('/home/view-student')) {
+    return 'View Student';
+  } else if (route.path.startsWith('/home/edit-program')) {
+    return 'Edit Program';
+  } else if (route.path.startsWith('/home/view-program')) {
+    return 'View Program';
+  }
   return pageTitles[route.path] || 'Dashboard';
 });
 
@@ -69,12 +132,19 @@ const subTitle = {
   '/home/student-profile': 'Profile',
   '/home/centers': 'Centers',
   '/home/new-center': 'Add a new center',
+  '/home/edit-center': '',
   '/home/teachers': 'Teachers',
   '/home/new-teacher': 'Add a new teacher',
 }
 
 const currentSubTitle = computed(() => {
   return subTitle[route.path] || '';
+});
+
+
+onMounted(() => {
+  getNotes();
+  getImg();
 });
 </script>
 
@@ -168,6 +238,22 @@ const currentSubTitle = computed(() => {
       }
     }
   }
+}
+
+.v-list{
+  border: 1px solid #7583D9!important;
+}
+
+.shadow{
+  background-color: rgba(#000000, 0.1)!important;
+}
+
+.v-list-item{
+  padding-block: 0px!important;
+  margin: 0px;
+  height: 40px;
+  min-height: 40px!important;
+  min-width: 200px;
 }
 
 </style>

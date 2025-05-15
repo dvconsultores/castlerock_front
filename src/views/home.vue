@@ -2,12 +2,12 @@
   <div id="home">
     <div class="title-home-div">
       <div class="div1">
-        <h3 class="tstart">Good morning,<br>{{nameUser}}!</h3>
+        <h3 class="tstart">Good morning,<br>{{ userName }} {{ userLastName }}!</h3>
       </div>
 
       <div class="divcol div2">
-        <h3>March 24, 2025 / 09:33 am</h3>
-        <span>4th Week (Mon, Mar 24 - Sun, Mar 30)</span>
+        <h3>{{ formattedDateTime }}</h3>
+        <span>{{ weekInfo }}</span>
       </div>
     </div>
 
@@ -136,7 +136,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, inject, onMounted, computed } from 'vue';
 import calendar from '@/assets/sources/icons/calendar.svg';
 import classroms from '@/assets/sources/icons/classroms.svg';
 import students from '@/assets/sources/icons/students.svg';
@@ -145,9 +145,78 @@ import centers from '@/assets/sources/icons/centers.svg';
 import imgUser from '@/assets/sources/images/user.png';
 import imgUser2 from '@/assets/sources/images/user-2.png';
 import imgStudent from '@/assets/sources/images/student-1.png';
+import axiosInstance from '@/plugins/axios';
+import dayjs from 'dayjs';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+import isLeapYear from 'dayjs/plugin/isLeapYear';
+import 'dayjs/locale/en';
+
+dayjs.extend(weekOfYear);
+dayjs.extend(isLeapYear);
+dayjs.locale('en');
+
+const currentDate = ref(dayjs()); 
+
+const formattedDateTime = computed(() => {
+  return currentDate.value.format('MMMM D, YYYY / hh:mm a');
+});
+
+const getWeekOfMonth = (date) => {
+  const firstDayOfMonth = date.startOf('month');
+  const firstDayOfWeek = firstDayOfMonth.startOf('week');
+  
+  const offset = firstDayOfMonth.diff(firstDayOfWeek, 'day') + 1;
+  return Math.ceil((date.date() + offset) / 7);
+};
+
+const weekInfo = computed(() => {
+  const weekOfMonth = getWeekOfMonth(currentDate.value);
+  console.log('Week of Month:', weekOfMonth);
+  const startOfWeek = currentDate.value.startOf('week');
+  const endOfWeek = currentDate.value.endOf('week');
+  
+  return `${weekOfMonth}${getOrdinalSuffix(weekOfMonth)} Week (${startOfWeek.format('ddd, MMM D')} - ${endOfWeek.format('ddd, MMM D')})`;
+});
+
+function getOrdinalSuffix(num) {
+  const j = num % 10;
+  const k = num % 100;
+  if (j === 1 && k !== 11) return 'st';
+  if (j === 2 && k !== 12) return 'nd';
+  if (j === 3 && k !== 13) return 'rd';
+  return 'th';
+};
 
 
-const nameUser = 'Emily Brown';
+const userName = ref('User');
+const userLastName = ref('');
+const isLoading = ref(true);
+
+const loadUserData = async () => {
+  const userId = localStorage.getItem('idUser');
+  if (!userId) {
+    console.error('No user ID found in localStorage');
+    isLoading.value = false;
+    return;
+  }
+
+  try {
+    const response = await axiosInstance.get(`/users/${userId}`);
+    console.log('User data response:', response.data);
+    
+    if (response.data?.result) {
+      const userData = response.data.result;
+      userName.value = userData.firstName || userData.firstname || '';
+      userLastName.value = userData.lastName || userData.lastname || '';
+    } else {
+      console.error('Unexpected response format:', response.data);
+    }
+  } catch (error) {
+    console.error('Failed to load user data:', error.response?.data || error.message);
+  } finally {
+    isLoading.value = false;
+  }
+}
 
 const sheetDataAbsences = ref ([
   {
@@ -353,16 +422,20 @@ const dataSheets = ref([
     imgIcon: teachers,
     titleSheet: 'New Teacher',
     subTitleSheet: 'Register a Teacher',
-    route: '/home/teachers'
+    route: '/home/new-teacher'
   },
   {
     imgIcon: centers,
     titleSheet: 'New Center',
     subTitleSheet: 'Register a Center',
-    route: '/home/centers'
+    route: '/home/new-center'
   }
 ]);
 
+
+onMounted(() => {
+  loadUserData();
+});
 </script>
 
 <style lang="scss">

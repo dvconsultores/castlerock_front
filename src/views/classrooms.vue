@@ -1,6 +1,6 @@
 <template>
   <div id="classrooms">
-    <v-data-table :items="dataClassrooms" :headers="headers" hide-default-footer>
+    <v-data-table :items="dataClassroomsFiltered" :headers="headers" :items-per-page="15">
       <template v-slot:top>
         <div class="flex gap4 center" style="background-color: #F0F0F0 ;">
           <v-text-field
@@ -13,12 +13,12 @@
             append-inner-icon="mdi-magnify"
           ></v-text-field>
 
-          <v-btn flat id="btn-search">
+          <v-btn flat id="btn-search" @click="$router.push('/home/new-weekly-schedule')">
             <v-icon color="#FFFFFF" class="mr-3">mdi-calendar</v-icon>
             New Weekly Enrollment
           </v-btn>
 
-          <v-btn flat id="btn-search-mobile">
+          <v-btn flat id="btn-search-mobile" @click="$router.push('/home/new-weekly-schedule')">
             <v-icon color="#FFFFFF" class="mr-3">mdi-calendar</v-icon>
           </v-btn>
         </div>
@@ -38,9 +38,9 @@
 
       <template v-slot:item.actions="{ item }">
         <div class="flex center gap2">
-          <v-icon color="#474649" size="24" class="pointer" @click="$router.push('/home/new-weekly-schedule')">mdi-calendar</v-icon>
-          <v-icon color="#474649" size="24" class="pointer">mdi-pencil-outline</v-icon>
-          <v-icon color="#474649" size="24" class="pointer" @click="openDelete">mdi-trash-can-outline</v-icon>
+          <v-icon color="#474649" size="24" class="pointer" @click="$router.push(`/home/edit-weekly-schedule/${item.id}`)">mdi-calendar</v-icon>
+          <v-icon color="#474649" size="24" class="pointer" @click="$router.push(`/home/edit-classroom/${item.id}`)">mdi-pencil-outline</v-icon>
+          <v-icon color="#474649" size="24" class="pointer" @click="openDelete(item)">mdi-trash-can-outline</v-icon>
         </div>
       </template>
     </v-data-table>
@@ -54,10 +54,10 @@
         <img src="@/assets/sources/icons/trash.svg" alt="Trash">
         <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to delete this classroom?</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400"><span class="w500" style="color: #7583D9;">Guppies,</span> Center 1 </span>
+        <span class="f16 w400"><span class="w500" style="color: #7583D9;">{{ nameClass }},</span> {{ centerName }} </span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1" @click="openConfirmation">Yes, delete</v-btn>
-          <v-btn flat class="btn2" @click="closeDelete">No, cancel</v-btn>
+          <v-btn flat class="btn1" @click="openConfirmation" :loading="loadingConfirmation">Yes, delete</v-btn>
+          <v-btn flat class="btn2" @click="dialogDeleteClassroom = false">No, cancel</v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -67,118 +67,106 @@
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
         <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully deleted!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The record of student <span class="w600" style="color: #7583D9;">Guppies</span> has been successfully deleted.</span>
+        <span class="f16 w400 tcenter">The record of class <span class="w600" style="color: #7583D9;">{{ nameClass }}</span> has been successfully deleted.</span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1">Management</v-btn>
-          <v-btn flat class="btn2" @click="closeConfirmation">New Classroom</v-btn>
+          <v-btn flat class="btn1" @click="refreshData">Management</v-btn>
+          <v-btn flat class="btn2" @click="$router.push('/home/new-classroom')">New Classroom</v-btn>
         </div>
-        <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home/home')">Go home</span>
+        <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home')">Go home</span>
       </v-card>
     </v-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import guppie from '@/assets/sources/images/guppie.png';
-import lion from '@/assets/sources/images/lion.png';
+import { ref, inject, onMounted, computed } from 'vue';
+import axiosInstance from '@/plugins/axios';
 
 const dialogDeleteClassroom = ref(false);
 const dialogConfirmationClassroom = ref(false);
+const showAlert = inject('showAlert');
+const searchQuery = ref('');
+const idClass = ref('');
+const nameClass = ref(''); 
+const centerName = ref('');
+const loadingConfirmation = ref(false);
+const dataClassrooms = ref([]);
 
-const closeDelete = () => {
-  dialogDeleteClassroom.value = false;
-};
-
-const closeConfirmation = () => {
-  dialogConfirmationClassroom.value = false;
-};
-
-const openDelete = () => {
+const openDelete = (item) => {
   dialogDeleteClassroom.value = true;
+  idClass.value = item.id;
+  nameClass.value = item.name;
+  centerName.value = item.center;
 };
 
-const openConfirmation = () => {
-  dialogDeleteClassroom.value = false;
-  dialogConfirmationClassroom.value = true;
+const refreshData = () => {
+  dialogConfirmationClassroom.value = false;
+  getDataClassrooms();
+};  
+
+const openConfirmation = async () => {
+  loadingConfirmation.value = true;
+  
+  try{
+    const response = await axiosInstance.delete(`/classes/${idClass.value}`);
+    loadingConfirmation.value = false;
+    dialogDeleteClassroom.value = false;
+    dialogConfirmationClassroom.value = true;
+  }catch(error){
+    loadingConfirmation.value = false;
+    showAlert('Error deleting classroom', 'error');
+  }
+};
+
+const dataClassroomsFiltered = computed(() => {
+  if (!searchQuery.value) return dataClassrooms.value;
+  
+  const query = searchQuery.value.toLowerCase();
+  return dataClassrooms.value.filter(classes => {
+    const safeToString = (value) => value ? value.toString().toLowerCase() : '';
+    return (
+      safeToString(classes.name).includes(query) ||
+      safeToString(classes.program).includes(query) ||
+      safeToString(classes.center).includes(query) ||
+      safeToString(classes.number_students).includes(query)
+    );
+  }
+  );
+});
+
+const getDataClassrooms = async () => {
+  try {
+    const response = await axiosInstance.get('/classes');
+    dataClassrooms.value = response.data.result.map((classes, index) =>{
+      return {
+        id: classes.id,
+        id_classroom: index + 1,
+        name: classes.name,
+        program: classes.program,
+        center: classes.campus.name,
+        number_students: classes.maxCapacity,
+        classroom_img: classes.image,
+      }
+    });
+  } catch (error) {
+    showAlert('Error fetching classrooms', 'error');
+  }
 };
 
 const headers = ref([
     { title: '', key: 'classroom_img', sortable: false },
     { title: 'Id.', key: 'id_classroom', align:'center', sortable: false },
-    { title: 'Activity Type', key: 'classroom', align:'center', sortable: false },
+    { title: 'Name', key: 'name', align:'center', sortable: false },
     { title: 'Program', key: 'program', align: 'center', sortable: false  },
     { title: 'Center', key: 'center', align: 'center', sortable: false  },
     { title: '# Students', key: 'number_students', align: 'center', sortable: false  },
     { title: 'Actions', key: 'actions', align: 'center', sortable: false  },
 ]);
 
-const dataClassrooms = ref([
-    {
-      classroom_img: guppie,
-      id_classroom: '1',
-      classroom: 'Guppies',
-      program: 'Primary',
-      center: 'Center 1',
-      number_students: 8,
-    },
-    {
-      classroom_img: lion,
-      id_classroom: '2',
-      classroom: 'Lion',
-      program: 'Toddler',
-      center: 'Center 2',
-      number_students: 10,
-    },
-    {
-      classroom_img: guppie,
-      id_classroom: '3',
-      classroom: 'Guppies',
-      program: 'Primary',
-      center: 'Center 1',
-      number_students: 8,
-    },
-    {
-      classroom_img: lion,
-      id_classroom: '4',
-      classroom: 'Lion',
-      program: 'Toddler',
-      center: 'Center 2',
-      number_students: 10,
-    },
-    {
-      classroom_img: guppie,
-      id_classroom: '5',
-      classroom: 'Guppies',
-      program: 'Primary',
-      center: 'Center 1',
-      number_students: 8,
-    },
-    {
-      classroom_img: lion,
-      id_classroom: '6',
-      classroom: 'Lion',
-      program: 'Toddler',
-      center: 'Center 2',
-      number_students: 10,
-    },
-    {
-      classroom_img: guppie,
-      id_classroom: '7',
-      classroom: 'Guppies',
-      program: 'Primary',
-      center: 'Center 1',
-      number_students: 8,
-    },
-    {
-      classroom_img: lion,
-      id_classroom: '8',
-      classroom: 'Lion',
-      program: 'Toddler',
-      center: 'Center 2',
-      number_students: 10,
-    },
-  ])
+onMounted(() => {
+  getDataClassrooms();
+});
+
 </script>
 
 <style lang="scss">

@@ -1,6 +1,6 @@
 <template>
   <div id="new-center">
-    <h3 class="font2 f32 tleft mt-6" style="color: #262B63;">New Center</h3>
+    <h3 class="font2 f32 tleft mt-6" style="color: #262B63;">Edit Center</h3>
     <v-form class="form-div">
       <v-row>
         <v-col cols="12" sm="8" class="pb-0">
@@ -57,15 +57,15 @@
 
         <v-col cols="12">
           <v-card flat class="card-img-upload flexcol center gap1">
-            <template v-if="!imagePreview">
+            <template v-if="!imagePreview && !currentImage">
               <img src="@/assets/sources/icons/cloud_upload.svg" alt="Cloud">
               <span class="mb-0 font2 f22 tcenter">Upload Image</span>
               <span class="f16 w400 mb-4">Drag and drop the image</span>
             </template>
             
-            <div class="img-preview-container" v-if="imagePreview">
+            <div class="img-preview-container" v-if="imagePreview || currentImage">
               <img 
-                :src="imagePreview" 
+                :src="imagePreview || currentImage" 
                 alt="Preview" 
                 class="preview-image"
               >
@@ -88,15 +88,15 @@
       </v-row>
     </v-form>
 
-    <v-dialog v-model="dialogAddCenter" content-class="dialogAdd" persistent>
+    <v-dialog v-model="dialogUpdateCenter" content-class="dialogAdd" persistent>
       <v-card class="card-add-program">
         <img src="@/assets/sources/icons/save.svg" alt="Save">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to create this new center?</span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to update this center?</span>
         <hr class="mt-2 mb-5">
         <span class="w500" style="color: #7583D9;">{{ center_name }}</span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1" @click="createCenter" :loading="loadingCenter">Yes, add</v-btn>
-          <v-btn flat class="btn2" @click="closeAddCenter">No, cancel</v-btn>
+          <v-btn flat class="btn1" @click="updateCenter" :loading="loadingCenter">Yes, update</v-btn>
+          <v-btn flat class="btn2" @click="closeUpdateCenter">No, cancel</v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -104,12 +104,12 @@
     <v-dialog v-model="dialogConfirmationCenter" content-class="dialogConfirmationCenter" persistent>
       <v-card class="card-confirmation-program">
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully saved!</span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully updated!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The new center <span class="w600" style="color: #7583D9;">{{ center_name }}</span> has been successfully created</span>
+        <span class="f16 w400 tcenter">The center <span class="w600" style="color: #7583D9;">{{ center_name }}</span> has been successfully updated</span>
         <div class="btn-divs mt-8">
           <v-btn flat class="btn1" @click="$router.push('/home/centers')">Centers</v-btn>
-          <v-btn flat class="btn2" @click="closeConfirmationCenter">New Center</v-btn>
+          <v-btn flat class="btn2" @click="dialogConfirmationCenter = false">Edit Center</v-btn>
         </div>
         <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home')">Go home</span>
       </v-card>
@@ -118,20 +118,23 @@
 </template>
 
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import axiosInstance from '@/plugins/axios';
 
-
+const route = useRoute();
+const centerId = ref(route.params.id);
+const showAlert = inject('showAlert');
 const fileInput = ref(null);
 const selectedImgCenter = ref(null);
 const imagePreview = ref(null);
+const currentImage = ref(null);
 const center_name = ref('');
 const phone_center = ref(''); 
 const nickname_center = ref('');
 const address = ref('');
 const loadingCenter = ref(false);
-const showAlert = inject('showAlert');
-const dialogAddCenter = ref(false);
+const dialogUpdateCenter = ref(false);
 const dialogConfirmationCenter = ref(false);
 
 const handleFileChange = (file) => {
@@ -146,29 +149,35 @@ const triggerFileInput = () => {
   fileInput.value.$el.querySelector('input[type="file"]').click();
 };
 
-const closeConfirmationCenter = () => {
-  center_name.value = '';
-  phone_center.value = '';
-  nickname_center.value = '';
-  address.value = '';
-  imagePreview.value = null;
-  dialogConfirmationCenter.value = false;
-};
-
 const openSaveCenter = () => {
-  if (center_name.value?.trim() && phone_center.value?.trim() && nickname_center.value?.trim() && address.value?.trim() && imagePreview.value) {
-    dialogAddCenter.value = true;
+  if (center_name.value?.trim() && phone_center.value?.trim() && nickname_center.value?.trim() && address.value?.trim() && imagePreview.value || currentImage.value) {
+    dialogUpdateCenter.value = true;
   }else {
     showAlert('Please fill in all fields', 'error');
     return;
   }
 };
 
-const closeAddCenter = () => {
-  dialogAddCenter.value = false;
+const closeUpdateCenter = () => {
+  dialogUpdateCenter.value = false;
 };
 
-const createCenter = async () => {
+const loadCenterData = async () => {
+  try {
+    const response = await axiosInstance.get(`/campus/${centerId.value}`);
+    const center = response.data.result;
+    
+    center_name.value = center.name;
+    phone_center.value = center.phone;
+    nickname_center.value = center.nickname;
+    address.value = center.address;
+    currentImage.value = center.image;
+  } catch (error) {
+    console.error('Failed to load center data', error);
+  }
+};
+
+const updateCenter = async () => {
   loadingCenter.value = true;
   try {
     const formData = new FormData();
@@ -180,21 +189,24 @@ const createCenter = async () => {
     if (selectedImgCenter.value) {4
       formData.append('image', selectedImgCenter.value);
     }
-    const response = await axiosInstance.post('/campus', formData, {
+    const response = await axiosInstance.patch(`/campus/${centerId.value}`, formData,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     });
 
     loadingCenter.value = false;
-    dialogAddCenter.value = false;
+    dialogUpdateCenter.value = false;
     dialogConfirmationCenter.value = true;
   } catch (error) {
-    showAlert('Failed to create centers', 'error');
+    showAlert('Failed to update center', 'error');
     loadingCenter.value = false;
   }
 };
 
+onMounted(() => {
+  loadCenterData();
+});
 </script>
 
 <style lang="scss">

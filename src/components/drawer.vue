@@ -9,7 +9,7 @@
         <span class="w600 f14" style="color: #262262;">Home</span>
       </div>
 
-      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/centers') || isRouteActive('/home/new-center')}" @click="$router.push('/home/centers')">
+      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/home/centers') || isRouteActive('/home/new-center') || isRouteActive('/home/edit-center')}" @click="$router.push('/home/centers')">
         <img src="@/assets/sources/icons/centers.svg" alt="Centers">
         <span class="w600 f14" style="color: #262262;">Centers</span>
       </div>
@@ -34,7 +34,7 @@
         <span class="w600 f14 tcenter" style="color: #262262; line-height: 100%;">Programs</span>
       </div>
 
-      <div class="logout-container mt-12 pointer" @click="$router.push('/')">
+      <div class="logout-container mt-12 pointer" @click="logOut">
         <img src="@/assets/sources/icons/logout.svg" alt="Logout">
         <span class="w600 f14 tcenter" style="color: #262262;">Log out</span>
       </div>
@@ -50,6 +50,13 @@ const route = useRoute();
 
 const isRouteActive = (path) => {
   return route.path === path
+};
+
+const logOut = () => {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('idUser');
+  localStorage.removeItem('userRole');
+  window.location.href = '/';
 };
 </script>
 

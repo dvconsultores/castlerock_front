@@ -8,8 +8,9 @@
           v-model.number="select_center"
           placeholder="Select Center"
           flat
+          readonly
           class="autocomplete-register"
-          menu-icon="mdi-chevron-up"
+          menu-icon=""
           :items="selectCenterItems"
           item-value="id"
           item-title="name"
@@ -42,10 +43,11 @@
           v-model.number="select_class"
           placeholder="Classroom"
           flat
+          readonly
           class="autocomplete-register"
           model
           return-object
-          menu-icon="mdi-chevron-up"
+          menu-icon=""
           :items="selectedClassItems"
           item-value="id"
           item-title="name"
@@ -109,9 +111,6 @@
             contentClass: 'rounded-menu',
           }"
         ></v-autocomplete>
-      </v-col>
-      <v-col v-if="!showStatePlanning" cols="12" align="right">
-        <v-btn class="btn btn-create" flat @click="createNewPlanning" :loading="loadingCreate">Create planning</v-btn>
       </v-col>
     </v-row>
 
@@ -219,10 +218,15 @@ dayjs.extend(weekOfYear);
 dayjs.extend(isLeapYear);
 dayjs.locale(locale);
 
+
+const route = useRoute();
+const idClass = ref(route.params.id);
 const dialogOpenDelete = ref(false);
 const dialogConfirmationDaily = ref(false);
 const loadingDelete = ref(false);
 const dailyScheduleToDelete = ref(null);
+const select_id = ref(null);
+const class_id = ref(null);
 
 const openDeleteDialog = (day) => {
   if (!day.dailyScheduleId) {
@@ -353,30 +357,6 @@ watch(month, () =>{
   month_selected.value = month.value.name
 });
 
-const createNewPlanning = async () =>{
-  // if (!week.value) {
-  //   showAlert('Please select a week', 'error');
-  //   return;
-  // }
-
-  loadingCreate.value = true;
-  try{
-    const response = await axiosInstance.post('/planning', {
-      year: year.value?.id,
-      month: month.value?.id,
-      week: week.value,
-      campus: select_center.value,
-      class: select_class.value,
-    });
-    showAlert('New Planning created succesfully!', 'success');
-    searchPlannings();
-    loadingCreate.value = false;
-  }catch(error){
-    showAlert(error, 'error')
-    loadingCreate.value = false;
-  }
-};
-
 const transformResponseToMonthlySchedule = (response) => {
   const weeks = [];
   const weekTitles = ["1st Week -", "2nd Week -", "3rd Week -", "4th Week -", "5th Week -"];
@@ -482,9 +462,10 @@ const getClasses = async () =>{
 
 const planningData = ref([]);
 
+
 const searchPlannings = async () =>{
   try{
-      const response = await axiosInstance.get(`/planning/search?campus=${select_center.value}&year=${year.value?.id}&month=${month.value?.id}&class=${select_class.value}`, {
+      const response = await axiosInstance.get(`/planning/search?campus=${select_id.value}&year=${year.value?.id}&month=${month.value?.id}&class=${class_id.value}`, {
     });
     if(response.data.result.length === 0){
       showStatePlanning.value = false;
@@ -494,7 +475,6 @@ const searchPlannings = async () =>{
       monthlySchedule.value = transformResponseToMonthlySchedule(response.data);
       planningData.value = response.data.result;
     }
-    console.log(response.data.result, 'Planning')
   }catch(error){
     showAlert(error, 'error')
   }
@@ -540,9 +520,23 @@ const deleteDailySchedule = async (dailyScheduleId) => {
   }
 };
 
+const loadClass = async () =>{
+  try{
+    const response = await axiosInstance.get(`/classes/${idClass.value}`)
+    select_center.value = response.data.result.campus.name
+    select_class.value = response.data.result.name
+    class_id.value = response.data.result.id
+    select_id.value = response.data.result.campus.id
+  }catch(error){
+    showAlert('Error', 'error')
+  }
+
+};
+
 onMounted(() =>{
   getCenters();
   getClasses();
+  loadClass();
 });
 </script>
 

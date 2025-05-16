@@ -14,7 +14,7 @@
 
 <script setup>
 import { ref, provide } from 'vue';
-import Alert from '@/components/Alert.vue';
+import Alert from '@/components/alert.vue';
 
 const showAlert = ref(false);
 const alertMessage = ref('');

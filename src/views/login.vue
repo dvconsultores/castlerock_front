@@ -119,6 +119,7 @@ const loginFunction = async () => {
   if (email.value?.trim() && password.value?.trim()) {
     loadingLogin.value = true;
   try {
+    console.log('URL completa:', axiosInstance.defaults.baseURL + '/auth/login');
     const response = await axiosInstance.post('/auth/login', {
       email: email.value,
       password: password.value

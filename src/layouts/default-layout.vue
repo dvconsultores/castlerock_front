@@ -20,7 +20,7 @@ import { ref, provide } from 'vue';
 import '@/assets/styles/layouts/default-layout.scss'
 import Drawer from '@/components/drawer.vue'
 import Navbar from '@/components/navbar.vue'
-import Alert from '@/components/Alert.vue';
+import Alert from '@/components/alert.vue';
 
 const showAlert = ref(false);
 const alertMessage = ref('');

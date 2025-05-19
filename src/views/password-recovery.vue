@@ -16,20 +16,24 @@
       prepend-inner-icon="mdi-email-outline" 
       placeholder="Enter your email recovery"
       hide-details
+      maxlength="150"
       class="login-textfield"
       @keyup.enter="resetPassword"
       ></v-text-field>
 
-      <v-text-field 
+      <v-text-field
       v-model="token"
-      variant="solo" 
+      variant="solo"
       flat
-      prepend-inner-icon="mdi-numeric" 
+      prepend-inner-icon="mdi-numeric"
       placeholder="Enter your recovery code"
       hide-details
+      maxlength="6"
       class="login-textfield"
       type="number"
       hide-spin-buttons
+      :rules="tokenRules"
+      @input="sanitizeToken"
       @keyup.enter="resetPassword"
       ></v-text-field>
 
@@ -37,6 +41,7 @@
       v-model="password"
       variant="solo"
       flat
+      maxlength="150"
       :append-inner-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off'"
       placeholder="Enter your new password"
       @click:append-inner="showPassword = !showPassword"
@@ -50,6 +55,7 @@
       v-model="passwordConfirmation"
       variant="solo"
       flat
+      maxlength="150"
       :append-inner-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off'"
       placeholder="Confirm your new password"
       :rules="passwordMatchRule"
@@ -90,9 +96,19 @@ const passwordRules = [
   (v) => /[a-z]/.test(v) || 'Must contain at least 1 lowercase letter',
 ];
 
+const tokenRules = [
+  (v) => !!v || 'Recovery code is required',
+  (v) => /^\d+$/.test(v) || 'Only numbers are allowed',
+  (v) => v.length === 6 || 'Code must be 6 digits'
+];
+
 const passwordMatchRule = computed(() => [
   (v) => v === password.value || 'Passwords must match',
 ]);
+
+const sanitizeToken = () => {
+  token.value = token.value.replace(/\D/g, '');
+};
 
 const isValidForm = computed(() => {
   return email.value &&
@@ -106,24 +122,37 @@ const isValidForm = computed(() => {
 const resetPassword = async () => {
   if (email.value?.trim() && token.value?.trim() && password.value?.trim() && passwordConfirmation.value?.trim()) {
     loadingReset.value = true;
-    try {
-      const response = await axiosInstance.post('/auth/reset-password', {
-        email: email.value,
-        token: token.value,
-        newPassword: passwordConfirmation.value,
-      });
-      
-      loadingReset.value = false;
-      showAlert('Password reset succesfully!', 'success');
-      setTimeout(() => {
-        router.push('/');
-        console.log('Redirecting to login page...');
-      }, 2000);
-    } catch (error) {
-      loadingReset.value = false;
-      const errorMessage = error.response?.data?.message?.[0] || error.response?.data?.error || 'Failed to send recovery email';    
-      showAlert(errorMessage, 'error');
-    }
+
+  if (!email.value?.trim()) {
+    showAlert('Please enter a valid email address', 'error');
+    loadingReset.value = false;
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email.value)) {
+    showAlert('Please enter a valid email format (e.g. user@example.com)', 'error');
+    loadingReset.value = false;
+    return;
+  }
+  try {
+    const response = await axiosInstance.post('/auth/reset-password', {
+      email: email.value,
+      token: token.value,
+      newPassword: passwordConfirmation.value,
+    });
+    
+    loadingReset.value = false;
+    showAlert('Password reset succesfully!', 'success');
+    setTimeout(() => {
+      router.push('/');
+      console.log('Redirecting to login page...');
+    }, 2000);
+  } catch (error) {
+    loadingReset.value = false;
+    const errorMessage = error.response?.data?.message?.[0] || error.response?.data?.error || 'Failed to send recovery email';    
+    showAlert(errorMessage, 'error');
+  }
   } else {
     showAlert('Please fill in all fields', 'error');
   }

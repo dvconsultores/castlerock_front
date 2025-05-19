@@ -15,6 +15,7 @@
       prepend-inner-icon="mdi-email-outline"
       placeholder="Enter your email or username"
       hide-details
+      maxlength="150"
       class="login-textfield mt-14"
       @keyup.enter="loginFunction"
       ></v-text-field>
@@ -23,6 +24,7 @@
       v-model="password"
       variant="solo"
       flat
+      maxlength="150"
       prepend-inner-icon="mdi-lock-outline"
       :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
       @click:append-inner="showPassword = !showPassword"
@@ -115,14 +117,23 @@ const password = ref('');
 const loadingLogin = ref(false);
 const showPassword = ref(false);
 const showAlert = inject('showAlert');
-const BASE_URL = process.env.VITE_BASE_URL_API
 
 const loginFunction = async () => {
+  if (!email.value?.trim()) {
+    showAlert('Please enter a valid email address', 'error');
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email.value)) {
+    showAlert('Please enter a valid email format (e.g. user@example.com)', 'error');
+    return;
+  }
+
   if (email.value?.trim() && password.value?.trim()) {
     loadingLogin.value = true;
   try {
-    console.log('URL completa:', BASE_URL + '/auth/login');
-    const response = await axiosInstance.post(BASE_URL +'/auth/login', {
+    const response = await axiosInstance.post('/auth/login', {
       email: email.value,
       password: password.value
     });

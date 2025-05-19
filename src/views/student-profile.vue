@@ -34,6 +34,7 @@
                 v-model="firstName"
                 class="login-textfield"
                 readonly
+                maxLength="150"
                 placeholder="Student Name"
                 variant="solo" 
                 flat
@@ -46,6 +47,7 @@
                 class="login-textfield"
                 placeholder="Student Last Name"
                 variant="solo"
+                maxLength="150"
                 flat
                 hide-details
                 readonly
@@ -58,6 +60,7 @@
               <v-text-field
                 v-model="dateOfBirth"
                 class="login-textfield"
+                maxLength="150"
                 placeholder="Date of Birth"
                 variant="solo"
                 flat
@@ -72,7 +75,7 @@
                 placeholder="Select Center"
                 flat
                 class="autocomplete-register"
-                menu-icon="mdi-chevron-up"
+                menu-icon=""
                 :items="selectCenterItems"
                 item-value="id"
                 item-title="name"
@@ -111,7 +114,7 @@
                 placeholder="Gender"
                 flat
                 class="autocomplete-register"
-                menu-icon="mdi-chevron-up"
+                menu-icon=""
                 :items="['M', 'F', 'Other']"
                 variant="solo"
                 readonly
@@ -149,6 +152,7 @@
             v-model="mothers_name"
             class="login-textfield"
             bg-color="#F0F0F0 "
+            maxLength="150"
             placeholder="Mother's Name"
             variant="solo"
             flat
@@ -160,6 +164,7 @@
           <v-text-field
             v-model="fathers_name"
             class="login-textfield"
+            maxLength="150"
             bg-color="#F0F0F0 "
             placeholder="Father's Name"
             variant="solo"
@@ -172,6 +177,7 @@
           <v-text-field
             v-model="mothers_number"
             class="login-textfield"
+            maxLength="150"
             bg-color="#F0F0F0 "
             placeholder="Mother's contact number"
             variant="solo"
@@ -187,6 +193,7 @@
           <v-text-field
             v-model="fathers_number"
             class="login-textfield"
+            maxLength="150"
             bg-color="#F0F0F0 "
             placeholder="Father's contact number"
             variant="solo"
@@ -205,7 +212,7 @@
             flat
             bg-color="#F0F0F0"
             class="autocomplete-register"
-            menu-icon="mdi-chevron-up"
+            menu-icon=""
             hide-details
             :items="['PRIMARY', 'SECONDARY']"
             variant="solo"
@@ -222,7 +229,7 @@
             flat
             bg-color="#F0F0F0"
             class="autocomplete-register"
-            menu-icon="mdi-chevron-up"
+            menu-icon=""
             hide-details
             :items="['PRIMARY', 'SECONDARY']"
             variant="solo"
@@ -243,6 +250,7 @@
           <v-text-field
             v-model="contact_name"
             class="login-textfield"
+            maxLength="150"
             bg-color="#F0F0F0 "
             placeholder="Contact Name 1"
             variant="solo"
@@ -256,6 +264,7 @@
           <v-text-field
             v-model="contact_name2"
             class="login-textfield"
+            maxLength="150"
             bg-color="#F0F0F0 "
             placeholder="Contact Name 2"
             variant="solo"
@@ -272,7 +281,7 @@
             flat
             bg-color="#F0F0F0 "
             class="autocomplete-register"
-            menu-icon="mdi-chevron-up"
+            menu-icon=""
             hide-details
             :items="['Grandmother', 'Grandfather', 'Aunt', 'Uncle', 'Sibling', 'Legal Guardian', 'Family Friend', 'Other']"
             variant="solo"
@@ -291,7 +300,7 @@
             bg-color="#F0F0F0 "
             class="autocomplete-register"
             hide-details
-            menu-icon="mdi-chevron-up"
+            menu-icon=""
             :items="['Grandmother', 'Grandfather', 'Aunt', 'Uncle', 'Sibling', 'Legal Guardian', 'Family Friend', 'Other']"
             variant="solo"
             readonly
@@ -307,6 +316,7 @@
             class="login-textfield"
             bg-color="#F0F0F0 "
             placeholder="Contact Number 1"
+            maxLength="150"
             variant="solo"
             append-inner-icon="mdi-phone-outline"
             flat
@@ -319,6 +329,7 @@
           <v-text-field
             v-model="contact_number2"
             class="login-textfield"
+            maxLength="150"
             bg-color="#F0F0F0 "
             placeholder="Contact Number 2"
             variant="solo"
@@ -340,6 +351,7 @@
           v-model="notes"
           placeholder="Notes" variant="solo"
           flat
+          maxLength="300"
           hide-details
           bg-color="#F0F0F0"
           class="text-area"
@@ -360,6 +372,7 @@
             v-model="start_date_class"
             class="login-textfield"
             placeholder="First Day of School"
+            maxLength="150"
             variant="solo"
             append-inner-icon="mdi-calendar"
             flat
@@ -462,7 +475,7 @@
             bg-color="#F0F0F0 "
             class="autocomplete-register"
             hide-details
-            menu-icon="mdi-chevron-up"
+            menu-icon=""
             :items="selectProgramItem"
             item-value="id"
             item-title="name"

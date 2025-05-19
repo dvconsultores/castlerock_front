@@ -8,6 +8,7 @@
             class="login-textfield"
             placeholder="Search Classrooms"
             variant="solo" 
+            maxLength="150"
             flat
             hide-details
             append-inner-icon="mdi-magnify"

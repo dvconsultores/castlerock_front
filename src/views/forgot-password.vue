@@ -16,6 +16,7 @@
       prepend-inner-icon="mdi-email-outline" 
       placeholder="Enter your email recovery"
       hide-details
+      maxlength="150"
       class="login-textfield"
       @keyup.enter="sendEmailFuction"
       ></v-text-field>
@@ -41,26 +42,33 @@ const showAlert = inject('showAlert');
 const router = useRouter();
 
 const sendEmailFuction = async () => {
-  if (email.value?.trim()) {
-    loadingRecovery.value = true;
-    try {
-      const response = await axiosInstance.post('/auth/forgot-password', {
-        email: email.value,
-      });
-      
-      loadingRecovery.value = false;
-      showAlert('Recovery email sent successfully! Check your inbox.', 'success');
-      setTimeout(() => {
-        router.push('/password-recovery');
-        console.log('Redirecting to password recovery page...');
-      }, 2000);
-    } catch (error) {
-      loadingRecovery.value = false;
-      const errorMessage = error.response?.data?.message?.[0] || error.response?.data?.error || 'Failed to send recovery email';    
-      showAlert('Failed to send recovery email', 'error');
-    }
-  } else{
+  if (!email.value?.trim()) {
     showAlert('Please enter a valid email address', 'error');
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email.value)) {
+    showAlert('Please enter a valid email format (e.g. user@example.com)', 'error');
+    return;
+  }
+
+  loadingRecovery.value = true;
+  try {
+    const response = await axiosInstance.post('/auth/forgot-password', {
+      email: email.value,
+    });
+    
+    loadingRecovery.value = false;
+    showAlert('Recovery email sent successfully! Check your inbox.', 'success');
+    setTimeout(() => {
+      router.push('/password-recovery');
+      console.log('Redirecting to password recovery page...');
+    }, 2000);
+  } catch (error) {
+    loadingRecovery.value = false;
+    const errorMessage = error.response?.data?.message?.[0] || error.response?.data?.error || 'Failed to send recovery email';
+    showAlert('Failed to send recovery email', 'error');
   }
 };
 </script>

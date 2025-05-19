@@ -12,6 +12,7 @@
             class="login-textfield"
             placeholder="Search Center"
             variant="solo" 
+            maxLength="150"
             flat
             hide-details
             append-inner-icon="mdi-magnify"

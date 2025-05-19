@@ -170,22 +170,6 @@ const triggerFileInput = () => {
   fileInput.value.$el.querySelector('input[type="file"]').click();
 };
 
-const closeConfirmationProgram = () => {
-  name.value = '';
-  select_center.value = '';
-  imagePreview.value = null;
-  selectedImgProgram.value = null;
-  fileInput.value = null;
-  monday.value = false;
-  tuesday.value = false;
-  wednesday.value = false;
-  thursday.value = false;
-  friday.value = false;
-  saturday.value = false;
-  sunday.value = false;
-  dialogConfirmationProgram.value = false;
-};
-
 const stateValue = () =>{
   if(monday.value || tuesday.value || wednesday.value || thursday.value || friday.value || saturday.value || sunday.value){
     return true;
@@ -263,7 +247,7 @@ const loadDataProgram = async () => {
 
     name.value = program.name;
     imagePreview.value = program.image;
-    // select_center.value = program.campus.name;
+    select_center.value = program.campus.name;
     monday.value = false;
     tuesday.value = false;
     wednesday.value = false;

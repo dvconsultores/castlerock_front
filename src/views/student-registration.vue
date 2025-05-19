@@ -32,6 +32,7 @@
               placeholder="Student Name"
               variant="solo" 
               flat
+              maxlength="150"
               hide-details
             ></v-text-field>
           </v-col>
@@ -42,6 +43,7 @@
               placeholder="Student Last Name"
               variant="solo" 
               flat
+              maxlength="150"
               hide-details
             ></v-text-field>
           </v-col>
@@ -55,6 +57,7 @@
               placeholder="Date of Birth"
               variant="solo" 
               flat
+              maxlength="150"
               append-inner-icon="mdi-calendar"
               hide-details
             ></v-text-field>
@@ -156,6 +159,7 @@
           bg-color="#F0F0F0 "
           placeholder="Mother's Name"
           variant="solo" 
+          maxlength="150"
           flat
           hide-details
         ></v-text-field>
@@ -167,6 +171,7 @@
           bg-color="#F0F0F0 "
           placeholder="Father's Name"
           variant="solo" 
+          maxlength="150"
           flat
           hide-details
         ></v-text-field>
@@ -179,6 +184,7 @@
           placeholder="Mother's contact number"
           variant="solo" 
           flat
+          maxlength="150"
           type="number"
           hide-spin-buttons
           append-inner-icon="mdi-phone-outline"
@@ -193,6 +199,7 @@
           placeholder="Father's contact number"
           variant="solo" 
           type="number"
+          maxlength="150"
           hide-spin-buttons
           flat
           hide-details
@@ -245,6 +252,7 @@
           bg-color="#F0F0F0 "
           placeholder="Contact Name 1"
           variant="solo" 
+          maxlength="150"
           flat
           hide-details
         ></v-text-field>
@@ -255,6 +263,7 @@
           v-model="contact_name2"
           class="login-textfield"
           bg-color="#F0F0F0 "
+          maxlength="150"
           placeholder="Contact Name 2"
           variant="solo" 
           flat
@@ -300,7 +309,8 @@
         <v-text-field
           v-model="contact_number"
           class="login-textfield"
-          bg-color="#F0F0F0 "
+          bg-color="#F0F0F0"
+          maxlength="150"
           placeholder="Contact Number 1"
           variant="solo" 
           append-inner-icon="mdi-phone-outline"
@@ -313,6 +323,7 @@
         <v-text-field
           v-model="contact_number2"
           class="login-textfield"
+          maxlength="150"
           bg-color="#F0F0F0 "
           placeholder="Contact Number 2"
           variant="solo" 
@@ -333,6 +344,7 @@
         v-model="notes"
         placeholder="Notes" variant="solo"
         flat
+        maxlength="300"
         hide-details
         bg-color="#F0F0F0"
         class="text-area"
@@ -351,6 +363,7 @@
         <v-text-field
           v-model="start_date_class"
           class="login-textfield"
+          maxlength="150"
           placeholder="First Day of School"
           variant="solo" 
           append-inner-icon="mdi-calendar"

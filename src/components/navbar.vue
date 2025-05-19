@@ -115,6 +115,8 @@ const currentTitle = computed(() => {
     return 'Edit Program';
   } else if (route.path.startsWith('/home/view-program')) {
     return 'View Program';
+  } else if (route.path.startsWith('/home/edit-additional-program')) {
+    return 'Edit Additional Program';
   }
   return pageTitles[route.path] || 'Dashboard';
 });

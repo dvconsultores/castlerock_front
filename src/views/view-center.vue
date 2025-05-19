@@ -74,11 +74,6 @@
                 class="preview-image"
               >
             </div>
-            
-            <v-file-input 
-            ref="fileInput" v-model="selectedImgCenter" flat variant="solo" 
-            class="input-file" prepend-icon="none" hide-details @update:modelValue="handleFileChange"
-            ></v-file-input>
           </v-card>
         </v-col>
       </v-row>

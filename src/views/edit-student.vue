@@ -31,6 +31,7 @@
               class="login-textfield"
               placeholder="Student Name"
               variant="solo" 
+              maxLength="150"
               flat
               hide-details
             ></v-text-field>
@@ -39,6 +40,7 @@
             <v-text-field
               v-model="lastName"
               class="login-textfield"
+              maxLength="150"
               placeholder="Student Last Name"
               variant="solo" 
               flat
@@ -52,6 +54,7 @@
             <v-text-field
               v-model="dateOfBirth"
               class="login-textfield"
+              maxLength="150"
               placeholder="Date of Birth"
               variant="solo" 
               flat
@@ -153,6 +156,7 @@
         <v-text-field
           v-model="mothers_name"
           class="login-textfield"
+          maxLength="150"
           bg-color="#F0F0F0 "
           placeholder="Mother's Name"
           variant="solo" 
@@ -164,6 +168,7 @@
         <v-text-field
           v-model="fathers_name"
           class="login-textfield"
+          maxLength="150"
           bg-color="#F0F0F0 "
           placeholder="Father's Name"
           variant="solo" 
@@ -175,6 +180,7 @@
         <v-text-field
           v-model="mothers_number"
           class="login-textfield"
+          maxLength="150"
           bg-color="#F0F0F0 "
           placeholder="Mother's contact number"
           variant="solo" 
@@ -189,6 +195,7 @@
         <v-text-field
           v-model="fathers_number"
           class="login-textfield"
+          maxLength="150"
           bg-color="#F0F0F0 "
           placeholder="Father's contact number"
           variant="solo" 
@@ -203,6 +210,7 @@
         <v-autocomplete
           v-model="mothers_role"
           placeholder="Role"
+          maxLength="150"
           flat
           bg-color="#F0F0F0"
           class="autocomplete-register"
@@ -243,6 +251,7 @@
           v-model="contact_name"
           class="login-textfield"
           bg-color="#F0F0F0 "
+          maxLength="150"
           placeholder="Contact Name 1"
           variant="solo" 
           flat
@@ -255,6 +264,7 @@
           v-model="contact_name2"
           class="login-textfield"
           bg-color="#F0F0F0 "
+          maxLength="150"
           placeholder="Contact Name 2"
           variant="solo" 
           flat
@@ -300,6 +310,7 @@
         <v-text-field
           v-model="contact_number"
           class="login-textfield"
+          maxLength="150"
           bg-color="#F0F0F0 "
           placeholder="Contact Number 1"
           variant="solo" 
@@ -313,6 +324,7 @@
         <v-text-field
           v-model="contact_number2"
           class="login-textfield"
+          maxLength="150"
           bg-color="#F0F0F0 "
           placeholder="Contact Number 2"
           variant="solo" 
@@ -333,6 +345,7 @@
         v-model="notes"
         placeholder="Notes" variant="solo"
         flat
+        maxLength="300"
         hide-details
         bg-color="#F0F0F0"
         class="text-area"
@@ -352,6 +365,7 @@
           v-model="start_date_class"
           class="login-textfield"
           placeholder="First Day of School"
+          maxLength="150"
           variant="solo" 
           append-inner-icon="mdi-calendar"
           flat

@@ -9,6 +9,7 @@
             placeholder="Search Teacher"
             variant="solo" 
             flat
+            maxlength="150"
             hide-details
             append-inner-icon="mdi-magnify"
           ></v-text-field>

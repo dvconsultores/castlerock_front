@@ -9,6 +9,7 @@
             class="textfield-registration"
             placeholder="Classroom Name"
             variant="solo" 
+            maxlength="150"
             flat
             hide-details
           ></v-text-field>
@@ -20,6 +21,7 @@
             class="textfield-registration"
             placeholder="Number of students"
             variant="solo" 
+            maxlength="150"
             flat
             hide-details
             type="number"

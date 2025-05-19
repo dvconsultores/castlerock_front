@@ -9,6 +9,7 @@
             class="textfield-registration"
             placeholder="Center Name"
             variant="solo" 
+            maxlength="150"
             flat
             hide-details
           ></v-text-field>
@@ -21,6 +22,7 @@
             placeholder="Phone of the center"
             variant="solo" 
             flat
+            maxlength="150"
             hide-details
             type="number"
             hide-spin-buttons
@@ -33,6 +35,7 @@
             class="textfield-registration"
             placeholder="Nickname of the center"
             variant="solo" 
+            maxlength="150"
             flat
             hide-details
           ></v-text-field>
@@ -44,6 +47,7 @@
             class="textfield-registration"
             placeholder="Location"
             variant="solo" 
+            maxlength="150"
             flat
             hide-details
           ></v-text-field>

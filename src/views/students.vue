@@ -7,6 +7,7 @@
           class="login-textfield"
           placeholder="Search Student"
           variant="solo" 
+          maxlength="150"
           flat
           hide-details
           append-inner-icon="mdi-magnify"

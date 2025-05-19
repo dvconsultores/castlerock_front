@@ -120,7 +120,7 @@ const loginFunction = async () => {
     loadingLogin.value = true;
   try {
     console.log('URL completa:', axiosInstance.defaults.baseURL + '/auth/login');
-    const response = await axiosInstance.post('/auth/login', {
+    const response = await axiosInstance.post('https://develop.stutris.com/kindergarten/api/v1/auth/login', {
       email: email.value,
       password: password.value
     });

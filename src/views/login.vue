@@ -114,13 +114,14 @@ const password = ref('');
 const loadingLogin = ref(false);
 const showPassword = ref(false);
 const showAlert = inject('showAlert');
+const BASE_URL = process.env.VITE_BASE_URL_API
 
 const loginFunction = async () => {
   if (email.value?.trim() && password.value?.trim()) {
     loadingLogin.value = true;
   try {
-    console.log('URL completa:', axiosInstance.defaults.baseURL + '/auth/login');
-    const response = await axiosInstance.post('/auth/login', {
+    console.log('URL completa:', BASE_URL + '/auth/login');
+    const response = await axiosInstance.defaults.post(BASE_URL + '/auth/login', {
       email: email.value,
       password: password.value
     });

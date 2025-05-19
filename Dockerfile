@@ -10,15 +10,11 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the rest of the application code including .env
 COPY . .
 
-# Build the application with environment variables
-ARG VITE_BASE_URL
-ARG VITE_BASE_URL_API
-RUN echo "VITE_BASE_URL=${VITE_BASE_URL}" > .env && \
-    echo "VITE_BASE_URL_API=${VITE_BASE_URL_API}" >> .env && \
-    npm run build
+# Build the application
+RUN npm run build
 
 # Stage 2: Serve
 FROM nginx:stable-alpine

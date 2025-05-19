@@ -121,7 +121,7 @@ const loginFunction = async () => {
     loadingLogin.value = true;
   try {
     console.log('URL completa:', BASE_URL + '/auth/login');
-    const response = await axiosInstance.defaults.post(BASE_URL + '/auth/login', {
+    const response = await axiosInstance.post(BASE_URL + '/auth/login', {
       email: email.value,
       password: password.value
     });

@@ -107,6 +107,7 @@
 <script setup>
 import { ref, inject } from 'vue';
 import axiosInstance from '@/plugins/axios';
+import axios from 'axios';
 
 const dialogHome = ref(false);
 const email = ref('');
@@ -121,7 +122,7 @@ const loginFunction = async () => {
     loadingLogin.value = true;
   try {
     console.log('URL completa:', BASE_URL + '/auth/login');
-    const response = await axiosInstance.post(BASE_URL + '/auth/login', {
+    const response = await axiosInstance.post(BASE_URL +'/auth/login', {
       email: email.value,
       password: password.value
     });

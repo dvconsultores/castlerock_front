@@ -20,10 +20,6 @@ export default defineConfig(({ mode }) => {
         }
       })
     ],
-    define: {
-      global: 'window',
-      'process.env': env, // Pass loaded environment variables
-    },
     optimizeDeps: {
       include: ['buffer', 'vuetify'],
       esbuildOptions: {

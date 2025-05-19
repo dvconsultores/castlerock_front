@@ -21,6 +21,9 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+# Create .env file from build arguments
+RUN echo "VITE_BASE_URL=${VITE_BASE_URL}\nVITE_BASE_URL_API=${VITE_BASE_URL_API}" > .env
+
 # Build the application
 RUN npm run build
 

@@ -151,6 +151,7 @@ const dialogAddClassroom = ref(false);
 const dialogConfirmationClassroom = ref(false);
 const route = useRoute();
 const classroomId = ref(route.params.id);
+const centerId = ref(null);
 
 const handleFileChange = (file) => {
   if (file) {
@@ -202,7 +203,7 @@ const loadClassroomData = async () => {
     maxCapacity.value = classroom.maxCapacity;
     program.value = classroom.program;
     imagePreview.value = classroom.image;
-    // select_center.value = classroom.campus.name;
+    select_center.value = classroom.campus.id;
   } catch (error) {
     console.error('Failed to load center data', error);
   }

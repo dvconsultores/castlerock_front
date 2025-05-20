@@ -1,7 +1,7 @@
 <template>
   <div id="daily-plan">
     <h3 class="font2 tleft" style="color: #262B63;">
-      {{ class_name }} - <span>{{ program }}</span>
+      {{ class_name }} - <span>{{ program.charAt(0).toUpperCase() + program.slice(1).toLowerCase() }}</span>
     </h3>
     <h5 class="font2 tleft" style="color: #4E444B;">
       {{ day }}, {{ dayNumber }}/{{ month }}/{{ year }}  - ({{ campus_name }})
@@ -185,7 +185,7 @@
           </v-sheet>
 
           <span class="f16 font2 tleft mt-4 mb-4" style="color: #262262;">
-            Students {{dataStudentSelected.length}}/8
+            Students {{dataStudentSelected.length}}/ {{ maxCapacity }}
           </span>
 
           <div class="students-selected-container">
@@ -214,24 +214,24 @@
           flat
           hide-details
           bg-color="#F0F0F0"
-          class="text-area mt-8 fullw"
+          class="text-area mt-8 mb-4 fullw"
           ></v-textarea>
 
           <v-row class="fullw" no-gutters>
             <v-col sm="2" cols="12" class="pr-1">
-              <v-btn flat class="btn1">
+              <!-- <v-btn flat class="btn1">
                 <v-icon class="mr-1">mdi-arrow-left-circle-outline</v-icon> Back to Day
-              </v-btn>
+              </v-btn> -->
             </v-col>
             <v-col sm="8" cols="12">
-              <v-btn flat class="btn2" @click="dialogAddPlanning = true">
+              <v-btn flat class="btn2" @click="validDialog">
                 Save
               </v-btn>
             </v-col>
             <v-col sm="2" cols="12" class="pl-1">
-              <v-btn flat class="btn3">
+              <!-- <v-btn flat class="btn3">
                 Next Day <v-icon class="ml-1">mdi-arrow-right-circle-outline</v-icon>
-              </v-btn>
+              </v-btn> -->
             </v-col>
           </v-row>
         </div>
@@ -305,6 +305,17 @@ const searchQueryTeachers = ref('');
 const searchQueryStudents = ref('');
 const dataStudentSelected = ref([]);
 const loadingCreate = ref(false);
+const maxCapacity = ref(0);
+
+const validDialog = () => {
+  if (sheetTeacherSelected.value.length === 0) {
+    showAlert('You must select at least 1 Teacher.', 'error');
+  } else if (dataStudentSelected.value.length === 0) {
+    showAlert('You must select at least 1 Student.', 'error');
+  } else {
+    dialogAddPlanning.value = true;
+  }
+};
 
 const selectedTeacher = (item) => {
   const alreadySelected = sheetTeacherSelected.value.length
@@ -326,9 +337,14 @@ const deleteStudent = (index) =>{
 };
 
 const selectedStudent = (item) => {
-  const alreadySelected = dataStudentSelected.value.length
+  const exists = dataStudentSelected.value.some(student => student.student_id === item.student_id);
 
-  if (alreadySelected < 8) {
+  if (exists) {
+    showAlert('This student has already been selected.', 'error');
+    return;
+  }
+
+  if (dataStudentSelected.value.length < maxCapacity.value) {
     dataStudentSelected.value.push({
       student_id: item.student_id,
       student_name: item.student_name,
@@ -337,7 +353,7 @@ const selectedStudent = (item) => {
       days_enrolled: item.days_enrolled
     });
   } else {
-    showAlert('This class does not accept more than 8 students.', 'error');
+    showAlert('This class does not accept more students.', 'error');
   }
 };
 
@@ -472,6 +488,7 @@ const fetchPlanningData = async () => {
     class_name.value = dataPlanning.value.class.name;
     program.value = dataPlanning.value.class.program;
     campus_name.value = dataPlanning.value.campus.name;
+    maxCapacity.value = dataPlanning.value.class.maxCapacity
     year.value = dataPlanning.value.year;
     month.value = dataPlanning.value.month;
     transformDatesYear()

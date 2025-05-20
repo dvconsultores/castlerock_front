@@ -28,6 +28,7 @@
 
       <template v-slot:item.actions="{ item }">
         <div class="flex center gap2">
+          <v-icon color="#474649" size="24" class="pointer" @click="$router.push(`/home/view-additional-program/${item.id}`)">mdi-eye-outline</v-icon>
           <v-icon color="#474649" size="24" class="pointer" @click="$router.push(`/home/edit-additional-program/${item.id}`)">mdi-pencil-outline</v-icon>
           <v-icon color="#474649" size="24" class="pointer" @click="openDelete(item)">mdi-trash-can-outline</v-icon>
         </div>

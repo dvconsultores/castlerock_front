@@ -37,7 +37,7 @@
 
       <div class="jspace fullw mb-6">
         <v-checkbox 
-        label="Recuerdame" 
+        label="Remember me" 
         hide-details 
         density="compact"
         true-icon="mdi-checkbox-outline"
@@ -46,7 +46,7 @@
         class="checkbox"
         ></v-checkbox>
 
-        <span class="f12 pointer w500" style="color: #262262;" @click="$router.push('/forgot-password')">¿Olvidaste la contraseña?</span>
+        <span class="f12 pointer w500" style="color: #262262;" @click="$router.push('/forgot-password')">Forgot your password?</span>
       </div>
 
       <div class="flex fullw btn-divs">

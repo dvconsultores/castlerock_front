@@ -22,14 +22,23 @@
       <v-menu
         transition="scale-transition"
       >
-        <template v-slot:activator="{ props }">
+        <template v-if="hasUnreadNotes" v-slot:activator="{ props }">
           <img v-bind="props" src="@/assets/sources/icons/bell-notification.svg" alt="Bell" class="img-bell pointer">
         </template>
 
-        <v-list v-for="(item, index) in dataNotes" :key="index">
-          <v-list-item :class="`${item.status === 'unread' ? 'shadow' : ''}`">
+        <template v-else-if="!hasUnreadNotes" v-slot:activator="{ props }">
+          <img v-bind="props" src="@/assets/sources/icons/bell-no-notification.svg" alt="Bell" class="img-bell pointer">
+        </template>
+
+        <v-list>
+          <v-list-item v-for="(item, index) in dataNotes" :key="index" :class="`${item.status === 'unread' ? 'shadow' : ''}`">
             <v-list-item-title class="f14 font1 w500" style="color: #4E444B;">{{ item.title }}</v-list-item-title>
             <v-list-item-subtitle class="f12 font1" style="color: #4E444B;">{{ item.message }}</v-list-item-subtitle>
+            <v-list-item-action>
+              <v-icon v-if="item.status === 'unread'" class="mt-1 pointer" color="#7583D9" style="font-size: 20px;" @click.stop="editStatus(item)">mdi-email-open-outline</v-icon>
+              <v-icon v-if="item.status === 'read'" class="mt-1" color="#7583D9" style="font-size: 20px;">mdi-email</v-icon>
+              <v-icon class="mt-1 ml-2 pointer" color="#7583D9" style="font-size: 20px;" @click.stop="deleteNote(item)">mdi-trash-can-outline</v-icon>
+            </v-list-item-action>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -49,6 +58,9 @@ import { toggleDrawer } from '@/store/drawerState.js';
 import axiosInstance from '@/plugins/axios';
 
 const dataNotes = ref([]);
+const hasUnreadNotes = computed(() => {
+  return dataNotes.value.some(note => note.status === 'unread');
+});
 const imageUser = ref(null);
 
 const getNotes = async () => {
@@ -68,6 +80,28 @@ const getNotes = async () => {
     console.error('Error fetching notifications:', error);
   }
 };
+
+const editStatus = async (item) => {
+  try {
+    const response = await axiosInstance.patch(`/notifications/${item.id}`, {
+      status: 'read'
+    });
+    getNotes();
+  } catch (error) {
+    console.error('Error updating status:', error);
+  }
+};
+
+const deleteNote = async (item) => {
+  try {
+    const response = await axiosInstance.delete(`/notifications/${item.id}`);
+    getNotes();
+  } catch (error) {
+    console.error('Error updating status:', error);
+  }
+};
+
+
 
 const getImg = async () =>{
   imageUser.value = localStorage.getItem('userImage')
@@ -90,6 +124,9 @@ const pageTitles = {
   '/home/edit-center': 'Edit Center',
   '/home/teachers': 'Teachers',
   '/home/new-teacher': 'New Teacher',
+  '/home/users': 'Users',
+  '/home/new-user': 'New user',
+  '/home/new-classroom': 'New Classroom',
 };
 
 const currentTitle = computed(() => {
@@ -117,7 +154,19 @@ const currentTitle = computed(() => {
     return 'View Program';
   } else if (route.path.startsWith('/home/edit-additional-program')) {
     return 'Edit Additional Program';
-  }
+  } else if (route.path.startsWith('/home/edit-teacher')) {
+    return 'Edit Teacher';
+  } else if (route.path.startsWith('/home/edit-classroom')) {
+    return 'Edit Classroom';
+  } else if (route.path.startsWith('/home/view-additional-program')) {
+    return 'View Additional Program';
+  } else if (route.path.startsWith('/home/edit-weekly-schedule')) {
+    return 'Edit Weekly Schedule';
+  } else if (route.path.startsWith('/home/daily-schedule')) {
+    return 'Daily Schedule';
+  } else if (route.path.startsWith('/home/view-daily-schedule')) {
+    return 'View Daily Schedule';
+  } else 
   return pageTitles[route.path] || 'Dashboard';
 });
 
@@ -137,6 +186,9 @@ const subTitle = {
   '/home/edit-center': '',
   '/home/teachers': 'Teachers',
   '/home/new-teacher': 'Add a new teacher',
+  '/home/users': 'Users management',
+  '/home/teachers': 'Teachers management',
+  '/home/new-classroom': 'Add a new classroom',
 }
 
 const currentSubTitle = computed(() => {
@@ -244,6 +296,7 @@ onMounted(() => {
 
 .v-list{
   border: 1px solid #7583D9!important;
+  padding: 8px!important;
 }
 
 .shadow{
@@ -251,11 +304,12 @@ onMounted(() => {
 }
 
 .v-list-item{
-  padding-block: 0px!important;
+  padding-block: 8px!important;
   margin: 0px;
-  height: 40px;
-  min-height: 40px!important;
+  height: max-content;
+  min-height: max-content!important;
   min-width: 200px;
+  margin-bottom: 4px;
 }
 
 </style>

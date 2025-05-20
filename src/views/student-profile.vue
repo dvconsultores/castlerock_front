@@ -1095,10 +1095,28 @@ const loadCenterData = async () => {
   }
 };
 
+const getAttendance = async (studentId, status) => {
+  try {
+    const response = await axiosInstance.get('/attendances', {
+      params: { 
+        studentId,
+        status
+      }
+    });
+    const attendanceData = response.data.result;
+    console.log(attendanceData, 'Attendance Data');
+    return attendanceData;
+  } catch (error) {
+    showAlert('Error fetching attendance data', 'error');
+    throw error; 
+  }
+};
+
 onMounted(() => {
   getPrograms();
   getCenters();
   getDataStudent();
+  getAttendance();
 });
 </script>
 

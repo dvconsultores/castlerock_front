@@ -1,7 +1,7 @@
 <template>
   <div id="daily-plan">
     <h3 class="font2 tleft" style="color: #262B63;">
-      {{ class_name }} - <span>{{ program }}</span>
+      {{ class_name }} - <span>{{ program.charAt(0).toUpperCase() + program.slice(1).toLowerCase() }}</span>
     </h3>
     <h5 class="font2 tleft" style="color: #4E444B;">
       {{ day }}, {{ dayNumber }}/{{ month }}/{{ year }}  - ({{ campus_name }})
@@ -185,7 +185,7 @@
           </v-sheet>
 
           <span class="f16 font2 tleft mt-4 mb-4" style="color: #262262;">
-            Students {{dataStudentSelected.length}}/8
+            Students {{dataStudentSelected.length}}/ {{ maxCapacity }}
           </span>
 
           <div class="students-selected-container">
@@ -219,9 +219,9 @@
 
           <v-row class="fullw" no-gutters>
             <v-col sm="2" cols="12" class="pr-1">
-              <v-btn flat class="btn1">
+              <!-- <v-btn flat class="btn1">
                 <v-icon class="mr-1">mdi-arrow-left-circle-outline</v-icon> Back to Day
-              </v-btn>
+              </v-btn> -->
             </v-col>
             <v-col sm="8" cols="12">
               <v-btn flat class="btn2" @click="dialogAddPlanning = true">
@@ -229,9 +229,9 @@
               </v-btn>
             </v-col>
             <v-col sm="2" cols="12" class="pl-1">
-              <v-btn flat class="btn3">
+              <!-- <v-btn flat class="btn3">
                 Next Day <v-icon class="ml-1">mdi-arrow-right-circle-outline</v-icon>
-              </v-btn>
+              </v-btn> -->
             </v-col>
           </v-row>
         </div>
@@ -305,6 +305,8 @@ const searchQueryTeachers = ref('');
 const searchQueryStudents = ref('');
 const dataStudentSelected = ref([]);
 const loadingCreate = ref(false);
+const scheduleId = ref(null);
+const maxCapacity = ref(0);
 
 const selectedTeacher = (item) => {
   const alreadySelected = sheetTeacherSelected.value.length
@@ -326,9 +328,14 @@ const deleteStudent = (index) =>{
 };
 
 const selectedStudent = (item) => {
-  const alreadySelected = dataStudentSelected.value.length
+  const exists = dataStudentSelected.value.some(student => student.student_id === item.student_id);
 
-  if (alreadySelected < 8) {
+  if (exists) {
+    showAlert('This student has already been selected.', 'error');
+    return;
+  }
+
+  if (dataStudentSelected.value.length < maxCapacity.value) {
     dataStudentSelected.value.push({
       student_id: item.student_id,
       student_name: item.student_name,
@@ -337,7 +344,7 @@ const selectedStudent = (item) => {
       days_enrolled: item.days_enrolled
     });
   } else {
-    showAlert('This class does not accept more than 8 students.', 'error');
+    showAlert('This class does not accept more students.', 'error');
   }
 };
 
@@ -463,6 +470,34 @@ const checkDayAvailability = () => {
   });
 };
 
+const getDailySchedule = async () => {
+  try {
+    const response = await axiosInstance.get(`/daily-schedules/${scheduleId.value}`);
+    const scheduleData = response.data.result;
+    
+    if (scheduleData) {
+      notes.value = scheduleData.notes || '';
+      
+      sheetTeacherSelected.value = [{
+        id: scheduleData.teacher.id,
+        teacher_name: 'Simulated Teacher Name',
+        teacher_img: '',
+        teacher_type: 'Teacher'
+      }];
+      
+      dataStudentSelected.value = scheduleData.students.map(student => ({
+        student_id: student.id,
+        student_name: `${student.firstName} ${student.lastName}`,
+        student_img: student.image,
+        student_program: student.program || '',
+        days_enrolled: student.daysEnrolled ? formatDays(student.daysEnrolled) : 'No days'
+      }));
+    }
+  } catch (error) {
+    showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
+  }
+};
+
 const fetchPlanningData = async () => {
   try {
     const response = await axiosInstance.get(`/planning/${planningId.value}`);
@@ -472,6 +507,7 @@ const fetchPlanningData = async () => {
     class_name.value = dataPlanning.value.class.name;
     program.value = dataPlanning.value.class.program;
     campus_name.value = dataPlanning.value.campus.name;
+    maxCapacity.value = dataPlanning.value.class.maxCapacity
     year.value = dataPlanning.value.year;
     month.value = dataPlanning.value.month;
     transformDatesYear()
@@ -501,7 +537,7 @@ const createNewDailySchedule = async () =>{
     
   // }
   try{
-      const response = await axiosInstance.post('/daily-schedules', {
+      const response = await axiosInstance.patch(`/daily-schedules/${scheduleId.value}`, {
       planningId: planningId.value,
       day: day.value,
       teacherId: sheetTeacherSelected.value[0].id,
@@ -522,8 +558,13 @@ onMounted(() => {
   getTeachers();
   getStudents();
   planningId.value = route.query.planningId || 0;
+  scheduleId.value = route.params.scheduleId || null;
   day.value = route.query.day || '';
   dayNumber.value = route.query.dayNumber || '00';
+  scheduleId.value = route.query.scheduleId || 0;
+   if (scheduleId.value) {
+    getDailySchedule();
+  }
   
   if (planningId.value) {
     fetchPlanningData();

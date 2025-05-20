@@ -51,16 +51,30 @@
 
         <v-row no-gutters class="pt-3">
           <v-col cols="12" sm="4" class="pa-2">
-            <v-text-field
-              v-model="dateOfBirth"
-              class="login-textfield"
-              placeholder="Date of Birth"
-              variant="solo" 
-              flat
-              maxlength="150"
-              append-inner-icon="mdi-calendar"
-              hide-details
-            ></v-text-field>
+            <v-menu :close-on-content-click="false">
+              <template v-slot:activator="{ props }">
+                <v-text-field
+                  v-model="formattedDate"
+                  class="login-textfield"
+                  placeholder="Date of Birth"
+                  variant="solo"
+                  flat
+                  readonly
+                  hide-details
+                  append-inner-icon="mdi-calendar"
+                  v-bind="props"
+                  @click:append-inner="props.onClick"
+                ></v-text-field>
+              </template>
+
+              <v-date-picker
+                v-model="dateOfBirth"
+                @update:model-value="formatDate"
+                :max-date="new Date()"
+                :close-on-click="false"
+                :close-on-content-click="false"
+              ></v-date-picker>
+            </v-menu>
           </v-col>
           <v-col cols="12" sm="4" class="pa-2">
             <v-autocomplete
@@ -360,16 +374,30 @@
       </v-col>
 
       <v-col cols="12" sm="12" class="pa-2">
-        <v-text-field
-          v-model="start_date_class"
-          class="login-textfield"
-          maxlength="150"
-          placeholder="First Day of School"
-          variant="solo" 
-          append-inner-icon="mdi-calendar"
-          flat
-          hide-details
-        ></v-text-field>
+        <v-menu :close-on-content-click="false">
+          <template v-slot:activator="{ props }">
+            <v-text-field
+              v-model="formattedStartDate"
+              class="login-textfield"
+              placeholder="First day of school"
+              variant="solo"
+              flat
+              readonly
+              hide-details
+              append-inner-icon="mdi-calendar"
+              v-bind="props"
+              @click:append-inner="props.onClick"
+            ></v-text-field>
+          </template>
+
+          <v-date-picker
+            v-model="start_date_class"
+            @update:model-value="formatStartDate"
+            :max-date="new Date()"
+            :close-on-click="false"
+            :close-on-content-click="false"
+          ></v-date-picker>
+        </v-menu>
       </v-col>
 
       <!-- <v-col cols="12" sm="4" class="pa-2">
@@ -628,6 +656,35 @@
 <script setup>
 import { ref, inject, onMounted, computed, watch } from 'vue'
 import axiosInstance from '@/plugins/axios';
+import dayjs from 'dayjs';
+
+const formattedDate = ref('');
+const formattedStartDate = ref('');
+
+const formatDate = (date) => {
+  if (!date) {
+    formattedDate.value = '';
+    return;
+  }
+  const jsDate = date instanceof Date ? date : new Date(date);
+  if (isNaN(jsDate.getTime())) {
+    formattedDate.value = '';
+    return;
+  }
+  formattedDate.value = dayjs(jsDate).format('YYYY-DD-MM');
+};
+const formatStartDate = (date) => {
+  if (!date) {
+    formattedStartDate.value = '';
+    return;
+  }
+  const jsDate = date instanceof Date ? date : new Date(date);
+  if (isNaN(jsDate.getTime())) {
+    formattedStartDate.value = '';
+    return;
+  }
+  formattedStartDate.value = dayjs(jsDate).format('YYYY-DD-MM');
+};
 
 const dialogConfirmationStudent = ref(false);
 const savingStudent = ref(false);
@@ -643,10 +700,10 @@ const imagePreviewFather = ref(null);
 const showAlert = inject('showAlert');
 const firstName = ref('');
 const lastName = ref('');
-const dateOfBirth = ref('');
+const dateOfBirth = ref(null);
 const gender = ref(null);
 const notes = ref('');
-const start_date_class = ref('');
+const start_date_class = ref(null);
 const selectProgramItem = ref([]);
 const dataPrograms = ref([]);
 const selected_program = ref(null);

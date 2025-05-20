@@ -34,6 +34,11 @@
         <span class="w600 f14 tcenter" style="color: #262262; line-height: 100%;">Programs</span>
       </div>
 
+      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/home/users') || isRouteActive('/home/users') }" @click="$router.push('/home/users')">
+        <img src="@/assets/sources/icons/avatar.svg" alt="Programs">
+        <span class="w600 f14 tcenter" style="color: #262262; line-height: 100%;">Users</span>
+      </div>
+
       <div class="logout-container mt-12 pointer" @click="logOut">
         <img src="@/assets/sources/icons/logout.svg" alt="Logout">
         <span class="w600 f14 tcenter" style="color: #262262;">Log out</span>
@@ -92,7 +97,7 @@ const logOut = () => {
   .menu{
     background-color: #6EC8AC;
     box-shadow: inset 0 8px 11px 4px rgba(0, 0, 0, 0.3);
-    height: 100%;
+    height: 900px;
     width: 100%;
     border-top-right-radius: 88px;
     display: flex;
@@ -108,6 +113,7 @@ const logOut = () => {
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      min-height: 88px;
       height: 88px;
       width: 99px;
       gap: 5px;
@@ -130,7 +136,7 @@ const logOut = () => {
         width: 50px;
         height: 44px;
         background-color: #F0F0F0 ;
-        top: -3px;
+        top: 0px;
         bottom: 0px;
         right: -40px;
         transform: translateY(50%);
@@ -154,7 +160,7 @@ const logOut = () => {
         width: 50px;
         height: 44px;
         background-color: #F0F0F0 ;
-        top: -3px;
+        top: 0px;
         bottom: 0px;
         right: -40px;
         transform: translateY(50%);

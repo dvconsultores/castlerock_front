@@ -110,7 +110,7 @@
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
         <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully saved!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The new center <span class="w600" style="color: #7583D9;">{{ center_name }}</span> has been successfully created</span>
+        <span class="f16 w400 tcenter">The new center <span class="w600" style="color: #7583D9;">{{ center_name }}</span> has been successfully created.</span>
         <div class="btn-divs mt-8">
           <v-btn flat class="btn1" @click="$router.push('/home/centers')">Centers</v-btn>
           <v-btn flat class="btn2" @click="closeConfirmationCenter">New Center</v-btn>

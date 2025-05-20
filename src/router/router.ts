@@ -110,9 +110,21 @@ const router = createRouter({
           meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
-          path: 'daily-schedule',
+          path: 'daily-schedule/',
           name: 'daily-schedule',
           component: () => import('@/views/daily-schedule.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
+        },
+        {
+          path: 'edit-daily-schedule/',
+          name: 'edit-daily-schedule',
+          component: () => import('@/views/edit-daily-schedule.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
+        },
+        {
+          path: 'view-daily-schedule/',
+          name: 'view-daily-schedule',
+          component: () => import('@/views/view-daily-schedule.vue'),
           meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
         },
         {
@@ -169,12 +181,36 @@ const router = createRouter({
           component: () => import('@/views/edit-teacher.vue'),
           meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
-        // {
-        //   path: 'view-teacher/:id',
-        //   name: 'view-teacher',
-        //   component: () => import('@/views/view-teacher.vue'),
-        //   meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
-        // },
+        {
+          path: 'users',
+          name: 'users',
+          component: () => import('@/views/users.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+        },
+        {
+          path: 'new-user',
+          name: 'new-user',
+          component: () => import('@/views/new-user.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+        },
+        {
+          path: 'view-user/:id',
+          name: 'view-user',
+          component: () => import('@/views/view-user.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+        },
+        {
+          path: 'edit-user/:id',
+          name: 'edit-user',
+          component: () => import('@/views/edit-user.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+        },
+        {
+          path: 'view-additional-program/:id',
+          name: 'view-additional-program',
+          component: () => import('@/views/view-additional-program.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+        },
       ]
     }
   ]

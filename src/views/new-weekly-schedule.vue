@@ -93,7 +93,7 @@
         ></v-autocomplete>
       </v-col>
 
-      <v-col v-if="!showStatePlanning" cols="12" sm="4" class="pb-0 pl-1 pr-1 pt-1">
+      <v-col cols="12" sm="4" class="pb-0 pl-1 pr-1 pt-1">
         <v-autocomplete
           v-model="week"
           placeholder="Select the Week"
@@ -110,7 +110,7 @@
           }"
         ></v-autocomplete>
       </v-col>
-      <v-col v-if="!showStatePlanning" cols="12" align="right">
+      <v-col cols="12" align="right">
         <v-btn class="btn btn-create" flat @click="createNewPlanning" :loading="loadingCreate">Create planning</v-btn>
       </v-col>
     </v-row>
@@ -119,7 +119,7 @@
       <div v-for="(week, weekIndex) in monthlySchedule" :key="weekIndex" class="div-container-weeks-cards">
         <h3>{{ week.weekTitle }} {{ week.monthTitle }}</h3>
         <div class="slider-div">
-          <v-card flat v-for="(day, dayIndex) in week.days" :key="dayIndex" @click="handleEditDay(day, weekIndex)">
+          <v-card flat v-for="(day, dayIndex) in week.days" :key="dayIndex" @click="handleNewDay(day, weekIndex)">
             <div class="div-header">
               <span>{{ day.date }}</span>
             </div>
@@ -139,17 +139,17 @@
                 <div class="img-student-card">
                   <img :src="day.imgStudent" alt="Student">
                 </div>
-                <div class="img-student-card">
-                  <img :src="day.imgStudent" alt="Student">
+                <div v-if="day.imgStudent2" class="img-student-card">
+                  <img :src="day.imgStudent2" alt="Student">
                 </div>
-                <div class="img-student-card">
-                  <img :src="day.imgStudent" alt="Student">
+                <div v-if="day.imgStudent3" class="img-student-card">
+                  <img :src="day.imgStudent3" alt="Student">
                 </div>
-                <div class="img-student-card">
-                  <img :src="day.imgStudent" alt="Student">
+                <div v-if="day.imgStudent4" class="img-student-card">
+                  <img :src="day.imgStudent4" alt="Student">
                 </div>
-                <div class="img-student-card">
-                  <img :src="day.imgStudent" alt="Student">
+                <div v-if=day.imgStudent5 class="img-student-card">
+                  <img :src="day.imgStudent5" alt="Student">
                 </div>
               </div>
 
@@ -165,14 +165,16 @@
               <span class="f10 w600" style="color: #7583D9;">{{ day.time }}</span>
             </div>
 
+            <div class="hr-div"></div>
+
             <div class="flex center mt-2 div-icons" style="gap: 10px;">
-              <v-icon color="#474649">mdi-eye-outline</v-icon>
+              <v-icon color="#474649" @click.stop="handleViewDay(day, weekIndex)">mdi-{{ day.eye_icon }}</v-icon>
               <v-icon
                 color="#474649"
                 class="edit-day"
-                @click="editDailySchedule(day)"
-              >mdi-pencil-outline</v-icon>
-              <v-icon color="#474649" @click.stop="openDeleteDialog(day)">mdi-trash-can-outline</v-icon>
+                @click.stop="handleEditDay(day, weekIndex)"
+              >mdi-{{ day.icon_pencil }}</v-icon>
+              <v-icon color="#474649" @click.stop="openDeleteDialog(day)">mdi-{{ day.trash_icon }}</v-icon>
             </div>
           </v-card>
         </div>
@@ -250,7 +252,7 @@ const deleteDaily = async () => {
 const showAlert = inject('showAlert');
 const router = useRouter();
 
-const handleEditDay = (day, weekIndex) => {
+const handleNewDay = (day, weekIndex) => {
   const weekData = monthlySchedule.value[weekIndex];
   if (!weekData?.planningId) {
     console.error('No planningId found for week', weekIndex + 1);
@@ -265,6 +267,46 @@ const handleEditDay = (day, weekIndex) => {
       planningId: weekData.planningId, // Usamos el ID correcto
       day: dayName,
       dayNumber: day.date.slice(-2),
+    }
+  });
+};
+
+const handleEditDay = (day, weekIndex) => {
+  const weekData = monthlySchedule.value[weekIndex];
+  if (!weekData?.planningId) {
+    console.error('No planningId found for week', weekIndex + 1);
+    return;
+  }
+
+  const dayName = day.date.split(',')[0].trim();
+  
+  router.push({
+    name: 'edit-daily-schedule',
+    query: {
+      planningId: weekData.planningId,
+      day: dayName,
+      dayNumber: day.date.slice(-2),
+      scheduleId: day.dailyScheduleId,
+    }
+  });
+};
+
+const handleViewDay = (day, weekIndex) => {
+  const weekData = monthlySchedule.value[weekIndex];
+  if (!weekData?.planningId) {
+    console.error('No planningId found for week', weekIndex + 1);
+    return;
+  }
+
+  const dayName = day.date.split(',')[0].trim();
+  
+  router.push({
+    name: 'view-daily-schedule',
+    query: {
+      planningId: weekData.planningId,
+      day: dayName,
+      dayNumber: day.date.slice(-2),
+      scheduleId: day.dailyScheduleId,
     }
   });
 };
@@ -310,22 +352,29 @@ const weeksArray = ref([]);
     if (!year.value || !month.value) return;
     
     const weeks = [];
-    if (monthlySchedule.value?.result?.length) {
-      monthlySchedule.value.result.forEach(planning => {
-        const startDate = dayjs(planning.startDate);
-        const endDate = dayjs(planning.endDate);
-        
-        weeks.push({
-          id: planning.week,
-          name: `${planning.week}${getOrdinalSuffix(planning.week)} Week (${startDate.format('ddd, MMM D')} - ${endDate.format('ddd, MMM D')})`
-        });
-      });
-      
-      // Sort by week number
-      weeks.sort((a, b) => a.id - b.id);
-      weeksArray.value = weeks;
+    const yearNum = year.value.id;
+    const monthNum = month.value.id;
+    
+    // Get first day of month
+    const firstDay = dayjs().year(yearNum).month(monthNum - 1).date(1);
+    // Find first Monday of month
+    let firstMonday = firstDay.day(1);
+    if (firstMonday.date() > 7) {
+      firstMonday = firstMonday.add(7, 'day');
     }
-  
+    
+    // Generate 5 weeks starting from first Monday
+    for (let weekNum = 1; weekNum <= 5; weekNum++) {
+      const startDate = firstMonday.add((weekNum - 1) * 7, 'day');
+      const endDate = startDate.add(4, 'day'); // Friday
+      
+      weeks.push({
+        id: weekNum,
+        name: `${weekNum}${getOrdinalSuffix(weekNum)} Week`
+      });
+    }
+    
+    weeksArray.value = weeks;
 };
 
 // Helper to get ordinal suffix (1st, 2nd, 3rd, etc)
@@ -414,10 +463,17 @@ const transformResponseToMonthlySchedule = (response) => {
         imgUser: null, // Valor por defecto
         teacherName: '',
         teacherType: '',
-        imgStudent: null, // Valor por defecto
+        imgStudent: null,
+        imgStudent2: null,
+        imgStudent3: null,
+        imgStudent4: null,
+        imgStudent5: null,
         realStudent: '',
         time: '',
         place: '',
+        icon_pencil: '',
+        trash_icon: '',
+        eye_icon: '',
       };
 
       // Sobrescribir con datos reales si existen
@@ -427,10 +483,17 @@ const transformResponseToMonthlySchedule = (response) => {
           ? `${daySchedule.teacher.user.firstName} ${daySchedule.teacher.user.lastName}`
           : 'No teacher assigned';
         dayData.imgStudent = daySchedule.students?.[0]?.image || imgStudent;
+        dayData.imgStudent2 = daySchedule.students?.[1]?.image || null;
+        dayData.imgStudent3 = daySchedule.students?.[2]?.image || null;
+        dayData.imgStudent4 = daySchedule.students?.[3]?.image || null;
+        dayData.imgStudent5 = daySchedule.students?.[4]?.image || null;
         dayData.realStudent = daySchedule.students?.length || '0';
         dayData.teacherType = 'Teacher';
         dayData.time = '9:00 - 12:00';
         dayData.dailyScheduleId = daySchedule.id;
+        dayData.icon_pencil = 'pencil-outline';
+        dayData.trash_icon = 'trash-can-outline';
+        dayData.eye_icon = 'eye-outline';
       }
 
       days.push(dayData);

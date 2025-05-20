@@ -30,10 +30,10 @@
       hide-details
       maxlength="6"
       class="login-textfield"
-      type="number"
-      hide-spin-buttons
       :rules="tokenRules"
       @input="sanitizeToken"
+      @keypress="(e) => { if (!/^\d$/.test(e.key) || token.length >= 6) e.preventDefault(); }"
+      @paste="e => { e.preventDefault(); }"
       @keyup.enter="resetPassword"
       ></v-text-field>
 
@@ -151,7 +151,7 @@ const resetPassword = async () => {
   } catch (error) {
     loadingReset.value = false;
     const errorMessage = error.response?.data?.message?.[0] || error.response?.data?.error || 'Failed to send recovery email';    
-    showAlert(errorMessage, 'error');
+    showAlert('Incorrect code', 'error');
   }
   } else {
     showAlert('Please fill in all fields', 'error');

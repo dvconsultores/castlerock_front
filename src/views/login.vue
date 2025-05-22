@@ -38,27 +38,13 @@
       hide-details
       ></v-text-field>
 
-      <div class="jspace fullw mb-6">
-        <v-checkbox 
-        label="Remember me" 
-        hide-details 
-        density="compact"
-        true-icon="mdi-checkbox-outline"
-        color="#6EC8AC"
-        base-color="#3C3C434D"
-        class="checkbox"
-        ></v-checkbox>
-
+      <div class="jend fullw mb-6">
         <span class="f12 pointer w500" style="color: #262262;" @click="$router.push('/forgot-password')">Forgot your password?</span>
       </div>
 
       <div class="flex fullw btn-divs">
         <v-btn class="btn" @click="loginFunction" :loading="loadingLogin" :disabled="!email || !password">
           Login
-        </v-btn>
-
-        <v-btn class="btn-2">
-          <v-icon>mdi-fingerprint</v-icon>
         </v-btn>
       </div>
     </section>

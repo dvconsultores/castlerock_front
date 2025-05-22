@@ -138,22 +138,14 @@
       gap: 25px;
 
       .btn{
-        width: 80%;
+        width: 100%;
 
         .v-btn__content{
           text-transform: none;
         }
 
         @include media(max, 560px) {
-          width: 65%;
-        }
-      }
-
-      .btn-2{
-        width: 70px;
-
-        @include media(max, 560px) {
-          width: 25%;
+          width: 100%;
         }
       }
     }

@@ -256,11 +256,11 @@
     <v-dialog v-model="dialogConfirmationDaily" content-class="dialogConfirmationDaily" persistent>
       <v-card class="card-confirmation-program">
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully created!</span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully update!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The daily schedule has been successfully created.</span>
+        <span class="f16 w400 tcenter">The daily schedule has been successfully update.</span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1" @click="$router.push('/home/new-weekly-schedule')">New Planning</v-btn>
+          <v-btn flat class="btn1" @click="dialogConfirmationDaily = false">Close</v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -271,6 +271,7 @@
 import { ref, onMounted, inject, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axiosInstance from '@/plugins/axios';
+import avatarImg from '@/assets/sources/images/avatar.svg';
 
 const dialogConfirmationDaily = ref(false);
 const dialogAddPlanning = ref(false);
@@ -403,7 +404,7 @@ const getTeachers = async () => {
       return {
         teacher_id: teacher.id,
         teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
-        teacher_img: teacher.user.image,
+        teacher_img: teacher.user.image || avatarImg,
         teacher_type: 'Teacher',
       };
     });
@@ -430,10 +431,12 @@ const getStudents = async () =>{
   try{
     const response = await axiosInstance.get('/students');
 
-    dataStudents.value = response.data.result.map((student) =>{
+    dataStudents.value = response.data.result
+      .filter(student => student.program === program.value)
+      .map((student) =>{
       return{
         student_id: student.id,
-        student_img: student.image,
+        student_img: student.image || avatarImg,
         student_name: student.firstName + ' ' + student.lastName,
         desc_program: student.program,
         days_enrolled: student.daysEnrolled ? formatDays(student.daysEnrolled) : "No days"
@@ -481,14 +484,14 @@ const getDailySchedule = async () => {
       sheetTeacherSelected.value = [{
         id: scheduleData.teacher.id,
         teacher_name: scheduleData.teacher.user.firstName + ' ' + scheduleData.teacher.user.lastName,
-        teacher_img: scheduleData.teacher.user.image,
+        teacher_img: scheduleData.teacher.user.image || avatarImg, 
         teacher_type: 'Teacher'
       }];
       
       dataStudentSelected.value = scheduleData.students.map(student => ({
         student_id: student.id,
         student_name: `${student.firstName} ${student.lastName}`,
-        student_img: student.image,
+        student_img: student.image || avatarImg,
         student_program: student.program || '',
         days_enrolled: student.daysEnrolled ? formatDays(student.daysEnrolled) : 'No days'
       }));
@@ -545,8 +548,8 @@ const createNewDailySchedule = async () =>{
       notes: notes.value,
 
       });
-      showAlert('New Planning created succesfully!', 'success');
       loadingCreate.value = false;
+      dialogAddPlanning.value = false;
       dialogConfirmationDaily.value = true;
     }catch(error){
       showAlert(error, 'error')
@@ -554,20 +557,22 @@ const createNewDailySchedule = async () =>{
     }
 };
 
-onMounted(() => {
+onMounted(async () => {
   getTeachers();
-  getStudents();
   planningId.value = route.query.planningId || 0;
   scheduleId.value = route.params.scheduleId || null;
   day.value = route.query.day || '';
   dayNumber.value = route.query.dayNumber || '00';
   scheduleId.value = route.query.scheduleId || 0;
    if (scheduleId.value) {
-    getDailySchedule();
+    await getDailySchedule();
   }
   
   if (planningId.value) {
-    fetchPlanningData();
+    await fetchPlanningData();
+    await getStudents(); 
+  } else {
+    await getStudents(); 
   }
 });
 

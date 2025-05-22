@@ -87,7 +87,7 @@
             >
             <span class="f24 font2 tcenter" style="color: #6BBDAE;">Attendance</span>
             <hr>
-            <span class="f16 font2" style="color: #262262; align-self: flex-start;">Students 0/8</span>
+            <span class="f16 font2" style="color: #262262; align-self: flex-start;">Students {{ totalAttendances }} / {{ maxCapacity }}</span>
 
             <div class="student-container mt-4">
               <v-card v-for="(item, index) in dataStudentAttendance" :key="index" flat>
@@ -111,7 +111,7 @@
           >
             <span class="f24 font2 tcenter" style="color: #F36029;">Late arrival</span>
             <hr>
-            <span class="f16 font2" style="color: #262262; align-self: flex-start;">Students 0/8</span>
+            <span class="f16 font2" style="color: #262262; align-self: flex-start;">Students {{ totalAttendances }} / {{ maxCapacity }}</span>
 
             <div class="student-container mt-4">
               <v-card v-for="(item, index) in dataStudentLate" :key="index" flat>
@@ -135,7 +135,7 @@
           >
             <span class="f24 font2 tcenter" style="color: #BA1A1A;">Absence</span>
             <hr>
-            <span class="f16 font2" style="color: #262262; align-self: flex-start;">Students 0/8</span>
+            <span class="f16 font2" style="color: #262262; align-self: flex-start;">Students {{ totalAttendances }} / {{ maxCapacity }}</span>
 
             <div class="student-container mt-4">
               <v-card v-for="(item, index) in dataStudentAbsence" :key="index" flat>
@@ -159,7 +159,7 @@
           >
             <span class="f24 font2 tcenter" style="color: #6DB0F3; line-height: 24px;">Excused <br> Absence</span>
             <hr>
-            <span class="f16 font2" style="color: #262262; align-self: flex-start;">Students 0/8</span>
+            <span class="f16 font2" style="color: #262262; align-self: flex-start;">Students {{ totalAttendances }} / {{ maxCapacity }}</span>
 
             <div class="student-container mt-4">
               <v-card v-for="(item, index) in dataStudentExcused" :key="index" flat>
@@ -174,7 +174,11 @@
             </div>
           </v-card>
         </div>
+      </v-col>
+    </v-row>
 
+    <v-row class="fullw">
+      <v-col cols="12" sm="6" class="pa-0 fullw">
         <div class="big-div-textarea">
           <span class="f24 font2 tcenter" style="color: #262262; line-height: 24px;">Notes and Comments</span>
           <hr>
@@ -190,9 +194,9 @@
           class="text-area fullw"
           ></v-textarea>
         </div>
-      </v-col>
+      </v-col>    
 
-      <v-col cols="12" align="right">
+      <v-col cols="12" align="center" class="mt-4">
         <v-btn flat class="btn" @click="dialogAddPlanning = true">Save</v-btn>
       </v-col>
     </v-row>
@@ -227,6 +231,7 @@ import { ref, onMounted, inject, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axiosInstance from '@/plugins/axios';
 import dayjs from 'dayjs';
+import imgAvatar from '@/assets/sources/images/avatar.svg';
 
 const dialogConfirmationDaily = ref(false);
 const dialogAddPlanning = ref(false);
@@ -269,6 +274,7 @@ const dataStudentAbsence = ref([]);
 const dataStudentExcused = ref([]);
 const loadingAttendance = ref(false);
 const draggedItem = ref(null);
+
 
 const startDrag = (item, ev) => {
   draggedItem.value = item;
@@ -360,9 +366,7 @@ const submitAttendances = async () => {
       return;
     }
 
-    const response = await axiosInstance.post('/attendances', {
-      attendances: attendances
-    });
+    const response = await axiosInstance.post('/attendances/bulk', attendances);
 
     loadingAttendance.value = false;
     dialogAddPlanning.value = false;
@@ -432,6 +436,13 @@ const filteredTeachers = computed(() => {
   );
 });
 
+const totalAttendances = computed(() => {
+  return dataStudentAttendance.value.length +
+         dataStudentLate.value.length +
+         dataStudentAbsence.value.length +
+         dataStudentExcused.value.length;
+});
+
 const filteredStudents = computed(() => {
   return dataStudents.value.filter(student => {
     const nameMatch = student.student_name.toLowerCase().includes(searchQueryStudents.value.toLowerCase());
@@ -450,23 +461,6 @@ const activeStudents = () =>{
   teachers_btn.value = false;
 };
 
-const getTeachers = async () => {
-  try {
-    const response = await axiosInstance.get('/teachers');
-
-    dataTeachers.value = response.data.result.map((teacher) => {
-      return {
-        teacher_id: teacher.id,
-        teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
-        teacher_img: teacher.user.image,
-        teacher_type: 'Teacher',
-      };
-    });
-  } catch (error) {
-    showAlert('Error', 'error');
-  }
-};
-
 const formatDays = (days) => {
   const dayAbbreviations = {
     "Monday": "Mon",
@@ -479,25 +473,6 @@ const formatDays = (days) => {
   };
   
   return days.map(day => dayAbbreviations[day]).join(', ');
-};
-
-const getStudents = async () =>{
-  try{
-    const response = await axiosInstance.get('/students');
-
-    //dataStudents.value = response.data.result.map((student) =>{
-      //return{
-       // student_id: student.id,
-       /// student_img: student.image,
-       /// student_name: student.firstName + ' ' + student.lastName,
-        //desc_program: student.program,
-        ///days_enrolled: student.daysEnrolled ? formatDays(student.daysEnrolled) : "No days"
-      //}
-    //});
-    // checkDayAvailability();
-  }catch(error){
-    showAlert('Error', 'error')
-  }
 };
 
 watch([all, monday, tuesday, wednesday, thursday, friday, saturday, sunday], () => {
@@ -531,6 +506,10 @@ const getDailySchedule = async () => {
     const scheduleData = response.data.result;
     
     if (scheduleData) {
+      maxCapacity.value = scheduleData.planning.class.maxCapacity;
+      campus_name.value = scheduleData.planning.campus.name;
+      class_name.value = scheduleData.planning.class.name;
+      program.value = scheduleData.planning.class.program;
       notes.value = scheduleData.notes || '';
       day.value = scheduleData.day;
       dayNumber.value = dayjs(scheduleData.date).format('DD/MM/YY');;
@@ -544,30 +523,11 @@ const getDailySchedule = async () => {
       dataStudents.value = scheduleData.students.map(student => ({
         student_id: student.id,
         student_name: `${student.firstName} ${student.lastName}`,
-        student_img: student.image,
+        student_img: student.image || imgAvatar,
       }));
     }
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
-  }
-};
-
-const fetchPlanningData = async () => {
-  try {
-    const response = await axiosInstance.get(`/planning/${planningId.value}`);
-
-    dataPlanning.value = response.data.result;
-    id_planning.value = dataPlanning.value.id;
-    class_name.value = dataPlanning.value.class.name;
-    program.value = dataPlanning.value.class.program;
-    campus_name.value = dataPlanning.value.campus.name;
-    maxCapacity.value = dataPlanning.value.class.maxCapacity
-    year.value = dataPlanning.value.year;
-    month.value = dataPlanning.value.month;
-    transformDatesYear()
-    transformDatesMonth()
-  } catch (error) {
-    console.error('Error fetching planning data:', error);
   }
 };
 
@@ -581,44 +541,11 @@ const transformDatesMonth = async () => {
   month.value = String(month.value).padStart(2, '0');
 };
 
-const createNewDailySchedule = async () =>{
-  loadingCreate.value = true;
-  // if(!sheetTeacherSelected.value){
-  //   showAlert('You must select at least 1 Teacher.')
-  // }else if (!dataStudentSelected.value){
-  //   showAlert('You must select at least 1 Student')
-  // }else{
-    
-  // }
-  try{
-      const response = await axiosInstance.patch(`/daily-schedules/${scheduleId.value}`, {
-      planningId: planningId.value,
-      day: day.value,
-      teacherId: sheetTeacherSelected.value[0].id,
-      studentIds: dataStudentSelected.value.map(student => student.student_id),
-      notes: notes.value,
-
-      });
-      showAlert('New Planning created succesfully!', 'success');
-      loadingCreate.value = false;
-      dialogConfirmationDaily.value = true;
-    }catch(error){
-      showAlert(error, 'error')
-      loadingCreate.value = false;
-    }
-};
-
 onMounted(() => {
-  getTeachers();
-  getStudents();
   planningId.value = route.query.planningId || 0;
    if (scheduleId.value) {
     getDailySchedule();
   }
-  
-  // if (planningId.value) {
-  //   fetchPlanningData();
-  // }
 });
 
 

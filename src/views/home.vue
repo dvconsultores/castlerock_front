@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <div class="sheet-menu-div mt-10">
+    <div v-if="!isTeacher" class="sheet-menu-div mt-10">
       <v-sheet v-for="(item, index) in dataSheets" :key="index" class="sheet-menu pointer" @click="$router.push(item.route)">
         <div class="flexstart flexcol">
           <img :src="item.imgIcon" alt="Calendar">
@@ -76,7 +76,7 @@
           </div>
 
           <div class="flex center mt-2" style="gap: 10px;">
-            <v-icon color="#474649">mdi-eye-outline</v-icon>
+            <v-icon color="#474649" @click="$router.push(`/home/view-daily-schedule/${item.id}`)">mdi-eye-outline</v-icon>
             <v-icon color="#474649" @click="$router.push(`/home/edit-daily-attendance/${item.id}`)">mdi-pencil-outline</v-icon>
           </div>
         </v-card>
@@ -139,8 +139,8 @@
           </div>
 
           <div class="flex center mt-2" style="gap: 10px;">
-            <v-icon color="#474649">mdi-eye-outline</v-icon>
-            <v-icon color="#474649">mdi-pencil-outline</v-icon>
+            <v-icon color="#474649" @click="$router.push(`/home/view-daily-schedule/${item.id}`)">mdi-eye-outline</v-icon>
+            <v-icon color="#474649" @click="$router.push(`/home/edit-daily-attendance/${item.id}`)">mdi-pencil-outline</v-icon>
           </div>
         </v-card>
 
@@ -214,8 +214,10 @@ import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import 'dayjs/locale/en';
+import avatarImg from '@/assets/sources/images/avatar.svg';
 
 const showAlert = inject('showAlert');
+const isTeacher = ref(false);
 
 dayjs.extend(weekOfYear);
 dayjs.extend(isLeapYear);
@@ -397,7 +399,7 @@ const loadDaily = async () => {
       imgUser: item.teacher?.user.image || null,
       teacherName: item.teacher?.user.firstName + ' ' + item.teacher?.user.lastName || 'Teacher',
       teacherType: 'Teacher',
-      imgStudent: item.students?.[0]?.image, 
+      imgStudent: item.students?.[0]?.image || avatarImg, 
       imgStudent2: item.students?.[1]?.image || null,
       imgStudent3: item.students?.[2]?.image || null,
       imgStudent4: item.students?.[3]?.image || null,
@@ -426,7 +428,7 @@ const loadDailyBefore = async () => {
       imgUser: item.teacher?.user.image || null,
       teacherName: item.teacher?.user.firstName + ' ' + item.teacher?.user.lastName || 'Teacher',
       teacherType: 'Teacher',
-      imgStudent: item.students?.[0]?.image, 
+      imgStudent: item.students?.[0]?.image || avatarImg, 
       imgStudent2: item.students?.[1]?.image || null,
       imgStudent3: item.students?.[2]?.image || null,
       imgStudent4: item.students?.[3]?.image || null,
@@ -451,7 +453,7 @@ const getAttendance = async () => {
     );
     
     sheetDataAbsences.value = todayAbsences.map(item => ({
-      absence_img: item.student?.image,
+      absence_img: item.student?.image || avatarImg,
       absences_name: item.student?.firstName + ' ' + item.student?.lastName.trim(),
       center_desc: item.dailySchedule?.class?.name || 'Center 1 - Lions'
     }));
@@ -465,6 +467,7 @@ onMounted(() => {
   loadDaily();
   loadDailyBefore();
   getAttendance();
+  isTeacher.value = localStorage.getItem('userRole') === 'TEACHER';
 });
 </script>
 

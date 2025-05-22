@@ -4,7 +4,7 @@
       {{ class_name }} - <span>{{ program.charAt(0).toUpperCase() + program.slice(1).toLowerCase() }}</span>
     </h3>
     <h5 class="font2 tleft" style="color: #4E444B;">
-      {{ day }}, {{ dayNumber }}/{{ month }}/{{ year }}  - ({{ campus_name }})
+      {{ day }}, {{ dayNumber }} - ({{ campus_name }})
     </h5>
 
     <v-row class="fullw mt-10">
@@ -27,11 +27,11 @@
           </v-sheet>
 
           <span class="f16 font2 tleft mt-4 mb-4" style="color: #262262;">
-            Students {{dataStudentSelected.length}}/ {{ maxCapacity }}
+            Students {{dataStudents.length}}/ {{ maxCapacity }}
           </span>
 
           <div class="students-selected-container">
-            <v-card v-for="(item, index) in dataStudentSelected" :key="index" flat>
+            <v-card v-for="(item, index) in dataStudents" :key="index" flat>
               <div class="rounde-div">
                 <img :src="item.student_img" alt="Student">
               </div>
@@ -50,7 +50,7 @@
           <v-textarea
           v-model="notes"
           density="compact"
-          placeholder="You can add a note here (optional)" variant="solo"
+          placeholder="There are no notes" variant="solo"
           flat
           readonly
           hide-details
@@ -67,16 +67,19 @@
 import { ref, onMounted, inject, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axiosInstance from '@/plugins/axios';
+import dayjs from 'dayjs';
+import imgAvatar from '@/assets/sources/images/avatar.svg';
 
+const class_name = ref('');
+const program = ref('');
 const notes = ref('');
 const route = useRoute();
-const planningId = ref(0);
+const scheduleId = ref(route.params.id);
 const day = ref('');
 const dayNumber = ref('');
 const month = ref('');
 const year = ref('');
 const showAlert = inject('showAlert');
-const dataTeachers = ref([]);
 const dataStudents = ref([]);
 const all = ref(true);
 const monday = ref(false);
@@ -86,34 +89,10 @@ const thursday = ref(false);
 const friday = ref(false);
 const saturday = ref(false);
 const sunday = ref(false);
-const dataPlanning= ref([]);
-const id_planning = ref('');
-const class_name = ref('');
-const program = ref('');
 const campus_name = ref('');
-const stateAvailable = ref(false);
 const sheetTeacherSelected = ref([]);
-const dataStudentSelected = ref([]);
-const loadingCreate = ref(false);
-const scheduleId = ref(null);
 const maxCapacity = ref(0);
 
-const getTeachers = async () => {
-  try {
-    const response = await axiosInstance.get('/teachers');
-
-    dataTeachers.value = response.data.result.map((teacher) => {
-      return {
-        teacher_id: teacher.id,
-        teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
-        teacher_img: teacher.user.image,
-        teacher_type: 'Teacher',
-      };
-    });
-  } catch (error) {
-    showAlert('Error', 'error');
-  }
-};
 
 const formatDays = (days) => {
   const dayAbbreviations = {
@@ -129,96 +108,11 @@ const formatDays = (days) => {
   return days.map(day => dayAbbreviations[day]).join(', ');
 };
 
-const getStudents = async () =>{
-  try{
-    const response = await axiosInstance.get('/students');
-
-    dataStudents.value = response.data.result.map((student) =>{
-      return{
-        student_id: student.id,
-        student_img: student.image,
-        student_name: student.firstName + ' ' + student.lastName,
-        desc_program: student.program,
-        days_enrolled: student.daysEnrolled ? formatDays(student.daysEnrolled) : "No days"
-      }
-    });
-    checkDayAvailability();
-  }catch(error){
-    showAlert('Error', 'error')
-  }
-};
-
 watch([all, monday, tuesday, wednesday, thursday, friday, saturday, sunday], () => {
   checkDayAvailability();
 }, { deep: true });
 
-const checkDayAvailability = () => {
-  if (!dataStudents.value) return;
-  
-  stateAvailable.value = dataStudents.value.some(student => {
-    if (!student.days_enrolled || student.days_enrolled === "No days") return false;
-    
-    const enrolledDays = student.days_enrolled.split(', ').map(day => day.trim());
-    
-    return (
-      (all.value) ||
-      (monday.value && enrolledDays.includes('Mon')) ||
-      (tuesday.value && enrolledDays.includes('Tue')) ||
-      (wednesday.value && enrolledDays.includes('Wed')) ||
-      (thursday.value && enrolledDays.includes('Thu')) ||
-      (friday.value && enrolledDays.includes('Fri')) ||
-      (saturday.value && enrolledDays.includes('Sat')) ||
-      (sunday.value && enrolledDays.includes('Sun'))
-    );
-  });
-};
 
-const getDailySchedule = async () => {
-  try {
-    const response = await axiosInstance.get(`/daily-schedules/${scheduleId.value}`);
-    const scheduleData = response.data.result;
-    
-    if (scheduleData) {
-      notes.value = scheduleData.notes || '';
-      
-      sheetTeacherSelected.value = [{
-        id: scheduleData.teacher.id,
-        teacher_name: 'Simulated Teacher Name',
-        teacher_img: '',
-        teacher_type: 'Teacher'
-      }];
-      
-      dataStudentSelected.value = scheduleData.students.map(student => ({
-        student_id: student.id,
-        student_name: `${student.firstName} ${student.lastName}`,
-        student_img: student.image,
-        student_program: student.program || '',
-        days_enrolled: student.daysEnrolled ? formatDays(student.daysEnrolled) : 'No days'
-      }));
-    }
-  } catch (error) {
-    showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
-  }
-};
-
-const fetchPlanningData = async () => {
-  try {
-    const response = await axiosInstance.get(`/planning/${planningId.value}`);
-
-    dataPlanning.value = response.data.result;
-    id_planning.value = dataPlanning.value.id;
-    class_name.value = dataPlanning.value.class.name;
-    program.value = dataPlanning.value.class.program;
-    campus_name.value = dataPlanning.value.campus.name;
-    maxCapacity.value = dataPlanning.value.class.maxCapacity
-    year.value = dataPlanning.value.year;
-    month.value = dataPlanning.value.month;
-    transformDatesYear()
-    transformDatesMonth()
-  } catch (error) {
-    console.error('Error fetching planning data:', error);
-  }
-};
 
 const transformDatesYear = async () =>{
   if (year.value >= 2023 && year.value <= 2030) {
@@ -230,22 +124,45 @@ const transformDatesMonth = async () => {
   month.value = String(month.value).padStart(2, '0');
 };
 
+const scheduleData = ref([]);
+
+const getDailySchedule = async () => {
+  try {
+    const response = await axiosInstance.get(`/daily-schedules/${scheduleId.value}`);
+    const scheduleData = response.data.result;
+    
+    if (scheduleData) {
+      maxCapacity.value = scheduleData.planning.class.maxCapacity;
+      campus_name.value = scheduleData.planning.campus.name;
+      class_name.value = scheduleData.planning.class.name;
+      program.value = scheduleData.planning.class.program;
+      notes.value = scheduleData.notes || '';
+      day.value = scheduleData.day;
+      dayNumber.value = dayjs(scheduleData.date).format('DD/MM/YY');;
+      sheetTeacherSelected.value = [{
+        id: scheduleData.teacher.id,
+        teacher_name: scheduleData.teacher.user.firstName + ' ' + scheduleData.teacher.user.lastName,
+        teacher_img: scheduleData.teacher.user.image,
+        teacher_type: 'Teacher'
+      }];
+      
+      dataStudents.value = scheduleData.students.map(student => ({
+        student_id: student.id,
+        student_name: `${student.firstName} ${student.lastName}`,
+        student_img: student.image || imgAvatar,
+      }));
+    }
+  } catch (error) {
+    showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
+  }
+};
+
 
 onMounted(() => {
-  getTeachers();
-  getStudents();
-  planningId.value = route.query.planningId || 0;
-  scheduleId.value = route.params.scheduleId || null;
-  day.value = route.query.day || '';
-  dayNumber.value = route.query.dayNumber || '00';
-  scheduleId.value = route.query.scheduleId || 0;
    if (scheduleId.value) {
     getDailySchedule();
   }
   
-  if (planningId.value) {
-    fetchPlanningData();
-  }
 });
 
 

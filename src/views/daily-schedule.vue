@@ -271,6 +271,7 @@
 import { ref, onMounted, inject, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axiosInstance from '@/plugins/axios';
+import avatarImg from '@/assets/sources/images/avatar.svg';
 
 const dialogConfirmationDaily = ref(false);
 const dialogAddPlanning = ref(false);
@@ -369,10 +370,7 @@ const filteredTeachers = computed(() => {
 
 const filteredStudents = computed(() => {
   return dataStudents.value.filter(student => {
-    // Filtrar por nombre
     const nameMatch = student.student_name.toLowerCase().includes(searchQueryStudents.value.toLowerCase());
-    
-    // Filtrar por días si no está seleccionado "All"
     let dayMatch = true;
     if (!all.value) {
       const selectedDays = [];
@@ -412,7 +410,7 @@ const getTeachers = async () => {
       return {
         teacher_id: teacher.id,
         teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
-        teacher_img: teacher.user.image,
+        teacher_img: teacher.user.image || avatarImg,
         teacher_type: 'Teacher',
       };
     });
@@ -439,10 +437,12 @@ const getStudents = async () =>{
   try{
     const response = await axiosInstance.get('/students');
 
-    dataStudents.value = response.data.result.map((student) =>{
+    dataStudents.value = response.data.result
+      .filter(student => student.program === program.value)
+      .map((student) =>{
       return{
         student_id: student.id,
-        student_img: student.image,
+        student_img: student.image || avatarImg,
         student_name: student.firstName + ' ' + student.lastName,
         desc_program: student.program,
         days_enrolled: student.daysEnrolled ? formatDays(student.daysEnrolled) : "No days"
@@ -493,6 +493,7 @@ const fetchPlanningData = async () => {
     month.value = dataPlanning.value.month;
     transformDatesYear()
     transformDatesMonth()
+    console.log('Year:', dataPlanning.value.class.program);
   } catch (error) {
     console.error('Error fetching planning data:', error);
   }
@@ -535,15 +536,17 @@ const createNewDailySchedule = async () =>{
     }
 };
 
-onMounted(() => {
-  getTeachers();
-  getStudents();
+onMounted(async () => { 
+  await getTeachers();    
   planningId.value = route.query.planningId || 0;
   day.value = route.query.day || '';
   dayNumber.value = route.query.dayNumber || '00';
   
   if (planningId.value) {
-    fetchPlanningData();
+    await fetchPlanningData();
+    await getStudents(); 
+  } else {
+    await getStudents(); 
   }
 });
 

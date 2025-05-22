@@ -6,7 +6,7 @@
         <v-col cols="12" sm="8" class="pb-0">
           <v-text-field
             v-model="center_name"
-            class="textfield-registration"
+            :class="{'textfield-error': centerError, 'textfield-registration': true}"
             placeholder="Center Name"
             variant="solo" 
             maxlength="150"
@@ -18,7 +18,7 @@
         <v-col cols="12" sm="4" class="pb-0">
           <v-text-field
             v-model="phone_center"
-            class="textfield-registration"
+            :class="{'textfield-error': phoneError, 'textfield-registration': true}"
             placeholder="Phone of the center"
             variant="solo" 
             flat
@@ -32,7 +32,7 @@
         <v-col cols="12" class="pb-0">
           <v-text-field
             v-model="nickname_center"
-            class="textfield-registration"
+            :class="{'textfield-error': nicknameError, 'textfield-registration': true}"
             placeholder="Nickname of the center"
             variant="solo" 
             maxlength="150"
@@ -44,7 +44,7 @@
         <v-col cols="12" class="pb-0">
           <v-text-field
             v-model="address"
-            class="textfield-registration"
+            :class="{'textfield-error': addressError, 'textfield-registration': true}"
             placeholder="Location"
             variant="solo" 
             maxlength="150"
@@ -75,7 +75,7 @@
               >
             </div>
             
-            <v-btn @click="triggerFileInput">Upload</v-btn>
+            <v-btn :class="{'btn-error': imgError}" @click="triggerFileInput">Upload</v-btn>
 
             <v-file-input 
             ref="fileInput" v-model="selectedImgCenter" flat variant="solo" 
@@ -137,6 +137,11 @@ const loadingCenter = ref(false);
 const showAlert = inject('showAlert');
 const dialogAddCenter = ref(false);
 const dialogConfirmationCenter = ref(false);
+const centerError = ref('');
+const phoneError = ref('');
+const nicknameError = ref('');
+const addressError = ref('');
+const imgError = ref('');
 
 const handleFileChange = (file) => {
   if (file) {
@@ -160,6 +165,42 @@ const closeConfirmationCenter = () => {
 };
 
 const openSaveCenter = () => {
+  centerError.value = '';
+  phoneError.value = '';
+  nicknameError.value = '';
+  addressError.value = '';
+  imgError.value = '';
+
+  if (!center_name.value?.trim()) {
+    centerError.value = 'Please enter a valid center name';
+    showAlert(centerError.value, 'error');
+    return;
+  }
+
+  if (!phone_center.value?.trim()) {
+    phoneError.value = 'Please enter a valid phone number';
+    showAlert(phoneError.value, 'error');
+    return;
+  }
+
+  if (!nickname_center.value?.trim()) {
+    nicknameError.value = 'Please enter a valid nickname';
+    showAlert(nicknameError.value, 'error');
+    return;
+  }
+
+  if (!address.value?.trim()) {
+    addressError.value = 'Please enter a valid address';
+    showAlert(addressError.value, 'error');
+    return;
+  }
+
+  if (!imagePreview.value) {
+    imgError.value = 'Please enter a valid image';
+    showAlert(imgError.value, 'error');
+    return;
+  }
+
   if (center_name.value?.trim() && phone_center.value?.trim() && nickname_center.value?.trim() && address.value?.trim() && imagePreview.value) {
     dialogAddCenter.value = true;
   }else {

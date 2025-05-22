@@ -152,6 +152,12 @@ button.btn-2, .v-btn.btn-2, .btn-2 {
   align-items: center;
 }
 
+.jend{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .flex{display: flex;}
 .flexcol{display: flex; flex-direction: column;}
 .flexstart{display: flex; justify-content: flex-start; align-items: flex-start;}

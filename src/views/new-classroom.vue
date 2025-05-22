@@ -6,7 +6,7 @@
         <v-col cols="12" sm="9" class="pb-0">
           <v-text-field
             v-model="name"
-            class="textfield-registration"
+            :class="{'textfield-error': nameError, 'textfield-registration': true}"
             placeholder="Classroom Name"
             variant="solo" 
             maxlength="150"
@@ -18,7 +18,7 @@
         <v-col cols="12" sm="3" class="pb-0">
           <v-text-field
             v-model="maxCapacity"
-            class="textfield-registration"
+            :class="{'textfield-error': maxCapacityError, 'textfield-registration': true}"
             placeholder="Number of students"
             variant="solo"
             maxlength="150" 
@@ -34,7 +34,7 @@
             v-model="program"
             placeholder="Program"
             flat
-            class="autocomplete-register"
+            :class="{'textfield-error': programError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="['PRIMARY', 'TODDLER']"
             variant="solo"
@@ -49,7 +49,7 @@
             v-model.number="select_center"
             placeholder="Select Center"
             flat
-            class="autocomplete-register"
+            :class="{'textfield-error': selectCenterError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="selectCenterItems"
             item-value="id"
@@ -85,7 +85,7 @@
               >
             </div>
             
-            <v-btn @click="triggerFileInput">Upload</v-btn>
+            <v-btn :class="{'btn-error': imgError}"  @click="triggerFileInput">Upload</v-btn>
 
             <v-file-input 
             ref="fileInput" v-model="selectedImgClassroom" flat variant="solo" 
@@ -149,6 +149,11 @@ const showAlert = inject('showAlert');
 const selectCenterItems = ref([]);
 const dialogAddClassroom = ref(false);
 const dialogConfirmationClassroom = ref(false);
+const nameError = ref('');
+const maxCapacityError = ref('');
+const programError = ref('');
+const selectCenterError = ref('');
+const imgError = ref('');
 
 const handleFileChange = (file) => {
   if (file) {
@@ -174,12 +179,49 @@ const closeConfirmationClassroom = () => {
 };
 
 const openSaveClassroom = () => {
+  nameError.value = '';
+  maxCapacityError.value = '';
+  programError.value = '';
+  selectCenterError.value = '';
+  imgError.value = '';
+
+  if (!name.value?.trim()) {
+    nameError.value = 'Please enter a valid classroom name';
+    showAlert(nameError.value, 'error');
+    return;
+  }
+
+  if (!maxCapacity.value) {
+    maxCapacityError.value = 'Please enter a valid number';
+    showAlert(maxCapacityError.value, 'error');
+    return;
+  }
+
+  if (!program.value) {
+    programError.value = 'Please select a valid program';
+    showAlert(programError.value, 'error');
+    return;
+  }
+
+  if (!select_center.value) {
+    selectCenterError.value = 'Please select a valid center';
+    showAlert(selectCenterError.value, 'error');
+    return;
+  }
+
+  if (!imagePreview.value) {
+    imgError.value = 'Please enter a valid image';
+    showAlert(imgError.value, 'error');
+    return;
+  }
+
   if (!name.value || !maxCapacity.value || !program.value || !select_center.value || imagePreview.value === null) {
     showAlert('Please fill all required fields', 'error');
     return;
   }
   
   if (isNaN(parseInt(maxCapacity.value))) {
+    maxCapacityError.value = 'Please enter a valid number';
     showAlert('Max capacity must be a number', 'error');
     return;
   }

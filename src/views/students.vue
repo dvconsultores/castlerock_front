@@ -83,6 +83,7 @@ import axiosInstance from '@/plugins/axios';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import avatarImg from '@/assets/sources/images/avatar.svg';
 
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
@@ -170,7 +171,7 @@ const getStudents = async () => {
       return {
         id: student.id,
         id_student: index + 1,
-        student_img: student.image,
+        student_img: student.image || avatarImg,
         name: student.firstName + ' ' + student.lastName,
         age: ageDisplay,
         gender: student.gender,

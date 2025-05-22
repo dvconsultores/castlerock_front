@@ -739,6 +739,7 @@ import absent from '@/assets/sources/icons/absent.svg';
 import late from '@/assets/sources/icons/late.svg';
 import excused from '@/assets/sources/icons/excused.svg';
 import contract from '@/assets/sources/icons/contract.svg';
+import avatarImg from '@/assets/sources/images/avatar.svg';
 
 const stateShow = ref(false);
 const year = ref(null);
@@ -922,7 +923,7 @@ const getDataStudent = async () => {
     lastName.value = student.lastName;
     gender.value = student.gender;
     dateOfBirth.value = student.dateOfBirth;
-    imagePreviewStudent.value = student.image;
+    imagePreviewStudent.value = student.image || avatarImg;
     notes.value = student.notes;
     start_date_class.value = student.startDateOfClasses;
     monday_enrolled.value = student.daysEnrolled.includes('Monday');
@@ -954,13 +955,13 @@ const getDataStudent = async () => {
     mothers_name.value = student.contacts.find(contact => contact.relation === 'Mother')?.fullName || '';
     mothers_number.value = student.contacts.find(contact => contact.relation === 'Mother')?.phone || '';
     mothers_role.value = student.contacts.find(contact => contact.relation === 'Mother')?.role || '';
-    imagePreviewMother.value = student.contacts.find(contact => contact.relation === 'Mother')?.image || '';
-    selectedImgMother.value = student.contacts.find(contact => contact.relation === 'Mother')?.image || '';
+    imagePreviewMother.value = student.contacts.find(contact => contact.relation === 'Mother')?.image || avatarImg;
+    selectedImgMother.value = student.contacts.find(contact => contact.relation === 'Mother')?.image || avatarImg;
     fathers_name.value = student.contacts.find(contact => contact.relation === 'Father')?.fullName || '';
     fathers_number.value = student.contacts.find(contact => contact.relation === 'Father')?.phone || '';
     fathers_role.value = student.contacts.find(contact => contact.relation === 'Father')?.role || '';
-    selectedImgFather.value = student.contacts.find(contact => contact.relation === 'Father')?.image || '';
-    imagePreviewFather.value = student.contacts.find(contact => contact.relation === 'Father')?.image || '';
+    selectedImgFather.value = student.contacts.find(contact => contact.relation === 'Father')?.image || avatarImg;
+    imagePreviewFather.value = student.contacts.find(contact => contact.relation === 'Father')?.image || avatarImg;
     contact_name.value = student.contacts.find(contact => contact.role === 'EMERGENCY_1')?.fullName || '';
     contact_number.value = student.contacts.find(contact => contact.role === 'EMERGENCY_1')?.phone || '';
     type_relationship1.value = student.contacts.find(contact => contact.role === 'EMERGENCY_1')?.relation || '';

@@ -330,11 +330,10 @@ const selectedClassItems = ref([]);
 const select_class = ref(null);
 const year = ref(null);
 const yearsArray = ref([
-  { id: 2023, name: '2023' },
-  { id: 2024, name: '2024' },
   { id: 2025, name: '2025' },
   { id: 2026, name: '2026' },
   { id: 2027, name: '2027' },
+  { id: 2028, name: '2028' },
 ]);
 const month = ref(null);
 const monthsArray = ref([
@@ -570,6 +569,23 @@ const searchPlannings = async () =>{
   }
 };
 
+const searchPlanningsWeeks = async () =>{
+  try{
+      const response = await axiosInstance.get(`/planning/search?campus=${select_id.value}&year=${year.value?.id}&month=${month.value?.id}&class=${class_id.value}&week=${week.value}`, {
+    });
+    if(response.data.result.length === 0){
+      showStatePlanning.value = false;
+      showAlert('Weekly Enrollment not created.', 'warning')
+    }else{
+      showStatePlanning.value = true;
+      monthlySchedule.value = transformResponseToMonthlySchedule(response.data);
+      planningData.value = response.data.result;
+    }
+  }catch(error){
+    showAlert(error, 'error')
+  }
+};
+
 watch(
   () => ({
     center: select_center.value,
@@ -595,6 +611,27 @@ watch(
 
     if (allRequiredFilled && hasChanged) {
       searchPlannings();
+    }
+  },
+  { deep: true }
+);
+
+watch(
+  () => ({
+    week: week.value,
+  }),
+  (newValues, oldValues) => {
+    if (!oldValues) return;
+
+    const allRequiredFilled = 
+      newValues.week !== null;
+
+    const hasChanged = (
+      newValues.week !== oldValues.week
+    );
+
+    if (allRequiredFilled && hasChanged) {
+      searchPlanningsWeeks();
     }
   },
   { deep: true }

@@ -223,7 +223,7 @@ const getTeacher = async () => {
     const teacher = response.data.result;
     
     teacher_name.value = teacher.user.firstName + ' ' + teacher.user.lastName;
-    // select_center.value = teacher.campus.name;
+    select_center.value = teacher.campus.id;
   } catch (error) {
     console.error('Failed to load center data', error);
   }

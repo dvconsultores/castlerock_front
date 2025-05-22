@@ -163,6 +163,18 @@
       align-items: flex-start;
       gap: 16px;
 
+      .no-data-div{
+        height: 200px;
+        width: 80vw;
+        display: grid;
+        place-items: center;
+        span{
+          font-family: var(--font-2);
+          font-size: 20px;
+          color: #262B63;
+        }
+      }
+
       .v-card:nth-child(odd) .div-header {
         background-color: #7583D9;  
       }
@@ -405,7 +417,7 @@
     .div-sheet-absences{
       display: flex;
       flex-direction: row;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 16px;
       align-items: center;
       background-color: transparent;
@@ -419,8 +431,8 @@
         padding: 8px;
         display: flex;
         flex-direction: column;
-        min-width: 210px;
-        width: 210px;
+        min-width: 240px;
+        width: 240px;
         height: max-content;
   
         .absences-info-div{

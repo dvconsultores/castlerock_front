@@ -823,8 +823,6 @@ const createStudent = async () => {
   !notes.value ||
   !start_date_class.value ||
   !select_center.value ||
-  !selectedImgFather.value ||
-  !selectedImgMother.value ||
   !selectedImgStudent.value ) {
     showAlert('Please fill in all required fields', 'error');
     savingStudent.value = false;

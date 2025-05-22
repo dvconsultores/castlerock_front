@@ -166,7 +166,9 @@ const currentTitle = computed(() => {
     return 'Daily Schedule';
   } else if (route.path.startsWith('/home/view-daily-schedule')) {
     return 'View Daily Schedule';
-  } else 
+  } else if (route.path.startsWith('/home/edit-daily-attendance')) {
+    return 'Daily Attendance';
+  }else 
   return pageTitles[route.path] || 'Dashboard';
 });
 
@@ -192,6 +194,9 @@ const subTitle = {
 }
 
 const currentSubTitle = computed(() => {
+  if(route.path.startsWith('/home/edit-daily-attendance')) {
+    return 'Manage your daily attendance';
+  } else
   return subTitle[route.path] || '';
 });
 

@@ -1,10 +1,10 @@
 <template>
-  <div id="daily-plan">
+  <div id="edit-daily-attendance">
     <h3 class="font2 tleft" style="color: #262B63;">
       {{ class_name }} - <span>{{ program.charAt(0).toUpperCase() + program.slice(1).toLowerCase() }}</span>
     </h3>
     <h5 class="font2 tleft" style="color: #4E444B;">
-      {{ day }}, {{ dayNumber }}/{{ month }}/{{ year }}  - ({{ campus_name }})
+      {{ day }}, {{ dayNumber }} - ({{ campus_name }})
     </h5>
 
     <v-row class="fullw mt-10">
@@ -18,23 +18,12 @@
           </v-btn>
         </div>
 
-        <div class="users-div">
+        <div class="users-div pt-6">
           <template v-if="teachers_btn">
-            <v-text-field
-              v-model="searchQueryTeachers"
-              class="login-textfield"
-              placeholder="Search Teacher"
-              bg-color="#F0F0F0 "
-              variant="solo" 
-              flat
-              hide-details
-              append-inner-icon="mdi-magnify"
-            ></v-text-field>
+            <span class="f16 font2 tcenter" style="color: #262262;">Classroom Teacher</span>
 
-            <hr>
-
-            <div class="scroll-div">
-              <v-sheet v-for="(item, index) in filteredTeachers" :key="index" class="sheet-absences pointer" @click="selectedTeacher(item)">
+            <div class="scroll-div mt-4">
+              <v-sheet v-for="(item, index) in sheetTeacherSelected" :key="index" class="sheet-absences pointer">
                 <div class="absences-info-div"> 
                   <div class="img-absences-card">
                     <img :src="item.teacher_img" alt="user">
@@ -45,8 +34,6 @@
                     <span class="f10 tleft" style="color: #4E444B;">{{ item.teacher_type }}</span>
                   </div>
                 </div>
-
-                <v-icon>mdi-chevron-right</v-icon>
               </v-sheet>
             </div>
           </template>
@@ -54,7 +41,7 @@
           <template v-else="students_btn">
             <v-text-field
               v-model="searchQueryStudents"
-              class="login-textfield"
+              class="login-textfield mb-6"
               placeholder="Search Student"
               bg-color="#F0F0F0 "
               variant="solo" 
@@ -63,86 +50,16 @@
               append-inner-icon="mdi-magnify"
             ></v-text-field>
 
-            <hr>
+            <span class="f16 font2 tcenter" style="color: #262262;">Classroom Students</span>
 
-            <span class="f16 font2 tcenter" style="color: #262262;">Available students today</span>
-
-            <div class="days-div">
-              <v-checkbox 
-                v-model="all" 
-                compact 
-                hide-details
-                class="checkbox " 
-                label="All" 
-                :class="{'checkbox-active': all}"
-              ></v-checkbox>
-              
-              <v-checkbox 
-                v-model="monday" 
-                compact 
-                hide-details
-                class="checkbox " 
-                label="Mon" 
-                :class="{'checkbox-active': monday}"
-              ></v-checkbox>
-              
-              <v-checkbox 
-                v-model="tuesday" 
-                compact 
-                hide-details
-                class="checkbox " 
-                label="Tue" 
-                :class="{'checkbox-active': tuesday}"
-              ></v-checkbox>
-              
-              <v-checkbox 
-                v-model="wednesday" 
-                compact 
-                hide-details
-                class="checkbox " 
-                label="Wed" 
-                :class="{'checkbox-active': wednesday}"
-              ></v-checkbox>
-              
-              <v-checkbox 
-                v-model="thursday" 
-                compact 
-                hide-details
-                class="checkbox " 
-                label="Thu" 
-                :class="{'checkbox-active': thursday}"
-              ></v-checkbox>
-              
-              <v-checkbox 
-                v-model="friday" 
-                compact 
-                hide-details
-                class="checkbox " 
-                label="Fri" 
-                :class="{'checkbox-active': friday}"
-              ></v-checkbox>
-              
-              <v-checkbox 
-                v-model="saturday" 
-                hide-details
-                compact 
-                class="checkbox" 
-                label="Sat" 
-                :class="{'checkbox-active': saturday}"
-              ></v-checkbox>
-              
-              <v-checkbox 
-                v-model="sunday" 
-                compact 
-                hide-details
-                class="checkbox" 
-                label="Sun" 
-                :class="{'checkbox-active': sunday}"
-              ></v-checkbox>
-            </div>
-
-            <div class="scroll-div scroll-div-student">
-              <v-sheet v-if="stateAvailable" v-for="(item, index) in filteredStudents" :key="index" class="sheet-absences pointer" @click="selectedStudent(item)">
+            <div class="scroll-div scroll-div-student mt-6">
+              <v-chip
+                v-for="(item, index) in filteredStudents"
+                :key="index"
+                class="sheet-absences pointer"
+                draggable
+                @dragstart="startDrag(item, $event)"
+              >
                 <div class="absences-info-div"> 
                   <div class="img-absences-card">
                     <img :src="item.student_img" alt="user">
@@ -150,62 +67,117 @@
 
                   <div class="flexcol">
                     <span class="f12 font2 tleft" style="color: #4E444B;">{{ item.student_name }}</span>
-                    <div>
-                      <span class="f10 tleft" style="color: #4E444B;">{{ item.desc_program }}</span>
-                      <span class="f10 tleft ml-1 w500" style="color: #6BBDAE;">{{ item.days_enrolled }}</span>
-                    </div>
                   </div>
                 </div>
 
                 <v-icon>mdi-chevron-right</v-icon>
-              </v-sheet>
+              </v-chip>
             </div>
           </template>
         </div>
       </v-col>
 
       <v-col cols="12" sm="9">
-        <div class="big-div">
-          <h5 class="font2 f24 tleft mb-0" style="color: #262262;">Daily Plan</h5>
-          <hr>
+        <div class="div-for-attendance">
+          <v-card  class="card-attendance" 
+            flat
+            @drop="onDrop($event, 'Present')"
+            @dragover.prevent
+            @dragenter.prevent
+            >
+            <span class="f24 font2 tcenter" style="color: #6BBDAE;">Attendance</span>
+            <hr>
+            <span class="f16 font2" style="color: #262262; align-self: flex-start;">Students 0/8</span>
 
-          <v-sheet v-for="(item, index) in sheetTeacherSelected" :key="index" class="sheet-teacher">
-            <div class="absences-info-div"> 
-              <div class="img-absences-card">
-                <img :src="item.teacher_img" alt="user">
-              </div>
-
-              <div class="flexcol">
-                <span class="f12 font2 tleft" style="color: #4E444B;">{{ item.teacher_name }}</span>
-                <span class="f10 tleft" style="color: #4E444B;">{{ item.teacher_type }}</span>
-              </div>
+            <div class="student-container mt-4">
+              <v-card v-for="(item, index) in dataStudentAttendance" :key="index" flat>
+                <div class="rounde-div">
+                  <img :src="item.student_img" alt="Student">
+                </div>
+                <span class="f12 font2 tcenter mt-2" style="color: #4E444B;">
+                  {{item.student_name}}
+                </span>
+                <v-icon @click="deleteStudent(index)">mdi-trash-can-outline</v-icon>
+              </v-card>
             </div>
+          </v-card>
 
-            <v-icon class="pointer" @click="deleteSelectedTeacher()">mdi-trash-can-outline</v-icon>
-          </v-sheet>
+          <v-card 
+          flat 
+          class="card-attendance"
+          @drop="onDrop($event, 'Late')"
+          @dragover.prevent
+          @dragenter.prevent
+          >
+            <span class="f24 font2 tcenter" style="color: #F36029;">Late arrival</span>
+            <hr>
+            <span class="f16 font2" style="color: #262262; align-self: flex-start;">Students 0/8</span>
 
-          <span class="f16 font2 tleft mt-4 mb-4" style="color: #262262;">
-            Students {{dataStudentSelected.length}}/ {{ maxCapacity }}
-          </span>
+            <div class="student-container mt-4">
+              <v-card v-for="(item, index) in dataStudentLate" :key="index" flat>
+                <div class="rounde-div">
+                  <img :src="item.student_img" alt="Student">
+                </div>
+                <span class="f12 font2 tcenter mt-2" style="color: #4E444B;">
+                  {{item.student_name}}
+                </span>
+                <v-icon @click="deleteStudent(index)">mdi-trash-can-outline</v-icon>
+              </v-card>
+            </div>
+          </v-card>
 
-          <div class="students-selected-container">
-            <v-card v-for="(item, index) in dataStudentSelected" :key="index" flat>
-              <div class="rounde-div">
-                <img :src="item.student_img" alt="Student">
-              </div>
-              <span class="f12 font2 tcenter" style="color: #4E444B;">
-                {{item.student_name}}
-              </span>
-              <span class="f10 w400 tcenter" style="color: #4E444B;">
-                {{item.student_program}}
-              </span>
-              <span class="f10 tcenter w500" style="color: #6BBDAE;">
-                {{ item.days_enrolled }}
-              </span>
+          <v-card 
+          flat 
+          class="card-attendance"
+          @drop="onDrop($event, 'Absent')"
+          @dragover.prevent
+          @dragenter.prevent
+          >
+            <span class="f24 font2 tcenter" style="color: #BA1A1A;">Absence</span>
+            <hr>
+            <span class="f16 font2" style="color: #262262; align-self: flex-start;">Students 0/8</span>
 
-              <v-icon @click="deleteStudent(index)">mdi-trash-can-outline</v-icon>
-            </v-card>
-          </div>
+            <div class="student-container mt-4">
+              <v-card v-for="(item, index) in dataStudentAbsence" :key="index" flat>
+                <div class="rounde-div">
+                  <img :src="item.student_img" alt="Student">
+                </div>
+                <span class="f12 font2 tcenter mt-2" style="color: #4E444B;">
+                  {{item.student_name}}
+                </span>
+                <v-icon @click="deleteStudent(index)">mdi-trash-can-outline</v-icon>
+              </v-card>
+            </div>
+          </v-card>
+
+          <v-card 
+          flat
+          class="card-attendance"
+          @drop="onDrop($event, 'Justified')"
+          @dragover.prevent
+          @dragenter.prevent
+          >
+            <span class="f24 font2 tcenter" style="color: #6DB0F3; line-height: 24px;">Excused <br> Absence</span>
+            <hr>
+            <span class="f16 font2" style="color: #262262; align-self: flex-start;">Students 0/8</span>
+
+            <div class="student-container mt-4">
+              <v-card v-for="(item, index) in dataStudentExcused" :key="index" flat>
+                <div class="rounde-div">
+                  <img :src="item.student_img" alt="Student">
+                </div>
+                <span class="f12 font2 tcenter mt-2" style="color: #4E444B;">
+                  {{item.student_name}}
+                </span>
+                <v-icon @click="deleteStudent(index)">mdi-trash-can-outline</v-icon>
+              </v-card>
+            </div>
+          </v-card>
+        </div>
+
+        <div class="big-div-textarea">
+          <span class="f24 font2 tcenter" style="color: #262262; line-height: 24px;">Notes and Comments</span>
+          <hr>
 
           <v-textarea
           v-model="notes"
@@ -213,28 +185,15 @@
           placeholder="You can add a note here (optional)" variant="solo"
           flat
           hide-details
+          rows="3"
           bg-color="#F0F0F0"
-          class="text-area mt-8 fullw"
+          class="text-area fullw"
           ></v-textarea>
-
-          <v-row class="fullw" no-gutters>
-            <v-col sm="2" cols="12" class="pr-1">
-              <!-- <v-btn flat class="btn1">
-                <v-icon class="mr-1">mdi-arrow-left-circle-outline</v-icon> Back to Day
-              </v-btn> -->
-            </v-col>
-            <v-col sm="8" cols="12">
-              <v-btn flat class="btn2" @click="dialogAddPlanning = true">
-                Save
-              </v-btn>
-            </v-col>
-            <v-col sm="2" cols="12" class="pl-1">
-              <!-- <v-btn flat class="btn3">
-                Next Day <v-icon class="ml-1">mdi-arrow-right-circle-outline</v-icon>
-              </v-btn> -->
-            </v-col>
-          </v-row>
         </div>
+      </v-col>
+
+      <v-col cols="12" align="right">
+        <v-btn flat class="btn" :loading="loadingAttendance" @click="submitAttendances">Save</v-btn>
       </v-col>
     </v-row>
 
@@ -271,6 +230,7 @@
 import { ref, onMounted, inject, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axiosInstance from '@/plugins/axios';
+import dayjs from 'dayjs';
 
 const dialogConfirmationDaily = ref(false);
 const dialogAddPlanning = ref(false);
@@ -305,8 +265,116 @@ const searchQueryTeachers = ref('');
 const searchQueryStudents = ref('');
 const dataStudentSelected = ref([]);
 const loadingCreate = ref(false);
-const scheduleId = ref(null);
+const scheduleId = ref(route.params.id);
 const maxCapacity = ref(0);
+const dataStudentAttendance = ref([]);
+const dataStudentLate = ref([]);
+const dataStudentAbsence = ref([]);
+const dataStudentExcused = ref([]);
+const loadingAttendance = ref(false);
+const draggedItem = ref(null);
+
+const startDrag = (item, ev) => {
+  draggedItem.value = item;
+  ev.dataTransfer.dropEffect = 'move';
+  ev.dataTransfer.effectAllowed = 'move';
+};
+
+const onDrop = (ev, status) => {
+  if (!draggedItem.value) return;
+
+  const student = draggedItem.value;
+  
+  // Remove from any existing array
+  dataStudentAttendance.value = dataStudentAttendance.value.filter(s => s.student_id !== student.student_id);
+  dataStudentLate.value = dataStudentLate.value.filter(s => s.student_id !== student.student_id);
+  dataStudentAbsence.value = dataStudentAbsence.value.filter(s => s.student_id !== student.student_id);
+  dataStudentExcused.value = dataStudentExcused.value.filter(s => s.student_id !== student.student_id);
+
+  // Add to the correct array
+  const studentData = {
+    student_id: student.student_id,
+    student_name: student.student_name,
+    student_img: student.student_img,
+    status: status
+  };
+
+  switch(status) {
+    case 'Present':
+      dataStudentAttendance.value.push(studentData);
+      break;
+    case 'Late':
+      dataStudentLate.value.push(studentData);
+      break;
+    case 'Absent':
+      dataStudentAbsence.value.push(studentData);
+      break;
+    case 'Justified':
+      dataStudentExcused.value.push(studentData);
+      break;
+  }
+
+  draggedItem.value = null;
+};
+
+const submitAttendances = async () => {
+  loadingAttendance.value = true;
+  try {
+    const attendances = [];
+    
+    dataStudentAttendance.value.forEach(student => {
+      attendances.push({
+        studentId: student.student_id,
+        dailyScheduleId: scheduleId.value,
+        status: 'Present',
+        observations: notes.value
+      });
+    });
+
+    dataStudentLate.value.forEach(student => {
+      attendances.push({
+        studentId: student.student_id,
+        dailyScheduleId: scheduleId.value,
+        status: 'Late',
+        observations: notes.value
+      });
+    });
+
+    dataStudentAbsence.value.forEach(student => {
+      attendances.push({
+        studentId: student.student_id,
+        dailyScheduleId: scheduleId.value,
+        status: 'Absent',
+        observations: notes.value
+      });
+    });
+
+    dataStudentExcused.value.forEach(student => {
+      attendances.push({
+        studentId: student.student_id,
+        dailyScheduleId: scheduleId.value,
+        status: 'Justified',
+        observations: notes.value
+      });
+    });
+
+    if (attendances.length === 0) {
+      showAlert('No attendances to save', 'error');
+      loadingAttendance.value = false;
+      return;
+    }
+
+    const response = await axiosInstance.post('/attendances', {
+      attendances: attendances
+    });
+
+    loadingAttendance.value = false;
+    showAlert('Attendances saved successfully!', 'success');
+  } catch (error) {
+    showAlert('Error saving attendances', 'error');
+    loadingAttendance.value = false;
+  }
+};
 
 const selectedTeacher = (item) => {
   const alreadySelected = sheetTeacherSelected.value.length
@@ -360,28 +428,9 @@ const filteredTeachers = computed(() => {
 
 const filteredStudents = computed(() => {
   return dataStudents.value.filter(student => {
-    // Filtrar por nombre
     const nameMatch = student.student_name.toLowerCase().includes(searchQueryStudents.value.toLowerCase());
-    
-    // Filtrar por días si no está seleccionado "All"
-    let dayMatch = true;
-    if (!all.value) {
-      const selectedDays = [];
-      if (monday.value) selectedDays.push('Mon');
-      if (tuesday.value) selectedDays.push('Tue');
-      if (wednesday.value) selectedDays.push('Wed');
-      if (thursday.value) selectedDays.push('Thu');
-      if (friday.value) selectedDays.push('Fri');
-      if (saturday.value) selectedDays.push('Sat');
-      if (sunday.value) selectedDays.push('Sun');
 
-      if (selectedDays.length > 0) {
-        const studentDays = student.days_enrolled.split(', ');
-        dayMatch = selectedDays.some(day => studentDays.includes(day));
-      }
-    }
-
-    return nameMatch && dayMatch;
+    return nameMatch;
   });
 });
 
@@ -430,16 +479,16 @@ const getStudents = async () =>{
   try{
     const response = await axiosInstance.get('/students');
 
-    dataStudents.value = response.data.result.map((student) =>{
-      return{
-        student_id: student.id,
-        student_img: student.image,
-        student_name: student.firstName + ' ' + student.lastName,
-        desc_program: student.program,
-        days_enrolled: student.daysEnrolled ? formatDays(student.daysEnrolled) : "No days"
-      }
-    });
-    checkDayAvailability();
+    //dataStudents.value = response.data.result.map((student) =>{
+      //return{
+       // student_id: student.id,
+       /// student_img: student.image,
+       /// student_name: student.firstName + ' ' + student.lastName,
+        //desc_program: student.program,
+        ///days_enrolled: student.daysEnrolled ? formatDays(student.daysEnrolled) : "No days"
+      //}
+    //});
+    // checkDayAvailability();
   }catch(error){
     showAlert('Error', 'error')
   }
@@ -477,7 +526,8 @@ const getDailySchedule = async () => {
     
     if (scheduleData) {
       notes.value = scheduleData.notes || '';
-      
+      day.value = scheduleData.day;
+      dayNumber.value = dayjs(scheduleData.date).format('DD/MM/YY');;
       sheetTeacherSelected.value = [{
         id: scheduleData.teacher.id,
         teacher_name: scheduleData.teacher.user.firstName + ' ' + scheduleData.teacher.user.lastName,
@@ -485,12 +535,10 @@ const getDailySchedule = async () => {
         teacher_type: 'Teacher'
       }];
       
-      dataStudentSelected.value = scheduleData.students.map(student => ({
+      dataStudents.value = scheduleData.students.map(student => ({
         student_id: student.id,
         student_name: `${student.firstName} ${student.lastName}`,
         student_img: student.image,
-        student_program: student.program || '',
-        days_enrolled: student.daysEnrolled ? formatDays(student.daysEnrolled) : 'No days'
       }));
     }
   } catch (error) {
@@ -558,22 +606,18 @@ onMounted(() => {
   getTeachers();
   getStudents();
   planningId.value = route.query.planningId || 0;
-  scheduleId.value = route.params.scheduleId || null;
-  day.value = route.query.day || '';
-  dayNumber.value = route.query.dayNumber || '00';
-  scheduleId.value = route.query.scheduleId || 0;
    if (scheduleId.value) {
     getDailySchedule();
   }
   
-  if (planningId.value) {
-    fetchPlanningData();
-  }
+  // if (planningId.value) {
+  //   fetchPlanningData();
+  // }
 });
 
 
 </script>
 
 <style lang="scss">
-@import '@/assets/styles/pages/daily-schedule.scss';
+@import '@/assets/styles/pages/edit-daily-attendance.scss';
 </style>

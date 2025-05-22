@@ -110,7 +110,10 @@
 import { ref, inject } from 'vue';
 import axiosInstance from '@/plugins/axios';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
+
+const router = useRouter();
 const dialogHome = ref(false);
 const email = ref('');
 const password = ref('');
@@ -142,7 +145,7 @@ const loginFunction = async () => {
     localStorage.setItem('userRole', response.data.result.role);
     localStorage.setItem('userImage', response.data.result.image)
     loadingLogin.value = false;
-    dialogHome.value = true;
+    router.push('/home');
     console.log('Login successful', response.data);
   } catch (error) {
     loadingLogin.value = false;

@@ -247,7 +247,7 @@ const loadDataProgram = async () => {
 
     name.value = program.name;
     imagePreview.value = program.image;
-    select_center.value = program.campus.name;
+    select_center.value = program.campus.id;
     monday.value = false;
     tuesday.value = false;
     wednesday.value = false;

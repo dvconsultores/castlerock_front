@@ -124,7 +124,7 @@
     <v-dialog v-model="dialogAddProgram" content-class="dialogAdd" persistent>
       <v-card class="card-add-program">
         <img src="@/assets/sources/icons/save.svg" alt="Save">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to add the new user</span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to add the new user?</span>
         <hr class="mt-2 mb-5">
         <span class="f16 w500" style="color: #7583D9;">{{ first_name + ' ' + last_name }}</span>
         <div class="btn-divs mt-8">

@@ -47,17 +47,80 @@
               <div class="img-student-card">
                 <img :src="item.imgStudent" alt="Student">
               </div>
+              <div v-if="item.imgStudent2" class="img-student-card">
+                <img :src="item.imgStudent2" alt="Student">
+              </div>
+              <div v-if="item.imgStudent3" class="img-student-card">
+                <img :src="item.imgStudent3" alt="Student">
+              </div>
+              <div v-if="item.imgStudent4" class="img-student-card">
+                <img :src="item.imgStudent4" alt="Student">
+              </div>
+              <div v-if="item.imgStudent5" class="img-student-card">
+                <img :src="item.imgStudent5" alt="Student">
+              </div>
+            </div>
+
+            <div class="attendance-div">
+              <span class="f8 tend" style="color: #4E444B;">Attendance</span>
+
+              <v-sheet>
+                <span class="f16" style="color: #4E444B;">{{item.realAttendance}}/{{ item.estimatedAttendance }}</span>
+              </v-sheet>
+            </div>
+          </div>
+
+          <div class="time-zone-div">
+            <span class="f10 w600">{{ item.place }}</span>
+            <span class="f10 w600" style="color: #7583D9;">{{ item.time }}</span>
+          </div>
+
+          <div class="flex center mt-2" style="gap: 10px;">
+            <v-icon color="#474649">mdi-eye-outline</v-icon>
+            <v-icon color="#474649" @click="$router.push(`/home/edit-daily-attendance/${item.id}`)">mdi-pencil-outline</v-icon>
+          </div>
+        </v-card>
+
+        <div v-if="dataClasses.length === 0" class="no-data-div">
+          <span>No data available</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="font2 mb-0 mt-8 h3-on">Before Classes</h3>
+    <div class="ongoing-classes-div">
+      <div class="cards-ongoing-div">
+        <v-card flat v-for="(item, index) in dataClassesBefore" :key="index">
+          <div class="div-header">
+            <span>{{ item.date }}</span>
+          </div>
+
+          <div class="techaer-div">
+            <div class="rounder-avatar">
+              <img :src="item.imgUser" alt="User">
+            </div>
+            <div class="flexstart flexcol" style="color: #4E444B;">
+              <span class="f12 tstart font2">{{ item.teacherName }}</span>
+              <span class="f10 tstart">{{ item.teacherType }}</span>
+            </div>
+          </div>
+
+          <div class="students-div">
+            <div class="students-img-div">
               <div class="img-student-card">
                 <img :src="item.imgStudent" alt="Student">
               </div>
-              <div class="img-student-card">
-                <img :src="item.imgStudent" alt="Student">
+              <div v-if="item.imgStudent2" class="img-student-card">
+                <img :src="item.imgStudent2" alt="Student">
               </div>
-              <div class="img-student-card">
-                <img :src="item.imgStudent" alt="Student">
+              <div v-if="item.imgStudent3" class="img-student-card">
+                <img :src="item.imgStudent3" alt="Student">
               </div>
-              <div class="img-student-card">
-                <img :src="item.imgStudent" alt="Student">
+              <div v-if="item.imgStudent4" class="img-student-card">
+                <img :src="item.imgStudent4" alt="Student">
+              </div>
+              <div v-if="item.imgStudent5" class="img-student-card">
+                <img :src="item.imgStudent5" alt="Student">
               </div>
             </div>
 
@@ -80,10 +143,14 @@
             <v-icon color="#474649">mdi-pencil-outline</v-icon>
           </div>
         </v-card>
+
+        <div v-if="dataClassesBefore.length === 0" class="no-data-div">
+          <span>No data available</span>
+        </div>
       </div>
     </div>
     
-    <div class="before-div mt-6">
+    <!-- <div class="before-div mt-6">
       <h3 class="font2 tleft" style="color: #4E444B;">Before</h3>      
 
       <div class="div-sheet">
@@ -109,15 +176,15 @@
           </div>
         </v-sheet>
       </div>
-    </div>
+    </div> -->
 
     <div class="absences-div mt-6">
       <h3 class="font2 tleft mb-2" style="color: #4E444B;">Today's Absences</h3>      
-      <span class="f18 w400 tleft mb-6" style="color: #262B63;">Monday ( March 24, 2025 )</span>
+      <span class="f18 w400 tleft mb-6" style="color: #262B63;">{{ formattedDateAbsence }}</span>
 
       <div class="div-sheet-absences">
         <v-sheet v-for="(item, index) in sheetDataAbsences" :key="index" class="sheet-absences">
-          <div class="absences-info-div mt-1"> 
+          <div class="absences-info-div"> 
             <div class="img-absences-card">
               <img :src="item.absence_img" alt="user">
             </div>
@@ -142,14 +209,13 @@ import classroms from '@/assets/sources/icons/classroms.svg';
 import students from '@/assets/sources/icons/students.svg';
 import teachers from '@/assets/sources/icons/teachers.svg';
 import centers from '@/assets/sources/icons/centers.svg';
-import imgUser from '@/assets/sources/images/user.png';
-import imgUser2 from '@/assets/sources/images/user-2.png';
-import imgStudent from '@/assets/sources/images/student-1.png';
 import axiosInstance from '@/plugins/axios';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import 'dayjs/locale/en';
+
+const showAlert = inject('showAlert');
 
 dayjs.extend(weekOfYear);
 dayjs.extend(isLeapYear);
@@ -159,6 +225,10 @@ const currentDate = ref(dayjs());
 
 const formattedDateTime = computed(() => {
   return currentDate.value.format('MMMM D, YYYY / hh:mm a');
+});
+
+const formattedDateAbsence = computed(() => {
+  return currentDate.value.format('dddd (MMMM D, YYYY)');
 });
 
 const getWeekOfMonth = (date) => {
@@ -171,7 +241,6 @@ const getWeekOfMonth = (date) => {
 
 const weekInfo = computed(() => {
   const weekOfMonth = getWeekOfMonth(currentDate.value);
-  console.log('Week of Month:', weekOfMonth);
   const startOfWeek = currentDate.value.startOf('week');
   const endOfWeek = currentDate.value.endOf('week');
   
@@ -202,7 +271,6 @@ const loadUserData = async () => {
 
   try {
     const response = await axiosInstance.get(`/users/${userId}`);
-    console.log('User data response:', response.data);
     
     if (response.data?.result) {
       const userData = response.data.result;
@@ -218,186 +286,66 @@ const loadUserData = async () => {
   }
 }
 
-const sheetDataAbsences = ref ([
-  {
-    absence_img: imgStudent,
-    absences_name: 'Samantha Taylor',
-    center_desc: 'Center 1 - Lions'
-  },
-  {
-    absence_img: imgStudent,
-    absences_name: 'Samantha Taylor',
-    center_desc: 'Center 1 - Lions'
-  },
-  {
-    absence_img: imgStudent,
-    absences_name: 'Samantha Taylor',
-    center_desc: 'Center 1 - Lions'
-  },
-  {
-    absence_img: imgStudent,
-    absences_name: 'Samantha Taylor',
-    center_desc: 'Center 1 - Lions'
-  },
-  {
-    absence_img: imgStudent,
-    absences_name: 'Samantha Taylor',
-    center_desc: 'Center 1 - Lions'
-  },
-  {
-    absence_img: imgStudent,
-    absences_name: 'Samantha Taylor',
-    center_desc: 'Center 1 - Lions'
-  },
-  {
-    absence_img: imgStudent,
-    absences_name: 'Samantha Taylor',
-    center_desc: 'Center 1 - Lions'
-  },
-  {
-    absence_img: imgStudent,
-    absences_name: 'Samantha Taylor',
-    center_desc: 'Center 1 - Lions'
-  },
-  {
-    absence_img: imgStudent,
-    absences_name: 'Samantha Taylor',
-    center_desc: 'Center 1 - Lions'
-  },
-  {
-    absence_img: imgStudent,
-    absences_name: 'Samantha Taylor',
-    center_desc: 'Center 1 - Lions'
-  },
-])
+const sheetDataAbsences = ref ([]);
 
-const sheetDataTeachers = ref([
-  {
-    center_desc: 'Turtles - Center 1',
-    time_desc: '1:00pm - 5:00pm',
-    teacher_img: imgUser,
-    tecaher_name: 'Samantha Taylor',
-    teacher_type: 'Teacher',
-  },
-  {
-    center_desc: 'Turtles - Center 2',
-    time_desc: '1:00pm - 5:00pm',
-    teacher_img: imgUser2,
-    tecaher_name: 'Mark Jason',
-    teacher_type: 'Teacher',
-  },
-  {
-    center_desc: 'Turtles - Center 1',
-    time_desc: '1:00pm - 5:00pm',
-    teacher_img: imgUser,
-    tecaher_name: 'Samantha Taylor',
-    teacher_type: 'Teacher',
-  },
-  {
-    center_desc: 'Turtles - Center 2',
-    time_desc: '1:00pm - 5:00pm',
-    teacher_img: imgUser2,
-    tecaher_name: 'Mark Jason',
-    teacher_type: 'Teacher',
-  },
-  {
-    center_desc: 'Turtles - Center 1',
-    time_desc: '1:00pm - 5:00pm',
-    teacher_img: imgUser,
-    tecaher_name: 'Samantha Taylor',
-    teacher_type: 'Teacher',
-  },
-  {
-    center_desc: 'Turtles - Center 2',
-    time_desc: '1:00pm - 5:00pm',
-    teacher_img: imgUser2,
-    tecaher_name: 'Mark Jason',
-    teacher_type: 'Teacher',
-  },
-  {
-    center_desc: 'Turtles - Center 1',
-    time_desc: '1:00pm - 5:00pm',
-    teacher_img: imgUser,
-    tecaher_name: 'Samantha Taylor',
-    teacher_type: 'Teacher',
-  },
-  {
-    center_desc: 'Turtles - Center 2',
-    time_desc: '1:00pm - 5:00pm',
-    teacher_img: imgUser2,
-    tecaher_name: 'Mark Jason',
-    teacher_type: 'Teacher',
-  },
-]);
-
-const dataClasses = ref([
-  {
-    date: 'Monday, 24',
-    imgUser: imgUser,
-    teacherName: 'Samantha Taylor',
-    teacherType: 'Teacher',
-    imgStudent: imgStudent,
-    realAttendance: '5',
-    estimatedAttendance: '8',
-    place: 'LIONS - Center 1',
-    time:'9:00 am - 12:15pm',
-  },
-  {
-    date: 'Monday, 24',
-    imgUser: imgUser2,
-    teacherName: 'Olivia Bennett',
-    teacherType: 'Teacher',
-    imgStudent: imgStudent,
-    realAttendance: '7',
-    estimatedAttendance: '8',
-    place: 'LIONS - Center 2',
-    time:'9:00 am - 12:15pm',
-  },
-  {
-    date: 'Monday, 24',
-    imgUser: imgUser,
-    teacherName: 'Samantha Taylor',
-    teacherType: 'Teacher',
-    imgStudent: imgStudent,
-    realAttendance: '5',
-    estimatedAttendance: '8',
-    place: 'LIONS - Center 1',
-    time:'9:00 am - 12:15pm',
-  },
-  {
-    date: 'Monday, 24',
-    imgUser: imgUser2,
-    teacherName: 'Olivia Bennett',
-    teacherType: 'Teacher',
-    imgStudent: imgStudent,
-    realAttendance: '7',
-    estimatedAttendance: '8',
-    place: 'LIONS - Center 2',
-    time:'9:00 am - 12:15pm',
-  },
-  {
-    date: 'Monday, 24',
-    imgUser: imgUser,
-    teacherName: 'Samantha Taylor',
-    teacherType: 'Teacher',
-    imgStudent: imgStudent,
-    realAttendance: '5',
-    estimatedAttendance: '8',
-    place: 'LIONS - Center 1',
-    time:'9:00 am - 12:15pm',
-  },
-  {
-    date: 'Monday, 24',
-    imgUser: imgUser2,
-    teacherName: 'Olivia Bennett',
-    teacherType: 'Teacher',
-    imgStudent: imgStudent,
-    realAttendance: '7',
-    estimatedAttendance: '8',
-    place: 'LIONS - Center 2',
-    time:'9:00 am - 12:15pm',
-  },
-]);
+// const sheetDataTeachers = ref([
+//   {
+//     center_desc: 'Turtles - Center 1',
+//     time_desc: '1:00pm - 5:00pm',
+//     teacher_img: imgUser,
+//     tecaher_name: 'Samantha Taylor',
+//     teacher_type: 'Teacher',
+//   },
+//   {
+//     center_desc: 'Turtles - Center 2',
+//     time_desc: '1:00pm - 5:00pm',
+//     teacher_img: imgUser2,
+//     tecaher_name: 'Mark Jason',
+//     teacher_type: 'Teacher',
+//   },
+//   {
+//     center_desc: 'Turtles - Center 1',
+//     time_desc: '1:00pm - 5:00pm',
+//     teacher_img: imgUser,
+//     tecaher_name: 'Samantha Taylor',
+//     teacher_type: 'Teacher',
+//   },
+//   {
+//     center_desc: 'Turtles - Center 2',
+//     time_desc: '1:00pm - 5:00pm',
+//     teacher_img: imgUser2,
+//     tecaher_name: 'Mark Jason',
+//     teacher_type: 'Teacher',
+//   },
+//   {
+//     center_desc: 'Turtles - Center 1',
+//     time_desc: '1:00pm - 5:00pm',
+//     teacher_img: imgUser,
+//     tecaher_name: 'Samantha Taylor',
+//     teacher_type: 'Teacher',
+//   },
+//   {
+//     center_desc: 'Turtles - Center 2',
+//     time_desc: '1:00pm - 5:00pm',
+//     teacher_img: imgUser2,
+//     tecaher_name: 'Mark Jason',
+//     teacher_type: 'Teacher',
+//   },
+//   {
+//     center_desc: 'Turtles - Center 1',
+//     time_desc: '1:00pm - 5:00pm',
+//     teacher_img: imgUser,
+//     tecaher_name: 'Samantha Taylor',
+//     teacher_type: 'Teacher',
+//   },
+//   {
+//     center_desc: 'Turtles - Center 2',
+//     time_desc: '1:00pm - 5:00pm',
+//     teacher_img: imgUser2,
+//     tecaher_name: 'Mark Jason',
+//     teacher_type: 'Teacher',
+//   },
+// ]);
 
 const dataSheets = ref([
   {
@@ -432,9 +380,89 @@ const dataSheets = ref([
   }
 ]);
 
+const scheduleData = ref([]);
+const dataClasses = ref([]);
+const dataClassesBefore = ref([]);
+
+const loadDaily = async () => {
+  try {
+    const response = await axiosInstance.get(`/daily-schedules/`);
+    const today = currentDate.value.format('YYYY-MM-DD');
+    const todayClasses = response.data.result.filter(item => item.date === today);
+    
+    scheduleData.value = todayClasses;
+    dataClasses.value = todayClasses.map(item => ({
+      id: item.id,
+      date: `${item.day}, ${currentDate.value.format('D')}`,
+      imgUser: item.teacher?.user.image || null,
+      teacherName: item.teacher?.user.firstName + ' ' + item.teacher?.user.lastName || 'Teacher',
+      teacherType: 'Teacher',
+      imgStudent: item.students?.[0]?.image, 
+      imgStudent2: item.students?.[1]?.image || null,
+      imgStudent3: item.students?.[2]?.image || null,
+      imgStudent4: item.students?.[3]?.image || null,
+      imgStudent5: item.students?.[4]?.image || null,
+      realAttendance: item.students?.length || 0,
+      estimatedAttendance: item.planning?.class?.maxCapacity,
+      place: item.planning?.class?.name,
+      time: '9:00 am - 12:15pm'
+    }));
+  } catch (error) {
+    showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
+  }
+};
+
+const loadDailyBefore = async () => {
+  try {
+    const response = await axiosInstance.get(`/daily-schedules/`);
+    const tomorrow = currentDate.value.add(1, 'day').format('YYYY-MM-DD');
+    const tomorrowClasses = response.data.result.filter(item => item.date === tomorrow);
+    
+    scheduleData.value = tomorrowClasses;
+    dataClassesBefore.value = tomorrowClasses.map(item => ({
+      date: `${item.day}, ${currentDate.value.format('D')}`,
+      imgUser: item.teacher?.user.image || null,
+      teacherName: item.teacher?.user.firstName + ' ' + item.teacher?.user.lastName || 'Teacher',
+      teacherType: 'Teacher',
+      imgStudent: item.students?.[0]?.image, 
+      imgStudent2: item.students?.[1]?.image || null,
+      imgStudent3: item.students?.[2]?.image || null,
+      imgStudent4: item.students?.[3]?.image || null,
+      imgStudent5: item.students?.[4]?.image || null,
+      realAttendance: item.students?.length || 0,
+      estimatedAttendance: item.planning?.class?.maxCapacity,
+      place: item.planning?.class?.name,
+      time: '9:00 am - 12:15pm'
+    }));
+    console.log('Tomorrow Classes:', dataClassesBefore.value);
+  } catch (error) {
+    showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
+  }
+};
+
+const getAttendance = async () => {
+  try {
+    const response = await axiosInstance.get(`/attendances/`);
+    const today = currentDate.value.format('YYYY-MM-DD');
+    const todayAbsences = response.data.result.filter(item =>
+      item.date === today && item.status === 'Absent'
+    );
+    
+    sheetDataAbsences.value = todayAbsences.map(item => ({
+      absence_img: item.student?.image,
+      absences_name: item.student?.firstName + ' ' + item.student?.lastName.trim(),
+      center_desc: item.dailySchedule?.class?.name || 'Center 1 - Lions'
+    }));
+  } catch (error) {
+    showAlert(error.response?.data?.message || 'Failed to load attendance', 'error');
+  }
+};
 
 onMounted(() => {
   loadUserData();
+  loadDaily();
+  loadDailyBefore();
+  getAttendance();
 });
 </script>
 

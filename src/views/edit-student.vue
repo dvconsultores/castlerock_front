@@ -875,20 +875,24 @@ const getDataStudent = async () => {
     friday_enrolled.value = student.daysEnrolled.includes('Friday');
     saturday_enrolled.value = student.daysEnrolled.includes('Saturday');
     sunday_enrolled.value = student.daysEnrolled.includes('Sunday');
-    monday_before.value = student.beforeSchoolDays.includes('Monday');
-    tuesday_before.value = student.beforeSchoolDays.includes('Tuesday');
-    wednesday_before.value = student.beforeSchoolDays.includes('Wednesday');
-    thursday_before.value = student.beforeSchoolDays.includes('Thursday');
-    friday_before.value = student.beforeSchoolDays.includes('Friday');
-    saturday_before.value = student.beforeSchoolDays.includes('Saturday');
-    sunday_before.value = student.beforeSchoolDays.includes('Sunday');
-    monday_after.value = student.afterSchoolDays.includes('Monday');
-    tuesday_after.value = student.afterSchoolDays.includes('Tuesday');
-    wednesday_after.value = student.afterSchoolDays.includes('Wednesday');
-    thursday_after.value = student.afterSchoolDays.includes('Thursday');
-    friday_after.value = student.afterSchoolDays.includes('Friday');
-    saturday_after.value = student.afterSchoolDays.includes('Saturday');
-    sunday_after.value = student.afterSchoolDays.includes('Sunday');
+    if(student.beforeSchoolDays != null){
+      monday_before.value = student.beforeSchoolDays.includes('Monday');
+      tuesday_before.value = student.beforeSchoolDays.includes('Tuesday');
+      wednesday_before.value = student.beforeSchoolDays.includes('Wednesday');
+      thursday_before.value = student.beforeSchoolDays.includes('Thursday');
+      friday_before.value = student.beforeSchoolDays.includes('Friday');
+      saturday_before.value = student.beforeSchoolDays.includes('Saturday');
+      sunday_before.value = student.beforeSchoolDays.includes('Sunday');
+    }
+    if(student.afterSchoolDays != null){
+      monday_after.value = student.afterSchoolDays.includes('Monday');
+      tuesday_after.value = student.afterSchoolDays.includes('Tuesday');
+      wednesday_after.value = student.afterSchoolDays.includes('Wednesday');
+      thursday_after.value = student.afterSchoolDays.includes('Thursday');
+      friday_after.value = student.afterSchoolDays.includes('Friday');
+      saturday_after.value = student.afterSchoolDays.includes('Saturday');
+      sunday_after.value = student.afterSchoolDays.includes('Sunday');
+    }
     select_center.value = student.campus.id;
     mothers_name.value = student.contacts.find(contact => contact.relation === 'Mother')?.fullName || '';
     mothers_number.value = student.contacts.find(contact => contact.relation === 'Mother')?.phone || '';

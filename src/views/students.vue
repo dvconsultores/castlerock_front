@@ -154,7 +154,7 @@ const getStudents = async () => {
     const response = await axiosInstance.get('/students');
     
     dataStudents.value = response.data.result.map((student, index) => {
-      console.log('Students:', response.data.result);
+      ('Students:', response.data.result);
       const birthDate = dayjs(student.dateOfBirth);
       const now = dayjs();
       

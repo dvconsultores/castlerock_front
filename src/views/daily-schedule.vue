@@ -493,7 +493,6 @@ const fetchPlanningData = async () => {
     month.value = dataPlanning.value.month;
     transformDatesYear()
     transformDatesMonth()
-    console.log('Year:', dataPlanning.value.class.program);
   } catch (error) {
     console.error('Error fetching planning data:', error);
   }

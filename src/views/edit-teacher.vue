@@ -181,7 +181,6 @@ const updateTeacher = async () => {
   loadingCreate.value = true;
 
   try{
-    console.log('Selected Center:', select_center.value);
     const response = await axiosInstance.patch(`/teachers/${teacherId.value}`, {
       campus: select_center.value
     });

@@ -73,6 +73,10 @@
       width: 100%;
       padding: 12px 32px 18px 32px;
     }
+
+    .border-red{
+      border: 1px solid red!important;
+    }
   }
 
   .card-img-upload{
@@ -140,6 +144,11 @@
         color: #FFFFFF;
         text-transform: none;
       }
+    }
+
+    
+    .btn-error{
+      background-color: rgb(210, 44, 44);
     }
   }
 }

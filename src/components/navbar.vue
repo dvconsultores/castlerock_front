@@ -74,7 +74,6 @@ const getNotes = async () => {
         status: notifications.status,
       }
     });;
-    console.log('Notifications:', response.data.result);
     return response.data;
   } catch (error) {
     console.error('Error fetching notifications:', error);

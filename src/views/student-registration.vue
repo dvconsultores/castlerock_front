@@ -7,7 +7,7 @@
         </h3>
       </v-col>
       <v-col sm="2" cols="12" :rows="2" align="center" class="pl-0">
-        <div class="img-container mt-2">
+        <div :class="{'img-container-error': imageError, 'img-container': true, 'mt-2': true}">
           <img v-if="imagePreviewStudent" :src="imagePreviewStudent" alt="Student">
           <span v-if="!imagePreviewStudent" class="add-image f12" style="color: #46464C;">
             Add Image
@@ -28,7 +28,7 @@
           <v-col cols="12" sm="6" class="pa-2">
             <v-text-field
               v-model="firstName"
-              class="login-textfield"
+              :class="{'textfield-error': firstNameError, 'login-textfield': true}"
               placeholder="Student Name"
               variant="solo" 
               flat
@@ -39,7 +39,7 @@
           <v-col cols="12" sm="6" class="pa-2">
             <v-text-field
               v-model="lastName"
-              class="login-textfield"
+              :class="{'textfield-error': lastNameError, 'login-textfield': true}"
               placeholder="Student Last Name"
               variant="solo" 
               flat
@@ -55,7 +55,7 @@
               <template v-slot:activator="{ props }">
                 <v-text-field
                   v-model="formattedDate"
-                  class="login-textfield"
+                  :class="{'textfield-error': dateOfBirthError, 'login-textfield': true}"
                   placeholder="Date of Birth"
                   variant="solo"
                   flat
@@ -81,7 +81,7 @@
               v-model.number="select_center"
               placeholder="Select Center"
               flat
-              class="autocomplete-register"
+              :class="{'textfield-error': campusError, 'autocomplete-register': true}"
               menu-icon="mdi-chevron-up"
               :items="selectCenterItems"
               item-value="id"
@@ -119,7 +119,7 @@
               v-model="gender"
               placeholder="Gender"
               flat
-              class="autocomplete-register"
+              :class="{'textfield-error': genderError, 'autocomplete-register': true}"
               menu-icon="mdi-chevron-up"
               :items="['M', 'F', 'Other']"
               variant="solo"
@@ -169,7 +169,7 @@
       <v-col cols="12" sm="6" class="pa-2">
         <v-text-field
           v-model="mothers_name"
-          class="login-textfield"
+          :class="{'textfield-error': contactsError, 'login-textfield': true}"
           bg-color="#F0F0F0 "
           placeholder="Mother's Name"
           variant="solo" 
@@ -181,7 +181,7 @@
       <v-col cols="12" sm="6" class="pa-2">
         <v-text-field
           v-model="fathers_name"
-          class="login-textfield"
+          :class="{'textfield-error': contactsError, 'login-textfield': true}"
           bg-color="#F0F0F0 "
           placeholder="Father's Name"
           variant="solo" 
@@ -193,7 +193,7 @@
       <v-col cols="12" sm="6" class="pa-2">
         <v-text-field
           v-model="mothers_number"
-          class="login-textfield"
+          :class="{'textfield-error': contactsError, 'login-textfield': true}"
           bg-color="#F0F0F0 "
           placeholder="Mother's contact number"
           variant="solo" 
@@ -208,7 +208,7 @@
       <v-col cols="12" sm="6" class="pa-2">
         <v-text-field
           v-model="fathers_number"
-          class="login-textfield"
+          :class="{'textfield-error': contactsError, 'login-textfield': true}"
           bg-color="#F0F0F0 "
           placeholder="Father's contact number"
           variant="solo" 
@@ -226,7 +226,7 @@
           placeholder="Role"
           flat
           bg-color="#F0F0F0"
-          class="autocomplete-register"
+          :class="{'textfield-error': contactsError, 'autocomplete-register': true}"
           menu-icon="mdi-chevron-up"
           hide-details
           :items="['PRIMARY', 'SECONDARY']"
@@ -242,7 +242,7 @@
           placeholder="Role"
           flat
           bg-color="#F0F0F0"
-          class="autocomplete-register"
+          :class="{'textfield-error': contactsError, 'autocomplete-register': true}"
           menu-icon="mdi-chevron-up"
           hide-details
           :items="['PRIMARY', 'SECONDARY']"
@@ -361,7 +361,7 @@
         maxlength="300"
         hide-details
         bg-color="#F0F0F0"
-        class="text-area"
+        :class="{'textfield-error': notesError, 'text-area': true}"
         ></v-textarea>
       </v-col>
     </v-row>
@@ -378,7 +378,7 @@
           <template v-slot:activator="{ props }">
             <v-text-field
               v-model="formattedStartDate"
-              class="login-textfield"
+              :class="{'textfield-error': startDateError, 'login-textfield': true}"
               placeholder="First day of school"
               variant="solo"
               flat
@@ -438,7 +438,7 @@
         <span class="font2 f24 tleft" style="color: #262262;">Days Enrolled</span>
       </v-col>
 
-      <v-col cols="12" class="jspace">
+      <v-col cols="12" class="jspace" :class="{'checkboxes-error': daysEnrolledError}">
         <v-checkbox v-model="monday_enrolled" density="compact" hide-details label="Monday" color="#3C3C434D"></v-checkbox>
         <v-checkbox v-model="tuesday_enrolled" density="compact" hide-details label="Tuesday" color="#3C3C434D"></v-checkbox>
         <v-checkbox v-model="wednesday_enrolled" density="compact" hide-details label="Wednesday" color="#3C3C434D"></v-checkbox>
@@ -480,7 +480,7 @@
         <v-checkbox v-model="sunday_after" density="compact" hide-details label="Sunday" color="#3C3C434D"></v-checkbox>
       </v-col>
     </v-row>
-    <v-row class="fullw mt-10 big-checkboxes-container">
+    <v-row class="fullw mt-10 big-checkboxes-container" :class="{'border-red': additionalProgramsIdsError}">
       <v-col cols="12" align="left">
         <span class="font2 f24 tleft" style="color: #262262;">Additional Programs</span>
       </v-col>
@@ -489,7 +489,13 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
 
-      <v-col v-for="(item, index) in dataForProgram" :key="index" cols="12" sm="12" class="pa-2 flex center gap4">
+      <v-col
+        v-for="(item, index) in dataForProgram"
+        :key="index"
+        cols="12"
+        sm="12"
+        class="pa-2 flex center gap4"
+      >
         <v-autocomplete
           v-model.number="item.selected_program"
           placeholder="Select Program"
@@ -658,8 +664,19 @@ import { ref, inject, onMounted, computed, watch } from 'vue'
 import axiosInstance from '@/plugins/axios';
 import dayjs from 'dayjs';
 
+const firstNameError = ref('');
+const lastNameError = ref('');
+const dateOfBirthError = ref('');
+const genderError = ref('');
+const notesError = ref('');
+const daysEnrolledError = ref('');
+const additionalProgramsIdsError = ref('');
+const campusError = ref('');
+const contactsError = ref('');
+const imageError = ref('');
 const formattedDate = ref('');
 const formattedStartDate = ref('');
+const startDateError = ref('');
 
 const formatDate = (date) => {
   if (!date) {
@@ -815,13 +832,87 @@ const triggerfileInputMother = () => {
 };
 
 const createStudent = async () => {
+  firstNameError.value = '';
+  lastNameError.value = '';
+  dateOfBirthError.value = '';
+  genderError.value = '';
+  notesError.value = '';
+  daysEnrolledError.value = '';
+  additionalProgramsIdsError.value = '';
+  campusError.value = '';
+  contactsError.value = '';
+  imageError.value = '';
+  startDateError.value = '';
   savingStudent.value = true;
+
+  let hasError = false;
+
+  if (!firstName.value?.trim()) {
+    firstNameError.value = 'Please enter a valid first name';
+    hasError = true;
+  }
+  if (!lastName.value?.trim()) {
+    lastNameError.value = 'Please enter a valid last name';
+    hasError = true;
+  }
+  if (!dateOfBirth.value) {
+    dateOfBirthError.value = 'Please select a valid date of birth';
+    hasError = true;
+  }
+  if (!gender.value) {
+    genderError.value = 'Please select a gender';
+    hasError = true;
+  }
+  if (!notes.value?.trim()) {
+    notesError.value = 'Please enter notes';
+    hasError = true;
+  }
+  if (!select_center.value) {
+    campusError.value = 'Please select a center';
+    hasError = true;
+  }
+  if (!selectedImgStudent.value) {
+    imageError.value = 'Please upload a student image';
+    hasError = true;
+  }
+  if (!start_date_class.value) {
+    startDateError.value = 'Please select a start date';
+    hasError = true;
+  }
+  if (
+    (!mothers_name.value && !fathers_name.value && !contact_name.value && !contact_name2.value) ||
+    (!mothers_number.value && !fathers_number.value && !contact_number.value && !contact_number2.value)
+  ) {
+    contactsError.value = 'Please provide at least one contact with a phone number';
+    hasError = true;
+  }
+  if (!dataForProgram.value.length || !dataForProgram.value.some(item => item.selected_program && item.selected_program.id)) {
+    additionalProgramsIdsError.value = 'Please select at least one additional program';
+    hasError = true;
+  }
+  if (
+    !monday_enrolled.value &&
+    !tuesday_enrolled.value &&
+    !wednesday_enrolled.value &&
+    !thursday_enrolled.value &&
+    !friday_enrolled.value &&
+    !saturday_enrolled.value &&
+    !sunday_enrolled.value
+  ) {
+    daysEnrolledError.value = 'Please select at least one day enrolled';
+    hasError = true;
+  }
+
+  if (hasError) {
+    showAlert('Please fix the highlighted errors', 'error');
+    savingStudent.value = false;
+    return;
+  }
   if (!firstName.value || 
   !lastName.value || 
   !dateOfBirth.value || 
   !gender.value || 
   !notes.value ||
-  !start_date_class.value ||
   !select_center.value ||
   !selectedImgStudent.value ) {
     showAlert('Please fill in all required fields', 'error');

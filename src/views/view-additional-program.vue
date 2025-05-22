@@ -231,7 +231,6 @@ const loadDataProgram = async () => {
  try {
     const response = await axiosInstance.get(`/additional-programs/${programId.value}`);
     const program = response.data.result;
-    console.log('Program data:', program);
 
     name.value = program.name;
     imagePreview.value = program.image;

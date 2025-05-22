@@ -182,7 +182,6 @@ const resetPassword = async () => {
     showAlert('Password reset succesfully!', 'success');
     setTimeout(() => {
       router.push('/');
-      console.log('Redirecting to login page...');
     }, 2000);
   } catch (error) {
     loadingReset.value = false;

@@ -393,10 +393,6 @@ watch([year, month], () => {
   week.value = null;
 });
 
-watch(week, () =>{
-  console.log(week.value)
-});
-
 watch(month, () =>{
   month_selected.value = month.value.name
 });
@@ -556,7 +552,6 @@ const searchPlannings = async () =>{
       monthlySchedule.value = transformResponseToMonthlySchedule(response.data);
       planningData.value = response.data.result;
     }
-    console.log(response.data.result, 'Planning')
   }catch(error){
     showAlert(error, 'error')
   }

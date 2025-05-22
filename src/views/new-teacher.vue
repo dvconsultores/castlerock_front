@@ -8,7 +8,7 @@
             v-model.number="select_teacher"
             placeholder="Select a Teacher"
             flat
-            class="autocomplete-register"
+            :class="{'textfield-error': teacherError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="selectTeacherItems"
             item-value="id"
@@ -27,7 +27,7 @@
             v-model.number="select_center"
             placeholder="Select Center"
             flat
-            class="autocomplete-register"
+            :class="{'textfield-error': centerError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="selectCenterItems"
             item-value="id"
@@ -165,6 +165,8 @@ import axiosInstance from '@/plugins/axios';
 //   fileInput.value.$el.querySelector('input[type="file"]').click();
 // };
 
+const teacherError = ref('');
+const centerError = ref('');
 const showAlert = inject('showAlert');
 const dialogAddTeacher = ref(false);
 const dialogConfirmationTeacher = ref(false);
@@ -208,6 +210,19 @@ const closeConfirmationTeacher = () => {
 };
 
 const openSaveTeacher = () => {
+  teacherError.value = '';
+  centerError.value = '';
+  
+  if(!selectedTeacherName.value){
+    teacherError.value = 'Please select a teacher';
+    showAlert(teacherError.value, 'error');
+    return;
+  }
+  if(!selectedCenterName.value){
+    centerError.value = 'Please select a center';
+    showAlert(centerError.value, 'error');
+    return;
+  }
   if(!selectedTeacherName.value || !selectedCenterName.value ) {
     showAlert('Please select a teacher and a center', 'error');
     return;

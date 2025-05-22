@@ -76,6 +76,10 @@
     }
   }
 
+  .img-container-error{
+    border: 2px solid red;
+  }
+
   .login-textfield{    
     i{
       color: #3C3C434D;
@@ -191,6 +195,10 @@
     border-radius: 16px;
     width: 100%;
     padding: 12px 32px 18px 32px;
+
+    .checkboxes-error{
+      border: 2px solid red;
+    }
   }
 
   .big-checkboxes-container{
@@ -213,6 +221,10 @@
       background-color: #7583D9;
       min-width: 1px;
     }
+  }
+
+  .border-red{
+    border: 2px solid red;
   }
 
   .card-rounded{

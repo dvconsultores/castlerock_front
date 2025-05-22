@@ -971,7 +971,6 @@ const getDataStudent = async () => {
     dataForProgram.value = student.additionalPrograms.map(program => ({
       selected_program: program.id,
     }));
-    console.log(select_center.value , 'select_center.value');
   } catch (error) {
     showAlert(error, 'error');
   }
@@ -1023,7 +1022,6 @@ const getAttendance = async () =>{
   try{
       const response = await axiosInstance.get(`/attendances?studentId=${studentId.value}`, {
     });
-    console.log(response.data.result, 'Attendance Data');
   }catch(error){
     showAlert(error, 'error')
   }
@@ -1089,7 +1087,6 @@ const searchAttendances = async () =>{
     }
 
     monthlyAttedance.value = weeks;
-    console.log('Updated monthly attendance:', monthlyAttedance.value);
     stateShow.value = true;
   }catch(error){
     showAlert(error, 'error')

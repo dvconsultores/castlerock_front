@@ -67,7 +67,6 @@ const sendEmailFuction = async () => {
     showAlert('Recovery email sent successfully! Check your inbox.', 'success');
     setTimeout(() => {
       router.push('/password-recovery');
-      console.log('Redirecting to password recovery page...');
     }, 2000);
   } catch (error) {
     loadingRecovery.value = false;

@@ -6,7 +6,7 @@
         <v-col cols="12" sm="6" class="pb-0">
           <v-text-field
             v-model="first_name"
-            class="textfield-registration"
+            :class="{'textfield-error': firstNameError, 'textfield-registration': true}"
             placeholder="First Name"
             variant="solo" 
             maxlength="150"
@@ -18,7 +18,7 @@
         <v-col cols="12" sm="6" class="pb-0">
           <v-text-field
             v-model="last_name"
-            class="textfield-registration"
+            :class="{'textfield-error': lastNameError, 'textfield-registration': true}"
             placeholder="Last Name"
             maxlength="150"
             variant="solo" 
@@ -30,7 +30,7 @@
         <v-col cols="12" sm="6" class="pb-0">
           <v-text-field
             v-model="email"
-            class="textfield-registration"
+            :class="{'textfield-error': emailError, 'textfield-registration': true}"
             placeholder="Email"
             maxlength="150"
             variant="solo" 
@@ -42,7 +42,7 @@
         <v-col cols="12" sm="6" class="pb-0">
           <v-text-field
             v-model="phone"
-            class="textfield-registration"
+            :class="{'textfield-error': phoneError, 'textfield-registration': true}"
             placeholder="Phone"
             type="number"
             maxlength="150"
@@ -60,7 +60,7 @@
             v-model="select_role"
             placeholder="Select Role"
             flat
-            class="autocomplete-register"
+            :class="{'textfield-error': selectRoleError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="itemsRole"
             variant="solo"
@@ -73,7 +73,7 @@
         <v-col cols="12" sm="6" class="pb-0">
           <v-text-field
             v-model="password"
-            class="textfield-registration"
+            :class="{'textfield-error': passwordError, 'textfield-registration': true}"
             placeholder="Default Password"
             maxlength="150"
             variant="solo" 
@@ -104,7 +104,7 @@
               >
             </div>
             
-            <v-btn @click="triggerFileInput">Upload</v-btn>
+            <v-btn @click="triggerFileInput" :class="{'btn-error': imageError}">Upload</v-btn>
 
             <v-file-input 
             ref="fileInput" v-model="selectedImgUser" flat variant="solo" 
@@ -168,7 +168,13 @@ const last_name = ref('');
 const email = ref('');
 const phone = ref('');
 const password = ref('');
-
+const firstNameError = ref('');
+const lastNameError = ref('');
+const emailError = ref('');
+const phoneError = ref('');
+const passwordError = ref('');
+const selectRoleError = ref('');
+const imageError = ref('');
 
 const handleFileChange = (file) => {
   if (file) {
@@ -196,12 +202,67 @@ const closeConfirmationUser = () => {
 };
 
 const openSaveProgram = () => {
-  if (first_name.value?.trim() && last_name.value?.trim() && imagePreview.value && email.value?.trim() && phone.value?.trim() && password.value?.trim()) {
-    dialogAddProgram.value = true;
-  }else {
-    showAlert('Please fill in all fields', 'error');
-    return;
+  firstNameError.value = '';
+  lastNameError.value = '';
+  emailError.value = '';
+  phoneError.value = '';
+  passwordError.value = '';
+  selectRoleError.value = '';
+  imageError.value = '';
+
+  const validations = [
+    {
+      field: first_name,
+      errorRef: firstNameError,
+      message: 'First name is required',
+      trim: true
+    },
+    {
+      field: last_name,
+      errorRef: lastNameError,
+      message: 'Last name is required',
+      trim: true
+    },
+    {
+      field: email,
+      errorRef: emailError,
+      message: 'Email is required',
+      trim: true
+    },
+    {
+      field: phone,
+      errorRef: phoneError,
+      message: 'Phone is required',
+      trim: true
+    },
+    {
+      field: select_role,
+      errorRef: selectRoleError,
+      message: 'Select a role'
+    },
+    {
+      field: password,
+      errorRef: passwordError,
+      message: 'Password is required',
+      trim: true
+    },
+    {
+      field: imagePreview,
+      errorRef: imageError,
+      message: 'Image is required'
+    }
+  ];
+
+  for (const {field, errorRef, message, trim} of validations) {
+    const value = trim ? field.value?.trim() : field.value;
+    if (!value) {
+      errorRef.value = message;
+      showAlert(message, 'error');
+      return;
+    }
   }
+
+  dialogAddProgram.value = true;
 };
 
 const createUser = async () => {

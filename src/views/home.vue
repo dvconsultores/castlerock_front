@@ -409,7 +409,6 @@ const loadDaily = async () => {
       place: item.planning?.class?.name,
       time: '9:00 am - 12:15pm'
     }));
-    console.log('Today Classes:', dataClasses.value);
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
   }
@@ -438,7 +437,6 @@ const loadDailyBefore = async () => {
       place: item.planning?.class?.name,
       time: '9:00 am - 12:15pm'
     }));
-    console.log('Before Classes:', dataClassesBefore.value);
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
   }

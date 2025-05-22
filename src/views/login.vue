@@ -148,7 +148,6 @@ const loginFunction = async () => {
     localStorage.setItem('userImage', response.data.result.image)
     loadingLogin.value = false;
     router.push('/home');
-    console.log('Login successful', response.data);
   } catch (error) {
     loadingLogin.value = false;
     console.error('Login failed', error);

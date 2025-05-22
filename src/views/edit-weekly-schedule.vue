@@ -424,10 +424,6 @@ watch([year, month], () => {
   week.value = null;
 });
 
-watch(week, () =>{
-  console.log(week.value)
-});
-
 watch(month, () =>{
   month_selected.value = month.value.name
 });

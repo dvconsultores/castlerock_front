@@ -6,7 +6,7 @@
         <v-col cols="12" sm="6" class="pb-0">
           <v-text-field
             v-model="name"
-            class="textfield-registration"
+            :class="{'textfield-error': nameError, 'textfield-registration': true}"
             placeholder="Activity Name"
             variant="solo" 
             flat
@@ -19,7 +19,7 @@
             v-model.number="select_center"
             placeholder="Select Center"
             flat
-            class="autocomplete-register"
+            :class="{'textfield-error': selectCenterError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="selectCenterItems"
             item-value="id"
@@ -49,7 +49,7 @@
         </v-col> -->
       </v-row>
 
-      <v-row class="container-div-form">
+      <v-row :class="{'border-red': daysError, 'container-div-form': true}">
         <v-col cols="12" align="left">
           <span class="font2 f24 tleft" style="color: #262262;">Days of the Activity</span>
         </v-col>
@@ -86,7 +86,7 @@
               >
             </div>
             
-            <v-btn @click="triggerFileInput">Upload</v-btn>
+            <v-btn @click="triggerFileInput" :class="{'btn-error': imageError}">Upload</v-btn>
 
             <v-file-input 
             ref="fileInput" v-model="selectedImgProgram" flat variant="solo" 
@@ -154,6 +154,10 @@ const thursday = ref(false);
 const friday = ref(false);
 const saturday = ref(false);
 const sunday = ref(false);
+const nameError = ref('');
+const selectCenterError = ref('');
+const daysError = ref('');
+const imageError = ref('');
 
 const handleFileChange = (file) => {
   if (file) {
@@ -192,6 +196,33 @@ const stateValue = () =>{
 }
 
 const openSaveProgram = () => {
+  nameError.value = '';
+  selectCenterError.value = '';
+  daysError.value = '';
+  imageError.value = '';
+
+  if (!name.value) {
+    nameError.value = 'Please enter the activity name';
+    showAlert(nameError.value, 'error');
+  }
+
+  if (!select_center.value) {
+    selectCenterError.value = 'Please select a center';
+    showAlert(selectCenterError.value, 'error');
+  }
+
+  if (!monday.value && !tuesday.value && !wednesday.value && !thursday.value && !friday.value && !saturday.value && !sunday.value) {
+    daysError.value = true;
+    showAlert('Please select at least one day enrolled', 'error');
+  } else {
+    daysError.value = false;
+  }
+
+  if (!imagePreview.value) {
+    imageError.value = 'Please upload an image';
+    showAlert(imageError.value, 'error');
+  }
+
   if (name.value?.trim() && select_center.value && imagePreview.value && stateValue()) {
     dialogAddProgram.value = true;
   }else {

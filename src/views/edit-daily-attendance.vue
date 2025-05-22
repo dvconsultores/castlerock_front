@@ -97,7 +97,7 @@
                 <span class="f12 font2 tcenter mt-2" style="color: #4E444B;">
                   {{item.student_name}}
                 </span>
-                <v-icon @click="deleteStudent(index)">mdi-trash-can-outline</v-icon>
+                <v-icon @click="deleteStudentAttendance(index)">mdi-trash-can-outline</v-icon>
               </v-card>
             </div>
           </v-card>
@@ -121,7 +121,7 @@
                 <span class="f12 font2 tcenter mt-2" style="color: #4E444B;">
                   {{item.student_name}}
                 </span>
-                <v-icon @click="deleteStudent(index)">mdi-trash-can-outline</v-icon>
+                <v-icon @click="deleteStudentLate(index)">mdi-trash-can-outline</v-icon>
               </v-card>
             </div>
           </v-card>
@@ -145,7 +145,7 @@
                 <span class="f12 font2 tcenter mt-2" style="color: #4E444B;">
                   {{item.student_name}}
                 </span>
-                <v-icon @click="deleteStudent(index)">mdi-trash-can-outline</v-icon>
+                <v-icon @click="deleteStudentAbsence(index)">mdi-trash-can-outline</v-icon>
               </v-card>
             </div>
           </v-card>
@@ -169,7 +169,7 @@
                 <span class="f12 font2 tcenter mt-2" style="color: #4E444B;">
                   {{item.student_name}}
                 </span>
-                <v-icon @click="deleteStudent(index)">mdi-trash-can-outline</v-icon>
+                <v-icon @click="deleteStudentExcused(index)">mdi-trash-can-outline</v-icon>
               </v-card>
             </div>
           </v-card>
@@ -193,20 +193,16 @@
       </v-col>
 
       <v-col cols="12" align="right">
-        <v-btn flat class="btn" :loading="loadingAttendance" @click="submitAttendances">Save</v-btn>
+        <v-btn flat class="btn" @click="dialogAddPlanning = true">Save</v-btn>
       </v-col>
     </v-row>
 
     <v-dialog v-model="dialogAddPlanning" content-class="dialogAdd" persistent>
       <v-card class="card-add-program">
         <img src="@/assets/sources/icons/save.svg" alt="Save">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to save this daily schedule?</span>
-        <hr class="mt-2 mb-5">
-        <span class="f16 w400">
-          <span class="w500" style="color: #7583D9;">{{ day }}, {{ dayNumber }}/{{ month }}/{{ year }}</span>
-        </span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to save this daily attendances?</span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1" @click="createNewDailySchedule()" :loading="loadingCreate">Yes, save</v-btn>
+          <v-btn flat class="btn1" :loading="loadingAttendance" @click="submitAttendances">Yes, save</v-btn>
           <v-btn flat class="btn2" @click="dialogAddPlanning = false">No, cancel</v-btn>
         </div>
       </v-card>
@@ -215,11 +211,11 @@
     <v-dialog v-model="dialogConfirmationDaily" content-class="dialogConfirmationDaily" persistent>
       <v-card class="card-confirmation-program">
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully created!</span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully saved!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The daily schedule has been successfully created.</span>
+        <span class="f16 w400 tcenter">The daily attendances has been successfully saved.</span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1" @click="$router.push('/home/new-weekly-schedule')">New Planning</v-btn>
+          <v-btn flat class="btn1" @click="$router.push('/home')">Home</v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -369,7 +365,8 @@ const submitAttendances = async () => {
     });
 
     loadingAttendance.value = false;
-    showAlert('Attendances saved successfully!', 'success');
+    dialogAddPlanning.value = false;
+    dialogConfirmationDaily.value = true;
   } catch (error) {
     showAlert('Error saving attendances', 'error');
     loadingAttendance.value = false;
@@ -391,8 +388,17 @@ const selectedTeacher = (item) => {
   }
 };
 
-const deleteStudent = (index) =>{
-  dataStudentSelected.value.splice(index,1)
+const deleteStudentAttendance = (index) =>{
+  dataStudentAttendance.value.splice(index,1)
+};
+const deleteStudentLate = (index) =>{
+  dataStudentLate.value.splice(index,1)
+};
+const deleteStudentAbsence = (index) =>{
+  dataStudentAbsence.value.splice(index,1)
+};
+const deleteStudentExcused = (index) =>{
+  dataStudentExcused.value.splice(index,1)
 };
 
 const selectedStudent = (item) => {

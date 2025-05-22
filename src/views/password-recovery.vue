@@ -17,7 +17,7 @@
       placeholder="Enter your email recovery"
       hide-details
       maxlength="150"
-      class="login-textfield"
+      :class="{'textfield-error': emailError, 'login-textfield': true }"
       @keyup.enter="resetPassword"
       ></v-text-field>
 
@@ -29,7 +29,7 @@
       placeholder="Enter your recovery code"
       hide-details
       maxlength="6"
-      class="login-textfield"
+      :class="{'textfield-error': codeError, 'login-textfield': true}"
       :rules="tokenRules"
       @input="sanitizeToken"
       @keypress="(e) => { if (!/^\d$/.test(e.key) || token.length >= 6) e.preventDefault(); }"
@@ -47,7 +47,7 @@
       @click:append-inner="showPassword = !showPassword"
       :type="showPassword ? 'text' : 'password'"
       :rules="passwordRules"
-      class="login-textfield"
+      :class="{'textfield-error': passwordError, 'login-textfield': true}"
       @keyup.enter="resetPassword"
       ></v-text-field>
 
@@ -61,7 +61,7 @@
       :rules="passwordMatchRule"
       @click:append-inner="showPassword = !showPassword"
       :type="showPassword ? 'text' : 'password'"
-      class="login-textfield"
+      :class="{'textfield-error': passwordConfirmationError, 'login-textfield': true}"
       style="margin-top: -24px;"
       @keyup.enter="resetPassword"
       ></v-text-field>
@@ -89,6 +89,10 @@ const loadingReset = ref(false);
 const showAlert = inject('showAlert');
 const showPassword = ref(false);
 const router = useRouter();
+const emailError = ref('');
+const codeError = ref('');
+const passwordError = ref('');
+const passwordConfirmationError = ref('');
 const passwordRules = [
   (v) => !!v || 'Password is required',
   (v) => (v && v.length >= 6) || 'Password must be at least 6 characters',
@@ -120,21 +124,53 @@ const isValidForm = computed(() => {
 });
 
 const resetPassword = async () => {
-  if (email.value?.trim() && token.value?.trim() && password.value?.trim() && passwordConfirmation.value?.trim()) {
-    loadingReset.value = true;
+  // Clear previous errors
+  emailError.value = '';
+  codeError.value = '';
+  passwordError.value = '';
+  passwordConfirmationError.value = '';
+
+  // Validate all fields
+  let isValid = true;
 
   if (!email.value?.trim()) {
-    showAlert('Please enter a valid email address', 'error');
-    loadingReset.value = false;
+    emailError.value = 'Please enter your email address';
+    isValid = false;
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    emailError.value = 'Please enter a valid email format (e.g. user@example.com)';
+    isValid = false;
+  }
+
+  if (!token.value?.trim()) {
+    codeError.value = 'Please enter your recovery code';
+    isValid = false;
+  } else if (token.value.length !== 6) {
+    codeError.value = 'Code must be 6 digits';
+    isValid = false;
+  }
+
+  if (!password.value?.trim()) {
+    passwordError.value = 'Please enter a new password';
+    isValid = false;
+  } else if (password.value.length < 6) {
+    passwordError.value = 'Password must be at least 6 characters';
+    isValid = false;
+  }
+
+  if (!passwordConfirmation.value?.trim()) {
+    passwordConfirmationError.value = 'Please confirm your password';
+    isValid = false;
+  } else if (passwordConfirmation.value !== password.value) {
+    passwordConfirmationError.value = 'Passwords must match';
+    isValid = false;
+  }
+
+  if (!isValid) {
+    showAlert('Please fix the errors in the form', 'error');
     return;
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email.value)) {
-    showAlert('Please enter a valid email format (e.g. user@example.com)', 'error');
-    loadingReset.value = false;
-    return;
-  }
+  loadingReset.value = true;
   try {
     const response = await axiosInstance.post('/auth/reset-password', {
       email: email.value,
@@ -152,9 +188,6 @@ const resetPassword = async () => {
     loadingReset.value = false;
     const errorMessage = error.response?.data?.message?.[0] || error.response?.data?.error || 'Failed to send recovery email';    
     showAlert('Incorrect code', 'error');
-  }
-  } else {
-    showAlert('Please fill in all fields', 'error');
   }
 };
 </script>

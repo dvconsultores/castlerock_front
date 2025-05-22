@@ -646,7 +646,10 @@
             class="autocomplete-register"
             hide-details
             menu-icon="mdi-chevron-up"
-            :items="['2025', '2026']"
+            :items="yearsArray"
+            item-value="id"
+            item-title="name"
+            return-object
             variant="solo"
             :menu-props="{
               contentClass: 'rounded-menu',
@@ -654,15 +657,18 @@
           ></v-autocomplete>
         </v-col>
 
-        <v-col cols="12" sm="5" class="pa-2">
+        <v-col cols="12" sm="10" class="pa-2">
           <v-autocomplete
-            v-model="from_month"
-            placeholder="From (Month)"
+            v-model="month_from"
+            placeholder="Month"
             flat
             class="autocomplete-register"
             hide-details
             menu-icon="mdi-chevron-up"
-            :items="['March', 'April']"
+            :items="monthsArrayFrom"
+            item-value="id"
+            item-title="name"
+            return-object
             variant="solo"
             :menu-props="{
               contentClass: 'rounded-menu',
@@ -670,33 +676,36 @@
           ></v-autocomplete>
         </v-col>
 
-        <v-col cols="12" sm="5" class="pa-2">
+        <!-- <v-col cols="12" sm="5" class="pa-2">
           <v-autocomplete
-            v-model="to_month"
+            v-model="month_to"
             placeholder="To (Month)"
             flat
             class="autocomplete-register"
             hide-details
             menu-icon="mdi-chevron-up"
-            :items="['March', 'April']"
+            :items="monthsArrayTo"
+            item-value="id"
+            item-title="name"
+            return-object
             variant="solo"
             :menu-props="{
               contentClass: 'rounded-menu',
             }"
           ></v-autocomplete>
-        </v-col>
+        </v-col> -->
       </v-row>
 
       <v-row class="fullw">
         <v-col cols="12" align="left" class="pa-2">
           <h3 class="font2 tleft" style="color: #262B63;">
-            March
+            {{ month_from?.name }}
           </h3>
         </v-col>
       </v-row>
 
       <v-card flat class="card-rounded">
-        <div v-for="(week, weekIndex) in monthlyAttedance" :key="weekIndex" class="div-container-weeks-cards">
+        <div v-if="stateShow" v-for="(week, weekIndex) in monthlyAttedance" :key="weekIndex" class="div-container-weeks-cards">
           <h3>{{ week.weekTitle }}</h3>
           <div class="slider-div">
             <v-card flat v-for="(day, dayIndex) in week.days" :key="dayIndex">
@@ -704,14 +713,18 @@
                 <span>{{ day.date }}</span>
               </div>
 
-              <img :src="day.state_attedance" alt="State">
+              <img v-if="day.state_attedance" :src="day.state_attedance" alt="State">
 
-              <hr>
+              <!-- <hr>
 
-              <span class="f10 w600" style="color: #7583D9;">{{ day.time }}</span>
+              <span class="f10 w600" style="color: #7583D9;">{{ day.time }}</span> -->
             </v-card>
           </div>
         </div>
+
+          <h3 v-else class="font2 center mt-16" style="color: #262B63;">
+            No data available
+          </h3>
       </v-card>
     </template>
   </div>
@@ -721,173 +734,51 @@
 import { ref, inject, onMounted, computed, watch } from 'vue'
 import axiosInstance from '@/plugins/axios';
 import { useRoute } from 'vue-router';
-import check from '@/assets/sources/icons/check.svg';
-import error from '@/assets/sources/icons/error.svg';
+import present from '@/assets/sources/icons/attendance.svg';
+import absent from '@/assets/sources/icons/absent.svg';
+import late from '@/assets/sources/icons/late.svg';
+import excused from '@/assets/sources/icons/excused.svg';
 import contract from '@/assets/sources/icons/contract.svg';
 
-
-const monthlyAttedance = ref([
-  {
-    weekTitle: "1st Week - March",
-    days: [
-      {
-        date: 'Monday, 3',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Tuesday, 4',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Wednesday, 5',
-        state_attedance: error,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Thursday, 6',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Friday, 7',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Saturday, 8',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Sunday, 9',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-    ]
-  },
-  {
-    weekTitle: "2nd Week - March",
-    days: [
-      {
-        date: 'Monday, 3',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Tuesday, 4',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Wednesday, 5',
-        state_attedance: error,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Thursday, 6',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Friday, 7',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Saturday, 8',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Sunday, 9',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-    ]
-  },
-  {
-    weekTitle: "3rd Week - March",
-    days: [
-      {
-        date: 'Monday, 3',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Tuesday, 4',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Wednesday, 5',
-        state_attedance: error,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Thursday, 6',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Friday, 7',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Saturday, 8',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Sunday, 9',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-    ]
-  },
-  {
-    weekTitle: "4th Week - March",
-    days: [
-      {
-        date: 'Monday, 3',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Tuesday, 4',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Wednesday, 5',
-        state_attedance: error,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Thursday, 6',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Friday, 7',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Saturday, 8',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-      {
-        date: 'Sunday, 9',
-        state_attedance: check,
-        time: '9:00 am - 12:15pm',
-      },
-    ]
-  },
+const stateShow = ref(false);
+const year = ref(null);
+const yearsArray = ref([
+  { id: 2025, name: '2025' },
+  { id: 2026, name: '2026' },
+  { id: 2027, name: '2027' },
 ]);
+const month_from = ref(null);
+const monthsArrayFrom = ref([
+  { id: 1, name: 'January' },
+  { id: 2, name: 'February' },
+  { id: 3, name: 'March' },
+  { id: 4, name: 'April' },
+  { id: 5, name: 'May' },
+  { id: 6, name: 'June' },
+  { id: 7, name: 'July' },
+  { id: 8, name: 'August' },
+  { id: 9, name: 'September' },
+  { id: 10, name: 'October' },
+  { id: 11, name: 'November' },
+  { id: 12, name: 'December' },
+]);
+const month_to = ref(null);
+const monthsArrayTo = ref([
+  { id: 1, name: 'January' },
+  { id: 2, name: 'February' },
+  { id: 3, name: 'March' },
+  { id: 4, name: 'April' },
+  { id: 5, name: 'May' },
+  { id: 6, name: 'June' },
+  { id: 7, name: 'July' },
+  { id: 8, name: 'August' },
+  { id: 9, name: 'September' },
+  { id: 10, name: 'October' },
+  { id: 11, name: 'November' },
+  { id: 12, name: 'December' },
+]);
+
+const monthlyAttedance = ref([]);
 
 const data_btn = ref(true);
 const attendance_btn = ref(false);
@@ -1100,22 +991,136 @@ const loadCenterData = async () => {
   }
 };
 
-const getAttendance = async (studentId, status) => {
-  try {
-    const response = await axiosInstance.get('/attendances', {
-      params: { 
-        studentId,
-        status
-      }
+// const getAttendance = async (studentId, status) => {
+//   try {
+//     const response = await axiosInstance.get('/attendances', {
+//       params: {
+//         studentId: studentId,
+//         status: status // Asegúrate de pasar este valor al llamar la función
+//       }
+//     });
+//     const attendanceData = response.data.result;
+//     console.log(attendanceData, 'Attendance Data');
+//     return attendanceData;
+//   } catch (error) {
+//     showAlert('Error fetching attendance data', 'error');
+//     throw error; 
+//   }
+// };
+
+const getOrdinalSuffix = (num) => {
+  const j = num % 10;
+  const k = num % 100;
+  if (j === 1 && k !== 11) return 'st';
+  if (j === 2 && k !== 12) return 'nd';
+  if (j === 3 && k !== 13) return 'rd';
+  return 'th';
+};
+
+
+const getAttendance = async () =>{
+  try{
+      const response = await axiosInstance.get(`/attendances?studentId=${studentId.value}`, {
     });
-    const attendanceData = response.data.result;
-    console.log(attendanceData, 'Attendance Data');
-    return attendanceData;
-  } catch (error) {
-    showAlert('Error fetching attendance data', 'error');
-    throw error; 
+    console.log(response.data.result, 'Attendance Data');
+  }catch(error){
+    showAlert(error, 'error')
   }
 };
+
+
+const searchAttendances = async () =>{
+  try{
+    const response = await axiosInstance.get(`/attendances?studentId=${studentId.value}&year=${year.value?.id}&monthFrom=${month_from.value?.id}&monthTo=${month_from.value?.id}`);
+    
+    // Create attendance map for quick lookup
+    const attendanceMap = new Map();
+    response.data.result.forEach(item => {
+      const date = new Date(item.date);
+      // Use UTC methods to avoid timezone offsets
+      const utcDate = new Date(Date.UTC(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate()
+      ));
+      attendanceMap.set(utcDate.getUTCDate(), item.status);
+    });
+
+    // Generate all days for selected month
+    const selectedMonth = month_from.value?.id;
+    const selectedYear = year.value?.id;
+    const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+    
+    const weeks = [];
+    let currentWeek = { weekTitle: `1st Week - ${month_from.value?.name}`, days: [] };
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(Date.UTC(selectedYear, selectedMonth - 1, day));
+      const dayName = date.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' });
+      
+      // Determine status image
+      let statusImage = null;
+      const status = attendanceMap.get(day);
+      if (status === 'Present') statusImage = present;
+      else if (status === 'Absent') statusImage = absent;
+      else if (status === 'Justified') statusImage = excused;
+      else if (status === 'Late') statusImage = late;
+
+      currentWeek.days.push({
+        date: `${dayName}, ${day}`,
+        state_attedance: statusImage,
+        time: '9:00 am - 12:15pm'
+      });
+
+      // Start new week every 7 days
+      if (day % 7 === 0 && day < daysInMonth) {
+        weeks.push(currentWeek);
+        currentWeek = {
+          weekTitle: `${weeks.length + 1}${getOrdinalSuffix(weeks.length + 1)} Week - ${month_from.value?.name}`,
+          days: []
+        };
+      }
+    }
+    
+    // Add the last week
+    if (currentWeek.days.length > 0) {
+      weeks.push(currentWeek);
+    }
+
+    monthlyAttedance.value = weeks;
+    console.log('Updated monthly attendance:', monthlyAttedance.value);
+    stateShow.value = true;
+  }catch(error){
+    showAlert(error, 'error')
+  }
+};
+
+watch(
+  () => ({
+    year: year.value,
+    month_from: month_from.value,
+    // month_to: month_to.value,
+  }),
+  (newValues, oldValues) => {
+    if (!oldValues) return;
+
+    const allRequiredFilled = 
+      newValues.year !== null && 
+      newValues.month_from !== null
+      // newValues.month_to !== null;
+
+    const hasChanged = (
+      newValues.year !== oldValues.year ||
+      newValues.month_from !== oldValues.month_from
+      // newValues.month_to !== oldValues.month_to
+    );
+
+    if (allRequiredFilled && hasChanged) {
+      searchAttendances();
+    }
+  },
+  { deep: true }
+);
 
 onMounted(() => {
   getPrograms();

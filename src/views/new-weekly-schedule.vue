@@ -215,7 +215,7 @@ import weekOfYear from 'dayjs/plugin/weekOfYear';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import locale from 'dayjs/locale/en';
 import imgUser from '@/assets/sources/images/user.png';
-import imgStudent from '@/assets/sources/images/student-1.png';
+import imgStudent from '@/assets/sources/images/avatar.svg';
 import { useRouter } from 'vue-router';
 dayjs.extend(weekOfYear);
 dayjs.extend(isLeapYear);

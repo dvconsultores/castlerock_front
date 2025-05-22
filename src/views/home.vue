@@ -44,7 +44,7 @@
 
           <div class="students-div">
             <div class="students-img-div">
-              <div class="img-student-card">
+              <div v-if="item.imgStudent" class="img-student-card">
                 <img :src="item.imgStudent" alt="Student">
               </div>
               <div v-if="item.imgStudent2" class="img-student-card">
@@ -107,7 +107,7 @@
 
           <div class="students-div">
             <div class="students-img-div">
-              <div class="img-student-card">
+              <div v-if="item.imgStudent" class="img-student-card">
                 <img :src="item.imgStudent" alt="Student">
               </div>
               <div v-if="item.imgStudent2" class="img-student-card">
@@ -407,6 +407,7 @@ const loadDaily = async () => {
       place: item.planning?.class?.name,
       time: '9:00 am - 12:15pm'
     }));
+    console.log('Today Classes:', dataClasses.value);
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
   }
@@ -420,7 +421,8 @@ const loadDailyBefore = async () => {
     
     scheduleData.value = tomorrowClasses;
     dataClassesBefore.value = tomorrowClasses.map(item => ({
-      date: `${item.day}, ${currentDate.value.format('D')}`,
+      id: item.id,
+      date: `${item.day}, ${currentDate.value.add(1, 'day').format('D')}`,
       imgUser: item.teacher?.user.image || null,
       teacherName: item.teacher?.user.firstName + ' ' + item.teacher?.user.lastName || 'Teacher',
       teacherType: 'Teacher',
@@ -434,7 +436,7 @@ const loadDailyBefore = async () => {
       place: item.planning?.class?.name,
       time: '9:00 am - 12:15pm'
     }));
-    console.log('Tomorrow Classes:', dataClassesBefore.value);
+    console.log('Before Classes:', dataClassesBefore.value);
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
   }

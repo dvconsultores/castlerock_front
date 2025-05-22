@@ -230,3 +230,23 @@ button.btn-2, .v-btn.btn-2, .btn-2 {
     display: none;      
   }
 }
+
+
+.textfield-error{
+  .v-field{
+    border: 1px solid red!important;
+  }
+
+  .v-field--active{
+    border: 1px solid red!important;
+  }
+
+  .v-input__details{
+    padding-top: 0px!important;
+    min-height: 1px!important;
+    height: 15px!important;
+  }
+  .v-messages__message{
+    margin-top: 8px!important;
+  }
+}

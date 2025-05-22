@@ -53,7 +53,7 @@ const router = createRouter({
           path: 'students',
           name: 'students',
           component: () => import('@/views/students.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
           path: 'student-registration',
@@ -65,7 +65,7 @@ const router = createRouter({
           path: 'programs',
           name: 'programs',
           component: () => import('@/views/programs.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
           path: 'additional-program',
@@ -131,13 +131,13 @@ const router = createRouter({
           path: 'student-profile/:id',
           name: 'student-profile',
           component: () => import('@/views/student-profile.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
           path: 'edit-student/:id',
           name: 'edit-student',
           component: () => import('@/views/edit-student.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
           path: 'centers',

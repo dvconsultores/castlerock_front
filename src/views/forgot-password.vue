@@ -17,7 +17,7 @@
       placeholder="Enter your email recovery"
       hide-details
       maxlength="150"
-      class="login-textfield"
+      :class="{'textfield-error': emailError, 'login-textfield': true}"
       @keyup.enter="sendEmailFuction"
       ></v-text-field>
 
@@ -38,18 +38,22 @@ import { useRouter } from 'vue-router';
 const email = ref('');
 const loadingRecovery = ref(false);
 const showAlert = inject('showAlert');
+const emailError = ref('');
 
 const router = useRouter();
 
 const sendEmailFuction = async () => {
+  emailError.value = '';
   if (!email.value?.trim()) {
-    showAlert('Please enter a valid email address', 'error');
+    emailError.value = 'Please enter your email address';
+    showAlert(emailError.value, 'error');
     return;
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email.value)) {
-    showAlert('Please enter a valid email format (e.g. user@example.com)', 'error');
+    emailError.value = 'Please enter a valid email format (e.g. user@example.com)';
+    showAlert(emailError.value, 'error');
     return;
   }
 

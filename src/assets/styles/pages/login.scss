@@ -61,6 +61,14 @@
     }
 
     .login-textfield{    
+      .v-input__details{
+        padding-top: 0px;
+        min-height: 1px;
+        height: 15px;
+      }
+      .v-messages__message{
+        margin-top: 8px;
+      }
       i{
         color: #3C3C434D;
         opacity: .6;

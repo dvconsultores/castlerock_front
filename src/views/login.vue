@@ -14,10 +14,11 @@
       flat
       prepend-inner-icon="mdi-email-outline"
       placeholder="Enter your email or username"
-      hide-details
+      :class="{'textfield-error': emailError, 'login-textfield': true, 'mt-14': true}"
       maxlength="150"
-      class="login-textfield mt-14"
       @keyup.enter="loginFunction"
+      @input="emailError = ''"
+      hide-details
       ></v-text-field>
 
       <v-text-field
@@ -29,10 +30,12 @@
       :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
       @click:append-inner="showPassword = !showPassword"
       placeholder="************"
-      hide-details
+      :class="{'textfield-error': passwordError, 'login-textfield': true, 'mb-0': true}"
       :type="showPassword ? 'text' : 'password'"
       class="login-textfield mb-0"
       @keyup.enter="loginFunction"
+      @input="passwordError = ''"
+      hide-details
       ></v-text-field>
 
       <div class="jspace fullw mb-6">
@@ -107,7 +110,7 @@
 </template>
 
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, computed } from 'vue';
 import axiosInstance from '@/plugins/axios';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
@@ -116,20 +119,33 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const dialogHome = ref(false);
 const email = ref('');
+const emailError = ref('');
+const passwordError = ref('');
 const password = ref('');
 const loadingLogin = ref(false);
 const showPassword = ref(false);
 const showAlert = inject('showAlert');
 
 const loginFunction = async () => {
+  emailError.value = '';
+  passwordError.value = '';
+
   if (!email.value?.trim()) {
-    showAlert('Please enter a valid email address', 'error');
+    emailError.value = 'Please enter a valid email address';
+    showAlert(emailError.value, 'error');
     return;
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email.value)) {
-    showAlert('Please enter a valid email format (e.g. user@example.com)', 'error');
+    emailError.value = 'Please enter a valid email format (e.g. user@example.com)';
+    showAlert(emailError.value, 'error');
+    return;
+  }
+
+  if (!password.value?.trim()) {
+    passwordError.value = 'Please enter a valid password';
+    showAlert(passwordError.value, 'error');
     return;
   }
 

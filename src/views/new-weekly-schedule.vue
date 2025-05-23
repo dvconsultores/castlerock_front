@@ -8,7 +8,7 @@
           v-model.number="select_center"
           placeholder="Select Center"
           flat
-          class="autocomplete-register"
+          :class="{'textfield-error': centerError, 'autocomplete-register': true}"
           menu-icon="mdi-chevron-up"
           :items="selectCenterItems"
           item-value="id"
@@ -42,7 +42,7 @@
           v-model.number="select_class"
           placeholder="Classroom"
           flat
-          class="autocomplete-register"
+          :class="{'textfield-error': classError, 'autocomplete-register': true}"
           model
           return-object
           menu-icon="mdi-chevron-up"
@@ -62,7 +62,7 @@
           v-model="year"
           placeholder="Select the Year"
           flat
-          class="autocomplete-register"
+          :class="{'textfield-error': yearError, 'autocomplete-register': true}"
           menu-icon="mdi-chevron-up"
           :items="yearsArray"
           item-value="id"
@@ -80,7 +80,7 @@
           v-model="month"
           placeholder="Select the Month"
           flat
-          class="autocomplete-register"
+          :class="{'textfield-error': monthError, 'autocomplete-register': true}"
           menu-icon="mdi-chevron-up"
           :items="monthsArray"
           item-value="id"
@@ -221,6 +221,11 @@ dayjs.extend(weekOfYear);
 dayjs.extend(isLeapYear);
 dayjs.locale(locale);
 
+
+const centerError = ref('');
+const classError = ref('');
+const yearError = ref('');
+const monthError = ref('');
 const dialogOpenDelete = ref(false);
 const dialogConfirmationDaily = ref(false);
 const loadingDelete = ref(false);
@@ -397,14 +402,38 @@ watch(month, () =>{
   month_selected.value = month.value.name
 });
 
-const createNewPlanning = async () =>{
-  // if (!week.value) {
-  //   showAlert('Please select a week', 'error');
-  //   return;
-  // }
+const createNewPlanning = async () => {
+  centerError.value = '';
+  classError.value = '';
+  yearError.value = '';
+  monthError.value = '';
 
+  const errors = [];
+  
+  if(!select_center.value) {
+    centerError.value = 'Please select a center';
+    errors.push(centerError.value);
+  }
+  if(!select_class.value) {
+    classError.value = 'Please select a classroom';
+    errors.push(classError.value);
+  }
+  if(!year.value) {
+    yearError.value = 'Please select a year';
+    errors.push(yearError.value);
+  }
+  if(!month.value) {
+    monthError.value = 'Please select a month';
+    errors.push(monthError.value);
+  }
+  
+  if (errors.length > 0) {
+    showAlert(errors.join('\n'), 'error');
+    return;
+  }
+  
   loadingCreate.value = true;
-  try{
+  try {
     const response = await axiosInstance.post('/planning', {
       year: year.value?.id,
       month: month.value?.id,
@@ -412,11 +441,17 @@ const createNewPlanning = async () =>{
       campus: select_center.value,
       class: select_class.value,
     });
-    showAlert('New Planning created succesfully!', 'success');
-    searchPlannings();
-    loadingCreate.value = false;
-  }catch(error){
-    showAlert(error, 'error')
+    showAlert('New planning created successfully!', 'success');
+    if (typeof searchPlannings === 'function') {
+      searchPlannings();
+    }
+    showStatePlanning.value = true;
+  } catch(error) {
+    const errorMessage = error.response?.data?.message ||
+                        error.message ||
+                        'Failed to create planning';
+    showAlert(errorMessage, 'error');
+  } finally {
     loadingCreate.value = false;
   }
 };

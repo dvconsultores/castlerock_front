@@ -171,42 +171,39 @@ const openSaveCenter = () => {
   addressError.value = '';
   imgError.value = '';
 
+  const errors = [];
+  
   if (!center_name.value?.trim()) {
     centerError.value = 'Please enter a valid center name';
-    showAlert(centerError.value, 'error');
-    return;
+    errors.push(centerError.value);
   }
 
   if (!phone_center.value?.trim()) {
     phoneError.value = 'Please enter a valid phone number';
-    showAlert(phoneError.value, 'error');
-    return;
+    errors.push(phoneError.value);
   }
 
   if (!nickname_center.value?.trim()) {
     nicknameError.value = 'Please enter a valid nickname';
-    showAlert(nicknameError.value, 'error');
-    return;
+    errors.push(nicknameError.value);
   }
 
   if (!address.value?.trim()) {
     addressError.value = 'Please enter a valid address';
-    showAlert(addressError.value, 'error');
-    return;
+    errors.push(addressError.value);
   }
 
   if (!imagePreview.value) {
     imgError.value = 'Please enter a valid image';
-    showAlert(imgError.value, 'error');
+    errors.push(imgError.value);
+  }
+
+  if (errors.length > 0) {
+    showAlert(errors.join('\n'), 'error');
     return;
   }
 
-  if (center_name.value?.trim() && phone_center.value?.trim() && nickname_center.value?.trim() && address.value?.trim() && imagePreview.value) {
-    dialogAddCenter.value = true;
-  }else {
-    showAlert('Please fill in all fields', 'error');
-    return;
-  }
+  dialogAddCenter.value = true;
 };
 
 const closeAddCenter = () => {

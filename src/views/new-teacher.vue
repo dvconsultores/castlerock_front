@@ -212,23 +212,28 @@ const closeConfirmationTeacher = () => {
 const openSaveTeacher = () => {
   teacherError.value = '';
   centerError.value = '';
+
+  const errors = [];
   
   if(!selectedTeacherName.value){
     teacherError.value = 'Please select a teacher';
-    showAlert(teacherError.value, 'error');
-    return;
+    errors.push(teacherError.value);
   }
   if(!selectedCenterName.value){
     centerError.value = 'Please select a center';
-    showAlert(centerError.value, 'error');
-    return;
+    errors.push(centerError.value);
   }
   if(!selectedTeacherName.value || !selectedCenterName.value ) {
     showAlert('Please select a teacher and a center', 'error');
     return;
-  }else{
-   dialogAddTeacher.value = true;
   }
+  
+  if (errors.length > 0) {
+    showAlert(errors.join('\n'), 'error');
+    return;
+  }
+  
+  dialogAddTeacher.value = true;
 };
 
 const getCenters = async () => {

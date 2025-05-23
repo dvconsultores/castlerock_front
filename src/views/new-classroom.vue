@@ -185,44 +185,38 @@ const openSaveClassroom = () => {
   selectCenterError.value = '';
   imgError.value = '';
 
+  const errors = [];
+  
   if (!name.value?.trim()) {
     nameError.value = 'Please enter a valid classroom name';
-    showAlert(nameError.value, 'error');
-    return;
+    errors.push(nameError.value);
   }
 
   if (!maxCapacity.value) {
     maxCapacityError.value = 'Please enter a valid number';
-    showAlert(maxCapacityError.value, 'error');
-    return;
+    errors.push(maxCapacityError.value);
+  } else if (isNaN(parseInt(maxCapacity.value))) {
+    maxCapacityError.value = 'Max capacity must be a number';
+    errors.push(maxCapacityError.value);
   }
 
   if (!program.value) {
     programError.value = 'Please select a valid program';
-    showAlert(programError.value, 'error');
-    return;
+    errors.push(programError.value);
   }
 
   if (!select_center.value) {
     selectCenterError.value = 'Please select a valid center';
-    showAlert(selectCenterError.value, 'error');
-    return;
+    errors.push(selectCenterError.value);
   }
 
   if (!imagePreview.value) {
     imgError.value = 'Please enter a valid image';
-    showAlert(imgError.value, 'error');
-    return;
+    errors.push(imgError.value);
   }
 
-  if (!name.value || !maxCapacity.value || !program.value || !select_center.value || imagePreview.value === null) {
-    showAlert('Please fill all required fields', 'error');
-    return;
-  }
-  
-  if (isNaN(parseInt(maxCapacity.value))) {
-    maxCapacityError.value = 'Please enter a valid number';
-    showAlert('Max capacity must be a number', 'error');
+  if (errors.length > 0) {
+    showAlert(errors.join('\n'), 'error');
     return;
   }
   

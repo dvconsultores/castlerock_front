@@ -253,13 +253,30 @@ const openSaveProgram = () => {
     }
   ];
 
+  const errors = [];
+  
+  const emailValue = email.value?.trim();
+  if (!emailValue) {
+    emailError.value = 'Email is required';
+    errors.push(emailError.value);
+  } else if (!/^[^@]+@[^@]+\.[^@]+$/.test(emailValue)) {
+    emailError.value = 'Please enter a valid email (example@domain.com)';
+    errors.push(emailError.value);
+  }
+
   for (const {field, errorRef, message, trim} of validations) {
+    if (field === email) continue;
+    
     const value = trim ? field.value?.trim() : field.value;
     if (!value) {
       errorRef.value = message;
-      showAlert(message, 'error');
-      return;
+      errors.push(message);
     }
+  }
+
+  if (errors.length > 0) {
+    showAlert(errors.join('\n'), 'error');
+    return;
   }
 
   dialogAddProgram.value = true;

@@ -4,21 +4,13 @@ FROM node:18-alpine AS build
 # Set the working directory
 WORKDIR /app
 
-# Pass environment variables as build arguments
-ARG VITE_BASE_URL
-ARG VITE_BASE_URL_API
-
-# Set environment variables
-ENV VITE_BASE_URL=$VITE_BASE_URL
-ENV VITE_BASE_URL_API=$VITE_BASE_URL_API
-
-# Copy package.json and package-lock.json
+# Copy package files first for better caching
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the rest of the application code including .env
 COPY . .
 
 # Build the application
@@ -30,8 +22,11 @@ FROM nginx:stable-alpine
 # Copy the built files from the build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose the default Nginx port
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy custom nginx configuration if needed
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
 
-# Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]

@@ -5,8 +5,8 @@
       <v-row>
         <v-col cols="12" sm="6" class="pb-0">
           <v-text-field
-            v-model="activity_name"
-            class="textfield-registration"
+            v-model="name"
+            :class="{'textfield-error': nameError, 'textfield-registration': true}"
             placeholder="Activity Name"
             variant="solo" 
             flat
@@ -16,12 +16,16 @@
 
         <v-col cols="12" sm="6" class="pb-0">
           <v-autocomplete
-            v-model="select_center"
+            v-model.number="select_center"
             placeholder="Select Center"
             flat
-            class="autocomplete-register"
+            :class="{'textfield-error': selectCenterError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
-            :items="['Center 1', 'Center 2']"
+            :items="selectCenterItems"
+            item-value="id"
+            item-title="name"
+            return-object
+            @update:modelValue="val => select_center = val?.id"
             variant="solo"
             :menu-props="{
               contentClass: 'rounded-menu',
@@ -29,7 +33,7 @@
           ></v-autocomplete>
         </v-col>
 
-        <v-col cols="12">
+        <!-- <v-col cols="12">
           <v-autocomplete
             v-model="select_number_days"
             placeholder="Select Number of Days"
@@ -42,10 +46,10 @@
               contentClass: 'rounded-menu',
             }"
           ></v-autocomplete>
-        </v-col>
+        </v-col> -->
       </v-row>
 
-      <v-row class="container-div-form">
+      <v-row :class="{'border-red': daysError, 'container-div-form': true}">
         <v-col cols="12" align="left">
           <span class="font2 f24 tleft" style="color: #262262;">Days of the Activity</span>
         </v-col>
@@ -82,7 +86,7 @@
               >
             </div>
             
-            <v-btn @click="triggerFileInput">Upload</v-btn>
+            <v-btn @click="triggerFileInput" :class="{'btn-error': imageError}">Upload</v-btn>
 
             <v-file-input 
             ref="fileInput" v-model="selectedImgProgram" flat variant="solo" 
@@ -104,10 +108,10 @@
         <img src="@/assets/sources/icons/save.svg" alt="Save">
         <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to add the new program</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400"><span class="w500" style="color: #7583D9;">Swimming,</span> Center 1 </span>
+        <span class="f16 w500" style="color: #7583D9;">{{ name }}</span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1" @click="openConfirmationProgram">Yes, register</v-btn>
-          <v-btn flat class="btn2" @click="closeAddProgram">No, cancel</v-btn>
+          <v-btn flat class="btn1" @click="createProgram" :loading="loadingProgram">Yes, register</v-btn>
+          <v-btn flat class="btn2" @click="dialogAddProgram = false">No, cancel</v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -117,9 +121,9 @@
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
         <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully deleted!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The new additional program <span class="w600" style="color: #7583D9;">(Swimming)</span> has been successfully saved</span>
+        <span class="f16 w400 tcenter">The new additional program <span class="w600" style="color: #7583D9;">({{ name }})</span> has been successfully saved</span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1">Additional Programs</v-btn>
+          <v-btn flat class="btn1" @click="$router.push('/home/programs')">Additional Programs</v-btn>
           <v-btn flat class="btn2" @click="closeConfirmationProgram">New Additional Programs</v-btn>
         </div>
         <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home')">Go home</span>
@@ -129,11 +133,31 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, inject, onMounted, computed } from 'vue';
+import axiosInstance from '@/plugins/axios';
 
 const fileInput = ref(null);
 const selectedImgProgram = ref(null);
 const imagePreview = ref(null);
+const dataCenters = ref([]);
+const name = ref('');
+const select_center = ref(null);
+const loadingProgram = ref(false);
+const showAlert = inject('showAlert');
+const selectCenterItems = ref([]);
+const dialogAddProgram = ref(false);
+const dialogConfirmationProgram = ref(false);
+const monday = ref(false);
+const tuesday = ref(false);
+const wednesday = ref(false);
+const thursday = ref(false);
+const friday = ref(false);
+const saturday = ref(false);
+const sunday = ref(false);
+const nameError = ref('');
+const selectCenterError = ref('');
+const daysError = ref('');
+const imageError = ref('');
 
 const handleFileChange = (file) => {
   if (file) {
@@ -147,33 +171,121 @@ const triggerFileInput = () => {
   fileInput.value.$el.querySelector('input[type="file"]').click();
 };
 
-const dialogAddProgram = ref(false);
-const dialogConfirmationProgram = ref(false);
-
-const openConfirmationProgram = () => {
-  dialogAddProgram.value = false;
-  dialogConfirmationProgram.value = true;
-};
-
 const closeConfirmationProgram = () => {
+  name.value = '';
+  select_center.value = '';
+  imagePreview.value = null;
+  selectedImgProgram.value = null;
+  fileInput.value = null;
+  monday.value = false;
+  tuesday.value = false;
+  wednesday.value = false;
+  thursday.value = false;
+  friday.value = false;
+  saturday.value = false;
+  sunday.value = false;
   dialogConfirmationProgram.value = false;
 };
 
+const stateValue = () =>{
+  if(monday.value || tuesday.value || wednesday.value || thursday.value || friday.value || saturday.value || sunday.value){
+    return true;
+  }else{
+    return false;
+  }
+}
+
 const openSaveProgram = () => {
-  dialogAddProgram.value = true;
+  nameError.value = '';
+  selectCenterError.value = '';
+  daysError.value = '';
+  imageError.value = '';
+
+  if (!name.value) {
+    nameError.value = 'Please enter the activity name';
+    showAlert(nameError.value, 'error');
+  }
+
+  if (!select_center.value) {
+    selectCenterError.value = 'Please select a center';
+    showAlert(selectCenterError.value, 'error');
+  }
+
+  if (!monday.value && !tuesday.value && !wednesday.value && !thursday.value && !friday.value && !saturday.value && !sunday.value) {
+    daysError.value = true;
+    showAlert('Please select at least one day enrolled', 'error');
+  } else {
+    daysError.value = false;
+  }
+
+  if (!imagePreview.value) {
+    imageError.value = 'Please upload an image';
+    showAlert(imageError.value, 'error');
+  }
+
+  if (name.value?.trim() && select_center.value && imagePreview.value && stateValue()) {
+    dialogAddProgram.value = true;
+  }else {
+    showAlert('Please fill in all fields', 'error');
+    return;
+  }
 };
 
-const closeAddProgram = () => {
-  dialogAddProgram.value = false;
+const createProgram = async () => {
+  loadingProgram.value = true;
+  try {
+    const formData = new FormData();
+    formData.append('name', name.value.toString());
+    formData.append('campus', Number(select_center.value));
+    const selectedDays = [];
+    if (monday.value) selectedDays.push("Monday");
+    if (tuesday.value) selectedDays.push("Tuesday");
+    if (wednesday.value) selectedDays.push("Wednesday");
+    if (thursday.value) selectedDays.push("Thursday");
+    if (friday.value) selectedDays.push("Friday");
+    if (saturday.value) selectedDays.push("Saturday");
+    if (sunday.value) selectedDays.push("Sunday");
+    
+    selectedDays.forEach(day => {
+      formData.append('days[]', day);
+    });
+    
+    if (selectedImgProgram.value) {4
+      formData.append('image', selectedImgProgram.value);
+    }
+    const response = await axiosInstance.post('/additional-programs', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    loadingProgram.value = false;
+    dialogAddProgram.value = false;
+    dialogConfirmationProgram.value = true;
+  } catch (error) {
+    showAlert('Error creating classroom', 'error');
+    loadingProgram.value = false;
+  }
 };
 
-const monday = ref(false);
-const tuesday = ref(false);
-const wednesday = ref(false);
-const thursday = ref(false);
-const friday = ref(false);
-const saturday = ref(false);
-const sunday = ref(false);
+const getCenters = async () => {
+  try {
+    const response = await axiosInstance.get('/campus');
+    
+    dataCenters.value = response.data.result.map(center => ({
+      id: center.id,
+      name: center.name,
+    }));
+
+    selectCenterItems.value = dataCenters.value;
+  } catch (error) {
+    showAlert('Error fetching centers', 'error');
+  }
+};
+
+onMounted(() => {
+  getCenters();
+});
 
 </script>
 

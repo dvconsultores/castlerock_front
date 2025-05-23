@@ -14,7 +14,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   padding-inline: 30px;
-  padding-block: 32px;
+  padding-block: 32px 120px;
 
   .card-img-table{
     border: 2px solid #7583D9;
@@ -127,6 +127,14 @@
     td:last-child {
       border-top-right-radius: 12px;
       border-bottom-right-radius: 12px;
+    }
+  }
+
+  .v-data-table-footer{
+    background-color: #F0F0F0;
+    border-top: 0px solid #E0E0E0!important;
+    .v-data-table-footer__items-per-page{
+      display: none;      
     }
   }
 

@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import inject from '@rollup/plugin-inject'
 import path from 'path'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineConfig(({ mode }) => {
   // Load all env variables starting with VITE_
@@ -10,9 +10,24 @@ export default defineConfig(({ mode }) => {
   return {
     base: env.VITE_BASE_URL || '/', // Set the base URL from the environment variable
     plugins: [
-      inject({ Buffer: ['buffer', 'Buffer'] }),
       vue(),
+      nodePolyfills({
+        include: ['buffer'],
+        globals: {
+          Buffer: true,
+          global: true,
+          process: true
+        }
+      })
     ],
+    optimizeDeps: {
+      include: ['buffer', 'vuetify'],
+      esbuildOptions: {
+        define: {
+          global: 'globalThis'
+        }
+      }
+    },
     define: {
       global: 'window',
       // Expose all VITE_* environment variables to client
@@ -24,9 +39,6 @@ export default defineConfig(({ mode }) => {
           silenceDeprecations: ["legacy-js-api"],
         },
       },
-    },
-    optimizeDeps: {
-      include: ['vuetify'],
     },
     build: {
       chunkSizeWarningLimit: 2000,

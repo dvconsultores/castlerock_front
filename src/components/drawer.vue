@@ -4,37 +4,44 @@
     
     
     <div class="menu">
-      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/home') }" @click="$router.push('/home')">
-        <img src="@/assets/sources/icons/home.svg" alt="Home">
-        <span class="w600 f14" style="color: #262262;">Home</span>
+      <div>
+        <div v-if="isAdmin || isTeacher" class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/home') }" @click="$router.push('/home')">
+          <img src="@/assets/sources/icons/home.svg" alt="Home">
+          <span class="w600 f14" style="color: #262262;">Home</span>
+        </div>
+
+        <div v-if="isAdmin" class="icon-container mt-2" :class="{ 'icon-container-selected': isRouteActive('/home/centers') || isRouteActive('/home/new-center') || isRouteActive('/home/edit-center')}" @click="$router.push('/home/centers')">
+          <img src="@/assets/sources/icons/centers.svg" alt="Centers">
+          <span class="w600 f14" style="color: #262262;">Centers</span>
+        </div>
+
+        <div v-if="isAdmin" class="icon-container mt-2" :class="{ 'icon-container-selected': isRouteActive('/home/students') || isRouteActive('/home/student-registration')  }" @click="$router.push('/home/students')">
+          <img src="@/assets/sources/icons/students.svg" alt="Students">
+          <span class="w600 f14" style="color: #262262;">Students</span>
+        </div>
+
+        <div v-if="isAdmin || isTeacher" class="icon-container mt-2" :class="{ 'icon-container-selected': isRouteActive('/home/classrooms') || isRouteActive('/home/new-classroom') }" @click="$router.push('/home/classrooms')">
+          <img src="@/assets/sources/icons/classroms.svg" alt="Classroms">
+          <span class="w600 f14" style="color: #262262;">Classrooms</span>
+        </div>
+
+        <div v-if="isAdmin" class="icon-container mt-2" :class="{ 'icon-container-selected': isRouteActive('/home/teachers') || isRouteActive('home/new-teacher')}" @click="$router.push('/home/teachers')">
+          <img src="@/assets/sources/icons/teachers.svg" alt="Teacher">
+          <span class="w600 f14" style="color: #262262;">Teacher</span>
+        </div>
+
+        <div v-if="isAdmin" class="icon-container mt-2" :class="{ 'icon-container-selected': isRouteActive('/home/programs') || isRouteActive('/home/additional-program') }" @click="$router.push('/home/programs')">
+          <img src="@/assets/sources/icons/programs.svg" alt="Programs">
+          <span class="w600 f14 tcenter" style="color: #262262; line-height: 100%;">Programs</span>
+        </div>
+
+        <div v-if="isAdmin" class="icon-container mt-2" :class="{ 'icon-container-selected': isRouteActive('/home/users') || isRouteActive('/home/users') }" @click="$router.push('/home/users')">
+          <img src="@/assets/sources/icons/avatar.svg" alt="Programs">
+          <span class="w600 f14 tcenter" style="color: #262262; line-height: 100%;">Users</span>
+        </div>
       </div>
 
-      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/centers') || isRouteActive('/home/new-center')}" @click="$router.push('/home/centers')">
-        <img src="@/assets/sources/icons/centers.svg" alt="Centers">
-        <span class="w600 f14" style="color: #262262;">Centers</span>
-      </div>
-
-      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/home/students') || isRouteActive('/home/student-registration')  }" @click="$router.push('/home/students')">
-        <img src="@/assets/sources/icons/students.svg" alt="Students">
-        <span class="w600 f14" style="color: #262262;">Students</span>
-      </div>
-
-      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/home/classrooms') || isRouteActive('/home/new-classroom') }" @click="$router.push('/home/classrooms')">
-        <img src="@/assets/sources/icons/classroms.svg" alt="Classroms">
-        <span class="w600 f14" style="color: #262262;">Classrooms</span>
-      </div>
-
-      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/home/teachers') || isRouteActive('home/new-teacher')}" @click="$router.push('/home/teachers')">
-        <img src="@/assets/sources/icons/teachers.svg" alt="Teacher">
-        <span class="w600 f14" style="color: #262262;">Teacher</span>
-      </div>
-
-      <div class="icon-container" :class="{ 'icon-container-selected': isRouteActive('/home/programs') || isRouteActive('/home/additional-program') }" @click="$router.push('/home/programs')">
-        <img src="@/assets/sources/icons/programs.svg" alt="Programs">
-        <span class="w600 f14 tcenter" style="color: #262262; line-height: 100%;">Programs</span>
-      </div>
-
-      <div class="logout-container mt-12 pointer" @click="$router.push('/')">
+      <div class="logout-container mt-12 pointer" @click="logOut">
         <img src="@/assets/sources/icons/logout.svg" alt="Logout">
         <span class="w600 f14 tcenter" style="color: #262262;">Log out</span>
       </div>
@@ -47,9 +54,18 @@ import { useRoute } from 'vue-router'
 import { isDrawerVisible } from '@/store/drawerState.js';
 
 const route = useRoute();
+const isAdmin = localStorage.getItem('userRole') === 'ADMIN';
+const isTeacher = localStorage.getItem('userRole') === 'TEACHER';
 
 const isRouteActive = (path) => {
   return route.path === path
+};
+
+const logOut = () => {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('idUser');
+  localStorage.removeItem('userRole');
+  window.location.href = '/';
 };
 </script>
 
@@ -85,15 +101,15 @@ const isRouteActive = (path) => {
   .menu{
     background-color: #6EC8AC;
     box-shadow: inset 0 8px 11px 4px rgba(0, 0, 0, 0.3);
-    height: 100%;
+    height: 900px;
     width: 100%;
     border-top-right-radius: 88px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     padding-top: 60px;
-    padding-bottom: 0px;
+    padding-bottom: 40px;
     gap: 10px;
 
     .icon-container{
@@ -101,6 +117,7 @@ const isRouteActive = (path) => {
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      min-height: 88px;
       height: 88px;
       width: 99px;
       gap: 5px;
@@ -123,7 +140,7 @@ const isRouteActive = (path) => {
         width: 50px;
         height: 44px;
         background-color: #F0F0F0 ;
-        top: -3px;
+        top: 0px;
         bottom: 0px;
         right: -40px;
         transform: translateY(50%);
@@ -147,7 +164,7 @@ const isRouteActive = (path) => {
         width: 50px;
         height: 44px;
         background-color: #F0F0F0 ;
-        top: -3px;
+        top: 0px;
         bottom: 0px;
         right: -40px;
         transform: translateY(50%);

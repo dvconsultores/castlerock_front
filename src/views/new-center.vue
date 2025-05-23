@@ -3,23 +3,39 @@
     <h3 class="font2 f32 tleft mt-6" style="color: #262B63;">New Center</h3>
     <v-form class="form-div">
       <v-row>
-        <v-col cols="12" sm="9" class="pb-0">
+        <v-col cols="12" sm="8" class="pb-0">
           <v-text-field
             v-model="center_name"
-            class="textfield-registration"
+            :class="{'textfield-error': centerError, 'textfield-registration': true}"
             placeholder="Center Name"
             variant="solo" 
+            maxlength="150"
             flat
             hide-details
           ></v-text-field>
         </v-col>
 
-        <v-col cols="12" sm="3" class="pb-0">
+        <v-col cols="12" sm="4" class="pb-0">
           <v-text-field
-            v-model="number_center"
-            class="textfield-registration"
-            placeholder="Number of the center"
+            v-model="phone_center"
+            :class="{'textfield-error': phoneError, 'textfield-registration': true}"
+            placeholder="Phone of the center"
             variant="solo" 
+            flat
+            maxlength="150"
+            hide-details
+            type="number"
+            hide-spin-buttons
+          ></v-text-field>
+        </v-col>
+
+        <v-col cols="12" class="pb-0">
+          <v-text-field
+            v-model="nickname_center"
+            :class="{'textfield-error': nicknameError, 'textfield-registration': true}"
+            placeholder="Nickname of the center"
+            variant="solo" 
+            maxlength="150"
             flat
             hide-details
           ></v-text-field>
@@ -27,10 +43,11 @@
 
         <v-col cols="12" class="pb-0">
           <v-text-field
-            v-model="location"
-            class="textfield-registration"
+            v-model="address"
+            :class="{'textfield-error': addressError, 'textfield-registration': true}"
             placeholder="Location"
             variant="solo" 
+            maxlength="150"
             flat
             hide-details
           ></v-text-field>
@@ -58,7 +75,7 @@
               >
             </div>
             
-            <v-btn @click="triggerFileInput">Upload</v-btn>
+            <v-btn :class="{'btn-error': imgError}" @click="triggerFileInput">Upload</v-btn>
 
             <v-file-input 
             ref="fileInput" v-model="selectedImgCenter" flat variant="solo" 
@@ -80,9 +97,9 @@
         <img src="@/assets/sources/icons/save.svg" alt="Save">
         <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to create this new center?</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400"><span class="w500" style="color: #7583D9;">Center New,</span> Center 1 </span>
+        <span class="w500" style="color: #7583D9;">{{ center_name }}</span>
         <div class="btn-divs mt-8">
-          <v-btn flat class="btn1" @click="openConfirmationCenter">Yes, add</v-btn>
+          <v-btn flat class="btn1" @click="createCenter" :loading="loadingCenter">Yes, add</v-btn>
           <v-btn flat class="btn2" @click="closeAddCenter">No, cancel</v-btn>
         </div>
       </v-card>
@@ -93,7 +110,7 @@
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
         <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully saved!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The new center <span class="w600" style="color: #7583D9;">(Center New)</span> has been successfully created</span>
+        <span class="f16 w400 tcenter">The new center <span class="w600" style="color: #7583D9;">{{ center_name }}</span> has been successfully created.</span>
         <div class="btn-divs mt-8">
           <v-btn flat class="btn1" @click="$router.push('/home/centers')">Centers</v-btn>
           <v-btn flat class="btn2" @click="closeConfirmationCenter">New Center</v-btn>
@@ -105,11 +122,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
+import axiosInstance from '@/plugins/axios';
+
 
 const fileInput = ref(null);
 const selectedImgCenter = ref(null);
 const imagePreview = ref(null);
+const center_name = ref('');
+const phone_center = ref(''); 
+const nickname_center = ref('');
+const address = ref('');
+const loadingCenter = ref(false);
+const showAlert = inject('showAlert');
+const dialogAddCenter = ref(false);
+const dialogConfirmationCenter = ref(false);
+const centerError = ref('');
+const phoneError = ref('');
+const nicknameError = ref('');
+const addressError = ref('');
+const imgError = ref('');
 
 const handleFileChange = (file) => {
   if (file) {
@@ -123,24 +155,86 @@ const triggerFileInput = () => {
   fileInput.value.$el.querySelector('input[type="file"]').click();
 };
 
-const dialogAddCenter = ref(false);
-const dialogConfirmationCenter = ref(false);
-
-const openConfirmationCenter = () => {
-  dialogAddCenter.value = false;
-  dialogConfirmationCenter.value = true;
-};
-
 const closeConfirmationCenter = () => {
+  center_name.value = '';
+  phone_center.value = '';
+  nickname_center.value = '';
+  address.value = '';
+  imagePreview.value = null;
   dialogConfirmationCenter.value = false;
 };
 
 const openSaveCenter = () => {
+  centerError.value = '';
+  phoneError.value = '';
+  nicknameError.value = '';
+  addressError.value = '';
+  imgError.value = '';
+
+  const errors = [];
+  
+  if (!center_name.value?.trim()) {
+    centerError.value = 'Please enter a valid center name';
+    errors.push(centerError.value);
+  }
+
+  if (!phone_center.value?.trim()) {
+    phoneError.value = 'Please enter a valid phone number';
+    errors.push(phoneError.value);
+  }
+
+  if (!nickname_center.value?.trim()) {
+    nicknameError.value = 'Please enter a valid nickname';
+    errors.push(nicknameError.value);
+  }
+
+  if (!address.value?.trim()) {
+    addressError.value = 'Please enter a valid address';
+    errors.push(addressError.value);
+  }
+
+  if (!imagePreview.value) {
+    imgError.value = 'Please enter a valid image';
+    errors.push(imgError.value);
+  }
+
+  if (errors.length > 0) {
+    showAlert(errors.join('\n'), 'error');
+    return;
+  }
+
   dialogAddCenter.value = true;
 };
 
 const closeAddCenter = () => {
   dialogAddCenter.value = false;
+};
+
+const createCenter = async () => {
+  loadingCenter.value = true;
+  try {
+    const formData = new FormData();
+    formData.append('name', center_name.value.toString());
+    formData.append('phone', phone_center.value.toString());
+    formData.append('nickname', nickname_center.value.toString());
+    formData.append('address', address.value.toString());
+    
+    if (selectedImgCenter.value) {4
+      formData.append('image', selectedImgCenter.value);
+    }
+    const response = await axiosInstance.post('/campus', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    loadingCenter.value = false;
+    dialogAddCenter.value = false;
+    dialogConfirmationCenter.value = true;
+  } catch (error) {
+    showAlert('Failed to create centers', 'error');
+    loadingCenter.value = false;
+  }
 };
 
 </script>

@@ -49,6 +49,7 @@
 
   .img-container{
     border: 2px solid #7583D9;
+    background-color: #FFFFFF;
     border-radius: 8px;
     overflow: hidden;
     display: grid;
@@ -73,6 +74,10 @@
       top: 4px;
       right: 4px;
     }
+  }
+
+  .img-container-error{
+    border: 2px solid red;
   }
 
   .login-textfield{    
@@ -190,12 +195,17 @@
     border-radius: 16px;
     width: 100%;
     padding: 12px 32px 18px 32px;
+
+    .checkboxes-error{
+      border: 2px solid red;
+    }
   }
 
   .big-checkboxes-container{
     padding: 12px 32px 18px 32px;
     border-radius: 16px;
     background-color: #FFFFFF;
+    position: relative;
 
     .container-checkboxes-inset{
       background-color: #F0F0F0 ;
@@ -203,6 +213,18 @@
       width: 100%;
       padding: 16px;
     }
+
+    .add-icon{
+      position: absolute;
+      right: 40px;
+      top: 20px;
+      background-color: #7583D9;
+      min-width: 1px;
+    }
+  }
+
+  .border-red{
+    border: 2px solid red;
   }
 
   .card-rounded{
@@ -210,6 +232,7 @@
     border-radius: 16px;
     padding: 0px 32px 32px 32px;
     width: 100%;
+    min-height: 400px;
     height: max-content;
     margin-top: 12px;
 
@@ -220,6 +243,7 @@
       justify-content: flex-start;
       align-items: flex-start;
       width: 100%;
+
       h3{
         color: #262262;
         font-size: 24px;
@@ -296,4 +320,70 @@
 .rounded-menu {
   border-radius: 12px !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+
+
+
+//////////// dialogs ////////////
+
+
+.dialogConfirmationStudent{
+  display: grid;
+  place-items: center;
+  .card-confirmation{
+    height: 330px;
+    width: 490px!important;
+    border-radius: 24px!important;
+    background-color: #FFFFFF;
+    border: 1px solid #7583D9;
+    padding: 36px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    img{
+      width: 28px;
+      height: 28px;
+    }
+
+    hr{
+      width: 100%;
+      border-bottom: 1px solid rgba(#000000, 0.1);
+    }
+
+    .btn-divs{
+      display: flex;
+      gap: 12px;
+
+      .btn1{
+        width: 200px;
+        height: 40px;
+        border-radius: 32px;
+        background-color: #6BBDAE;
+
+        .v-btn__content{
+          color: #FFFFFF;
+          font-weight: 500;
+          font-size: 16px;
+          text-transform: none;
+        }
+      }
+
+      .btn2{
+        width: 200px;
+        height: 40px;
+        border-radius: 32px;
+        background-color: #F36029;
+
+        .v-btn__content{
+          color: #FFFFFF;
+          font-weight: 500;
+          font-size: 16px;
+          text-transform: none;
+        }
+      }
+    }
+  }
 }

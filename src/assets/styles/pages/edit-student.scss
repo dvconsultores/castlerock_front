@@ -1,0 +1,375 @@
+@use "@/assets/styles/main.scss" as *;
+//---------------------------------------------------------------------------------------------//
+//========================================= Student Profile ===================================//
+//---------------------------------------------------------------------------------------------//
+
+#student-profile {
+  background-color: #F0F0F0 ;
+  height: 100%;
+  width: 100%;
+  max-width: 1560px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-inline: 30px;
+  padding-block: 32px 60px;
+
+  .custom-toggle{
+    height: 40px;
+    min-height: 40px;
+    opacity: 1!important;
+    background-color: transparent!important;
+    display: flex;
+    justify-content: flex-start;
+    .toggle-btn{
+      background-color: #6BBDAE54;
+      height: 40px;
+      min-height: 40px;
+      border-top-right-radius: 8px;
+      border-top-left-radius: 8px;
+      border-bottom-right-radius: 0px;
+      border-bottom-left-radius: 0px;
+      color: #4E444B;
+      font-size: 16px;
+      text-transform: none;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      width: 140px;
+      box-shadow: inset 2px 2px 10px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .active-toggle{
+      opacity: 1!important;
+      background: #F0F0F0 ;
+      box-shadow: 0 -4px 8px -5px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .img-container{
+    border: 2px solid #7583D9;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    width: 134px;
+    height: 134px;
+    position: relative;
+    
+    img{
+    width: 134px;
+    height: 134px;
+    object-fit: cover;
+    }
+
+    .v-icon{
+      position: absolute;
+      z-index: 2;
+      background-color: #FFFFFF;
+      border-radius: 50%;
+      font-size: 16px;
+      padding: 10px;
+      top: 4px;
+      right: 4px;
+    }
+  }
+
+  .login-textfield{    
+    i{
+      color: #3C3C434D;
+      opacity: .6;
+    }
+
+    .v-field{
+      border-radius: 16px;
+      transition: all .5s ease-in-out;
+      ::placeholder{
+        color: #3C3C434D;
+        opacity: .6;
+      }
+    }
+
+    .v-field--active{
+      border: 1px solid #7583D9;
+
+      i{
+        color: #46464C;
+      }
+    }
+    .v-input{
+      max-width: 100%;
+      width: 100%;
+    }
+    .v-input__control{
+      height: 56px;
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .v-field__input{
+      max-width: 100%;
+      width: 100%;
+      padding-block: 5px;
+      height: 56px!important;
+      min-height: 1px!important;
+    }
+  }
+
+  .autocomplete-register{
+    .v-field{
+      border-radius: 16px;
+    }
+
+    .v-field--active{
+      border: 1px solid #7583D9;
+
+      i{
+        color: #46464C;
+      }
+    }
+  }
+
+  .container-for-text{
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 32px 32px 18px 32px;
+    width: 100%;
+
+    .text-area{
+      .v-field{
+        border-radius: 16px;
+        transition: all .5s ease-in-out;
+        ::placeholder{
+          color: #3C3C434D;
+          opacity: .6;
+        }
+      }
+  
+      .v-field--active{
+        border: 1px solid #7583D9;
+  
+        i{
+          color: #46464C;
+        }
+      }
+    }
+
+
+    .img-container{
+      border: 2px solid #7583D9;
+      border-radius: 8px;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      width: 134px;
+      height: 134px;
+      position: relative;
+      
+      img{
+      width: 134px;
+      height: 134px;
+      object-fit: cover;
+      }
+  
+      .v-icon{
+        position: absolute;
+        z-index: 2;
+        background-color: #FFFFFF;
+        border-radius: 50%;
+        font-size: 16px;
+        padding: 10px;
+        top: 4px;
+        right: 4px;
+      }
+    }
+  }
+
+  .container-checkboxes{
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    width: 100%;
+    padding: 12px 32px 18px 32px;
+  }
+
+  .big-checkboxes-container{
+    padding: 12px 32px 18px 32px;
+    border-radius: 16px;
+    background-color: #FFFFFF;
+    position: relative;
+
+    .container-checkboxes-inset{
+      background-color: #F0F0F0 ;
+      border-radius: 16px;
+      width: 100%;
+      padding: 16px;
+    }
+
+    .add-icon{
+      position: absolute;
+      right: 40px;
+      top: 20px;
+      background-color: #7583D9;
+      min-width: 1px;
+    }
+  }
+
+  .card-rounded{
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    padding: 0px 32px 32px 32px;
+    width: 100%;
+    height: max-content;
+    margin-top: 12px;
+
+
+    .div-container-weeks-cards{
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 100%;
+      h3{
+        color: #262262;
+        font-size: 24px;
+        font-family: var(--font-2);
+        text-align: left;
+        margin-top: 32px;
+      }
+
+      .slider-div{
+        display: flex;
+        gap: 16px;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        overflow-x: scroll;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        
+        .v-card .div-header {
+          background-color: #7583D9;  
+        }
+
+        .v-card{
+          min-width: 155px;
+          height: 100px;
+          background-color: #F0F0F0 ;
+          border-radius: 8px;
+          position: relative;
+          overflow: hidden;
+          padding-top: 30px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding-inline: 12px;
+  
+          .div-header{
+            position: absolute;
+            top: 0;
+            height: 30px;
+            width: 100%;
+            display: grid;
+            place-items: center;
+  
+            span{
+              font-family: var(--font-2);
+              font-size: 12px;
+              color: #FFFFFF;
+            }
+          }
+
+          img{
+            width: 35px;
+            height: 35px;
+            margin-bottom: 6px;
+          }
+
+          hr{
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            width: 100%;
+
+          }
+        } 
+      }
+    }
+  }
+}
+
+.rounded-menu {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+
+
+
+//////////// dialogs ////////////
+
+
+.dialogConfirmationStudent{
+  display: grid;
+  place-items: center;
+  .card-confirmation{
+    height: 330px;
+    width: 490px!important;
+    border-radius: 24px!important;
+    background-color: #FFFFFF;
+    border: 1px solid #7583D9;
+    padding: 36px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    img{
+      width: 28px;
+      height: 28px;
+    }
+
+    hr{
+      width: 100%;
+      border-bottom: 1px solid rgba(#000000, 0.1);
+    }
+
+    .btn-divs{
+      display: flex;
+      gap: 12px;
+
+      .btn1{
+        width: 200px;
+        height: 40px;
+        border-radius: 32px;
+        background-color: #6BBDAE;
+
+        .v-btn__content{
+          color: #FFFFFF;
+          font-weight: 500;
+          font-size: 16px;
+          text-transform: none;
+        }
+      }
+
+      .btn2{
+        width: 200px;
+        height: 40px;
+        border-radius: 32px;
+        background-color: #F36029;
+
+        .v-btn__content{
+          color: #FFFFFF;
+          font-weight: 500;
+          font-size: 16px;
+          text-transform: none;
+        }
+      }
+    }
+  }
+}

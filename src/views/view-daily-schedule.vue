@@ -74,7 +74,7 @@ const class_name = ref('');
 const program = ref('');
 const notes = ref('');
 const route = useRoute();
-const scheduleId = ref(route.params.id);
+const scheduleId = ref(null);
 const day = ref('');
 const dayNumber = ref('');
 const month = ref('');
@@ -139,12 +139,19 @@ const getDailySchedule = async () => {
       notes.value = scheduleData.notes || '';
       day.value = scheduleData.day;
       dayNumber.value = dayjs(scheduleData.date).format('DD/MM/YY');;
-      sheetTeacherSelected.value = [{
-        id: scheduleData.teacher.id,
-        teacher_name: scheduleData.teacher.user.firstName + ' ' + scheduleData.teacher.user.lastName,
-        teacher_img: scheduleData.teacher.user.image,
+      // sheetTeacherSelected.value = [{
+      //   id: scheduleData.teacher.id,
+      //   teacher_name: scheduleData.teacher.user.firstName + ' ' + scheduleData.teacher.user.lastName,
+      //   teacher_img: scheduleData.teacher.user.image,
+      //   teacher_type: 'Teacher'
+      // }];
+
+      sheetTeacherSelected.value = scheduleData.teachers.map(teacher => ({
+        id: teacher.id,
+        teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
+        teacher_img: teacher.user.image,
         teacher_type: 'Teacher'
-      }];
+      }));
       
       dataStudents.value = scheduleData.students.map(student => ({
         student_id: student.id,
@@ -159,7 +166,9 @@ const getDailySchedule = async () => {
 
 
 onMounted(() => {
-   if (scheduleId.value) {
+  scheduleId.value = route.query.scheduleId;
+
+  if (scheduleId.value) {
     getDailySchedule();
   }
   

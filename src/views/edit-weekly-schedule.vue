@@ -1,6 +1,6 @@
 <template>
   <div id="new-plan">
-    <h3 class="font2" style="color: #262B63">New Weekly Enrollment</h3>
+    <h3 class="font2" style="color: #262B63">Enrollment</h3>
 
     <v-row class="form-div" no-gutters>
       <v-col cols="12" sm="6" class="pb-0 pl-1 pr-1 pt-1">
@@ -127,7 +127,7 @@
               <span>{{ day.date }}</span>
             </div>
 
-            <div class="techaer-div">
+            <!-- <div class="techaer-div">
               <div v-if="day.imgUser" class="rounder-avatar">
                 <img :src="day.imgUser" alt="User">
               </div>
@@ -135,9 +135,21 @@
                 <span class="f12 tstart font2">{{ day.teacherName }}</span>
                 <span class="f10 tstart">{{ day.teacherType }}</span>
               </div>
+            </div> -->
+
+            <div class="slider-teacher">
+              <span
+                v-for="(teacher, index) in day.teachers || []"
+                :key="index"
+                class="f12 tstart font2"
+              >
+                <span v-if="teacher?.user">
+                  {{ teacher.user.firstName || '' }} {{ teacher.user.lastName || '' }} - Teacher
+                </span>
+              </span>
             </div>
 
-            <div v-if="day.imgStudent" class="students-div">
+            <!-- <div v-if="day.imgStudent" class="students-div">
               <div class="students-img-div">
                 <div class="img-student-card">
                   <img :src="day.imgStudent" alt="Student">
@@ -159,6 +171,26 @@
               <div class="attendance-div">
                 <v-sheet>
                   <span class="f16" style="color: #4E444B;">+{{day.realStudent}}</span>
+                </v-sheet>
+              </div>
+            </div> -->
+
+            <span v-if="day.maxStudents" class="f12 tstart font2">Students</span>
+
+            <div class="students-div">
+              <div class="students-names">
+                <span
+                  v-for="(student, index) in day.students || []"
+                  :key="index"
+                  class="f10 tstart font2"
+                >
+                  {{ student?.firstName || '' }} {{ student?.lastName || '' }}
+                </span>
+              </div>
+
+              <div v-if="day.maxStudents" class="attendance-div">
+                <v-sheet>
+                  <span class="f12" style="color: #4E444B;">{{day.realStudent}} / {{ day.maxStudents }} </span>
                 </v-sheet>
               </div>
             </div>
@@ -506,6 +538,7 @@ const transformResponseToMonthlySchedule = (response) => {
         imgStudent4: null,
         imgStudent5: null,
         realStudent: '',
+        maxStudents: '',
         time: '',
         place: '',
         icon_pencil: '',
@@ -516,15 +549,22 @@ const transformResponseToMonthlySchedule = (response) => {
       // Sobrescribir con datos reales si existen
       if (daySchedule) {
         dayData.imgUser = daySchedule.teacher?.user?.image || imgUser;
-        dayData.teacherName = daySchedule.teacher
-          ? `${daySchedule.teacher.user.firstName} ${daySchedule.teacher.user.lastName}`
+        dayData.teachers = (daySchedule.teachers || []).filter(t => t?.user);
+        dayData.teacherName = dayData.teachers.length
+          ? dayData.teachers.map(t => `${t.user?.firstName || ''} ${t.user?.lastName || ''}`.trim()).filter(n => n).join(', ')
           : 'No teacher assigned';
-        dayData.imgStudent = daySchedule.students?.[0]?.image || imgStudent;
-        dayData.imgStudent2 = daySchedule.students?.[1]?.image || null;
-        dayData.imgStudent3 = daySchedule.students?.[2]?.image || null;
-        dayData.imgStudent4 = daySchedule.students?.[3]?.image || null;
-        dayData.imgStudent5 = daySchedule.students?.[4]?.image || null;
-        dayData.realStudent = daySchedule.students?.length || '0';
+        dayData.students = (daySchedule.students || []).map(student => ({
+          firstName: student?.firstName || '',
+          lastName: student?.lastName || '',
+          image: student?.image || null
+        }));
+        dayData.imgStudent = dayData.students[0]?.image || imgStudent;
+        dayData.imgStudent2 = dayData.students[1]?.image || null;
+        dayData.imgStudent3 = dayData.students[2]?.image || null;
+        dayData.imgStudent4 = dayData.students[3]?.image || null;
+        dayData.imgStudent5 = dayData.students[4]?.image || null;
+        dayData.realStudent = dayData.students.length || '0';
+        dayData.maxStudents = planning.class?.maxCapacity?.toString() || '0';
         dayData.teacherType = 'Teacher';
         dayData.time = '9:00 - 12:00';
         dayData.dailyScheduleId = daySchedule.id;

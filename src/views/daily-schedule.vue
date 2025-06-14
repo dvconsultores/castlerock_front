@@ -181,7 +181,7 @@
               </div>
             </div>
 
-            <v-icon class="pointer" @click="deleteSelectedTeacher()">mdi-trash-can-outline</v-icon>
+            <v-icon class="pointer" @click="deleteSelectedTeacher(index)">mdi-trash-can-outline</v-icon>
           </v-sheet>
 
           <span class="f16 font2 tleft mt-4 mb-4" style="color: #262262;">
@@ -261,6 +261,7 @@
         <span class="f16 w400 tcenter">The daily schedule has been successfully created.</span>
         <div class="btn-divs mt-8">
           <v-btn flat class="btn1" @click="$router.push('/home/new-weekly-schedule')">New Planning</v-btn>
+          <v-btn flat class="btn2" @click="dialogConfirmationDaily = false">Close</v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -319,18 +320,19 @@ const validDialog = () => {
 };
 
 const selectedTeacher = (item) => {
-  const alreadySelected = sheetTeacherSelected.value.length
+  const exists = sheetTeacherSelected.value.some(teacher => teacher.id === item.teacher_id);
 
-  if (alreadySelected === 0) {
-    sheetTeacherSelected.value.push({
-      id: item.teacher_id,
-      teacher_name: item.teacher_name,
-      teacher_img: item.teacher_img,
-      teacher_type: 'Teacher',
-    });
-  } else {
-    showAlert('The teacher has already been selected.', 'error');
+  if (exists) {
+    showAlert('This teacher has already been selected.', 'error');
+    return;
   }
+
+  sheetTeacherSelected.value.push({
+    id: item.teacher_id,
+    teacher_name: item.teacher_name,
+    teacher_img: item.teacher_img,
+    teacher_type: 'Teacher',
+  });
 };
 
 const deleteStudent = (index) =>{
@@ -358,8 +360,8 @@ const selectedStudent = (item) => {
   }
 };
 
-const deleteSelectedTeacher = () => {
-  sheetTeacherSelected.value = [];
+const deleteSelectedTeacher = (index) => {
+  sheetTeacherSelected.value.splice(index,1)
 };
 
 const filteredTeachers = computed(() => {
@@ -437,17 +439,45 @@ const getStudents = async () =>{
   try{
     const response = await axiosInstance.get('/students');
 
+    const dayAbbreviations = {
+      "Monday": "Mon",
+      "Tuesday": "Tue",
+      "Wednesday": "Wed",
+      "Thursday": "Thu",
+      "Friday": "Fri",
+      "Saturday": "Sat",
+      "Sunday": "Sun"
+    };
+    const currentDayAbbr = dayAbbreviations[day.value];
+
     dataStudents.value = response.data.result
-      .filter(student => student.program === program.value)
-      .map((student) =>{
-      return{
-        student_id: student.id,
-        student_img: student.image || avatarImg,
-        student_name: student.firstName + ' ' + student.lastName,
-        desc_program: student.program,
-        days_enrolled: student.daysEnrolled ? formatDays(student.daysEnrolled) : "No days"
-      }
-    });
+      .filter(student =>
+        student.program === program.value &&
+        student.classes?.some(cls => cls.name === class_name.value) &&
+        (student.daysEnrolled?.includes(day.value) || false)
+      )
+      .map((student) => {
+        return {
+          student_id: student.id,
+          student_img: student.image || avatarImg,
+          student_name: student.firstName + ' ' + student.lastName,
+          desc_program: student.program,
+          days_enrolled: student.daysEnrolled ? formatDays(student.daysEnrolled) : "No days"
+        };
+      });
+
+    dataStudentSelected.value = dataStudents.value
+      .filter(student =>
+        student.days_enrolled.includes(currentDayAbbr)
+      )
+      .map(student => ({
+        student_id: student.student_id,
+        student_name: student.student_name,
+        student_img: student.student_img,
+        student_program: student.desc_program,
+        days_enrolled: student.days_enrolled
+      }));
+
     checkDayAvailability();
   }catch(error){
     showAlert('Error', 'error')
@@ -521,13 +551,14 @@ const createNewDailySchedule = async () =>{
       const response = await axiosInstance.post('/daily-schedules', {
       planningId: planningId.value,
       day: day.value,
-      teacherId: sheetTeacherSelected.value[0].id,
+      teacherIds: sheetTeacherSelected.value.map(teacher => teacher.id),
       studentIds: dataStudentSelected.value.map(student => student.student_id),
       notes: notes.value,
 
       });
       showAlert('New Planning created succesfully!', 'success');
       loadingCreate.value = false;
+      dialogAddPlanning.value = false;
       dialogConfirmationDaily.value = true;
     }catch(error){
       showAlert(error, 'error')

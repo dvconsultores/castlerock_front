@@ -32,7 +32,7 @@
             <span>{{ item.date }}</span>
           </div>
 
-          <div class="techaer-div">
+          <!-- <div class="techaer-div">
             <div class="rounder-avatar">
               <img :src="item.imgUser" alt="User">
             </div>
@@ -40,32 +40,34 @@
               <span class="f12 tstart font2">{{ item.teacherName }}</span>
               <span class="f10 tstart">{{ item.teacherType }}</span>
             </div>
+          </div> -->
+
+          <div class="slider-teacher">
+            <span v-for="(teacher, index) in item.teachers" :key="index" class="f12 tstart font2">
+              {{ teacher.user.firstName }} {{ teacher.user.lastName }} - Teacher
+            </span>
           </div>
 
+          <span class="f10 tstart font2">
+            Students
+          </span>
+
           <div class="students-div">
-            <div class="students-img-div">
-              <div v-if="item.imgStudent" class="img-student-card">
-                <img :src="item.imgStudent" alt="Student">
-              </div>
-              <div v-if="item.imgStudent2" class="img-student-card">
-                <img :src="item.imgStudent2" alt="Student">
-              </div>
-              <div v-if="item.imgStudent3" class="img-student-card">
-                <img :src="item.imgStudent3" alt="Student">
-              </div>
-              <div v-if="item.imgStudent4" class="img-student-card">
-                <img :src="item.imgStudent4" alt="Student">
-              </div>
-              <div v-if="item.imgStudent5" class="img-student-card">
-                <img :src="item.imgStudent5" alt="Student">
-              </div>
+            <div class="students-names">
+              <span
+                v-for="(student, index) in item.students"
+                :key="index"
+                class="f10 tstart font2"
+              >
+                {{ student.firstName || '' }} {{ student.lastName || '' }}
+              </span>
             </div>
 
             <div class="attendance-div">
               <span class="f8 tend" style="color: #4E444B;">Attendance</span>
 
               <v-sheet>
-                <span class="f16" style="color: #4E444B;">{{item.realAttendance}}/{{ item.estimatedAttendance }}</span>
+                <span class="f12" style="color: #4E444B;">{{item.realAttendance}}/{{ item.estimatedAttendance }}</span>
               </v-sheet>
             </div>
           </div>
@@ -95,7 +97,7 @@
             <span>{{ item.date }}</span>
           </div>
 
-          <div class="techaer-div">
+          <!-- <div class="techaer-div">
             <div class="rounder-avatar">
               <img :src="item.imgUser" alt="User">
             </div>
@@ -103,32 +105,34 @@
               <span class="f12 tstart font2">{{ item.teacherName }}</span>
               <span class="f10 tstart">{{ item.teacherType }}</span>
             </div>
+          </div> -->
+
+          <div class="slider-teacher">
+            <span v-for="(teacher, index) in item.teachers" :key="index" class="f12 tstart font2">
+              {{ teacher.user.firstName }} {{ teacher.user.lastName }} - Teacher
+            </span>
           </div>
 
+          <span class="f10 tstart font2">
+            Students
+          </span>
+
           <div class="students-div">
-            <div class="students-img-div">
-              <div v-if="item.imgStudent" class="img-student-card">
-                <img :src="item.imgStudent" alt="Student">
-              </div>
-              <div v-if="item.imgStudent2" class="img-student-card">
-                <img :src="item.imgStudent2" alt="Student">
-              </div>
-              <div v-if="item.imgStudent3" class="img-student-card">
-                <img :src="item.imgStudent3" alt="Student">
-              </div>
-              <div v-if="item.imgStudent4" class="img-student-card">
-                <img :src="item.imgStudent4" alt="Student">
-              </div>
-              <div v-if="item.imgStudent5" class="img-student-card">
-                <img :src="item.imgStudent5" alt="Student">
-              </div>
+            <div class="students-names">
+              <span
+                v-for="(student, index) in item.students"
+                :key="index"
+                class="f10 tstart font2"
+              >
+                {{ student.firstName || '' }} {{ student.lastName || '' }}
+              </span>
             </div>
 
             <div class="attendance-div">
               <span class="f8 tend" style="color: #4E444B;">Attendance</span>
 
               <v-sheet>
-                <span class="f16" style="color: #4E444B;">{{item.realAttendance}}/{{ item.estimatedAttendance }}</span>
+                <span class="f12" style="color: #4E444B;">{{item.realAttendance}}/{{ item.estimatedAttendance }}</span>
               </v-sheet>
             </div>
           </div>
@@ -399,7 +403,7 @@ const loadDaily = async () => {
       imgUser: item.teacher?.user.image || null,
       teacherName: item.teacher?.user.firstName + ' ' + item.teacher?.user.lastName || 'Teacher',
       teacherType: 'Teacher',
-      imgStudent: item.students?.[0]?.image || avatarImg, 
+      imgStudent: item.students?.[0]?.image || avatarImg,
       imgStudent2: item.students?.[1]?.image || null,
       imgStudent3: item.students?.[2]?.image || null,
       imgStudent4: item.students?.[3]?.image || null,
@@ -407,7 +411,9 @@ const loadDaily = async () => {
       realAttendance: item.students?.length || 0,
       estimatedAttendance: item.planning?.class?.maxCapacity,
       place: item.planning?.class?.name,
-      time: '9:00 am - 12:15pm'
+      time: '9:00 am - 12:15pm',
+      teachers: item.teachers || [],
+      students: item.students || []
     }));
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
@@ -435,7 +441,9 @@ const loadDailyBefore = async () => {
       realAttendance: item.students?.length || 0,
       estimatedAttendance: item.planning?.class?.maxCapacity,
       place: item.planning?.class?.name,
-      time: '9:00 am - 12:15pm'
+      time: '9:00 am - 12:15pm',
+      teachers: item.teachers || [],
+      students: item.students || []
     }));
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');

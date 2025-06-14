@@ -461,6 +461,34 @@
           <v-checkbox v-model="sunday_after" density="compact" hide-details label="Sunday" color="#3C3C434D" disabled></v-checkbox>
         </v-col>
       </v-row>
+
+      <v-row class="fullw mt-10 big-checkboxes-container">
+        <v-col cols="12" align="left">
+          <span class="font2 f24 tleft" style="color: #262262;">Classes</span>
+        </v-col>
+
+        <v-col v-for="(item, index) in dataForClass" :key="index" cols="12" sm="12" class="pa-2 flex center gap4">
+          <v-autocomplete
+            v-model.number="item.selected_class"
+            placeholder="Select Class"
+            flat
+            bg-color="#F0F0F0 "
+            class="autocomplete-register"
+            hide-details
+            menu-icon=""
+            :items="selectClassItem"
+            item-value="id"
+            item-title="name"
+            return-object
+            @update:modelValue="val => selected_class = val?.id"
+            variant="solo"
+            readonly
+            :menu-props="{
+              contentClass: 'rounded-menu',
+            }"
+          ></v-autocomplete>
+        </v-col>
+      </v-row>
       
       <v-row class="fullw mt-10 big-checkboxes-container">
         <v-col cols="12" align="left">
@@ -818,8 +846,11 @@ const gender = ref(null);
 const notes = ref('');
 const start_date_class = ref('');
 const selectProgramItem = ref([]);
+const selectClassItem = ref([]);
 const dataPrograms = ref([]);
+const dataClasses = ref([]);
 const selected_program = ref(null);
+const selected_class = ref(null);
 const sessions = ref('');
 const duration = ref('');
 const selectCenterItems = ref([]);
@@ -883,6 +914,10 @@ const dataForProgram = ref([
   { selected_program: 'Select Program' },
 ])
 
+const dataForClass = ref([
+  { selected_class: 'Select Class' },
+])
+
 const getPrograms = async () => {
   try {
     const response = await axiosInstance.get('/additional-programs');
@@ -895,6 +930,21 @@ const getPrograms = async () => {
     selectProgramItem.value = dataPrograms.value;
   } catch (error) {
     showAlert('Error fetching programs', 'error');
+  }
+};
+
+const getClasses = async () => {
+  try {
+    const response = await axiosInstance.get('/classes');
+    
+    dataClasses.value = response.data.result.map(classe => ({
+      id: classe.id,
+      name: classe.name,
+    }));
+
+    selectClassItem.value = dataClasses.value;
+  } catch (error) {
+    showAlert('Error fetching classes', 'error');
   }
 };
 
@@ -970,6 +1020,9 @@ const getDataStudent = async () => {
     type_relationship2.value = student.contacts.find(contact => contact.role === 'EMERGENCY_2')?.relation || '';
     dataForProgram.value = student.additionalPrograms.map(program => ({
       selected_program: program.id,
+    }));
+    dataForClass.value = student.classes.map(classe => ({
+      selected_class: classe.id,
     }));
   } catch (error) {
     showAlert(error, 'error');
@@ -1125,6 +1178,7 @@ onMounted(() => {
   getCenters();
   getDataStudent();
   getAttendance();
+  getClasses();
 });
 </script>
 

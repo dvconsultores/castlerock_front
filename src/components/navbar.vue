@@ -167,6 +167,8 @@ const currentTitle = computed(() => {
     return 'View Daily Schedule';
   } else if (route.path.startsWith('/home/edit-daily-attendance')) {
     return 'Daily Attendance';
+  }else if (route.path.startsWith('/home/edit-daily-schedule')) {
+    return 'Edit daily schedule';
   }else 
   return pageTitles[route.path] || 'Dashboard';
 });

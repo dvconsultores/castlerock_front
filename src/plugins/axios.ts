@@ -50,8 +50,9 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Manejar token expirado/no válido
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      localStorage.removeItem('accessToken');
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

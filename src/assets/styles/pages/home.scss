@@ -190,7 +190,7 @@
         border-radius: 8px;
         position: relative;
         overflow: hidden;
-        padding-top: 56px;
+        padding-top: 50px;
 
         .div-header{
           position: absolute;
@@ -206,6 +206,28 @@
             color: #FFFFFF;
           }
         }
+
+        
+          .slider-teacher{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 210px;
+            margin-inline: auto;
+            gap: 0px;
+            margin-bottom: 0px;
+            padding-inline: 10px;
+            max-height: 40px;
+            text-align: center;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            &::-webkit-scrollbar {
+              display: none;
+            }
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
 
         .techaer-div{
           margin-inline: 16px;
@@ -232,11 +254,28 @@
         }
 
         .students-div{
-          width: 100%;
-          margin-inline: 16px;
           display: flex;
+          margin-inline: 8px;
           justify-content: space-between;
-          margin-top: 12px;
+          margin-top: 0px;
+
+          .students-names{
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 120px;
+            padding-inline: 0px;
+            gap: 5px;
+            max-height: 40px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            &::-webkit-scrollbar {
+              display: none;
+            }
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
 
           .students-img-div{
             display: flex;
@@ -289,9 +328,9 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-end;
-            position: relative;
-            left: -40px;
-            top: -8px;
+            // position: relative;
+            // left: -40px;
+            // top: 0px;
 
             .v-sheet{
               width: 38px;

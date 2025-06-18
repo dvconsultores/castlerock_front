@@ -210,6 +210,10 @@
               }
               scrollbar-width: none;
               -ms-overflow-style: none;
+
+              span{
+                line-height: 12px;
+              }
             }
   
             .students-img-div{

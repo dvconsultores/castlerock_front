@@ -14,12 +14,12 @@
             append-inner-icon="mdi-magnify"
           ></v-text-field>
 
-          <v-btn flat id="btn-search" @click="$router.push('/home/new-weekly-schedule')">
+          <v-btn flat id="btn-search" @click="goToNewWeeklySchedule">
             <v-icon color="#FFFFFF" class="mr-3">mdi-calendar</v-icon>
             New Weekly Enrollment
           </v-btn>
 
-          <v-btn flat id="btn-search-mobile" @click="$router.push('/home/new-weekly-schedule')">
+          <v-btn flat id="btn-search-mobile" @click="goToNewWeeklySchedule">
             <v-icon color="#FFFFFF" class="mr-3">mdi-calendar</v-icon>
           </v-btn>
         </div>
@@ -39,7 +39,7 @@
 
       <template v-slot:item.actions="{ item }">
         <div class="flex center gap2">
-          <v-icon color="#474649" size="24" class="pointer" @click="$router.push(`/home/edit-weekly-schedule/${item.id}`)">mdi-calendar</v-icon>
+          <v-icon color="#474649" size="24" class="pointer" @click="goToEditWeeklySchedule(item)">mdi-calendar</v-icon>
           <v-icon color="#474649" size="24" class="pointer" @click="$router.push(`/home/edit-classroom/${item.id}`)">mdi-pencil-outline</v-icon>
           <v-icon color="#474649" size="24" class="pointer" @click="openDelete(item)">mdi-trash-can-outline</v-icon>
         </div>
@@ -82,7 +82,9 @@
 <script setup>
 import { ref, inject, onMounted, computed } from 'vue';
 import axiosInstance from '@/plugins/axios';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const dialogDeleteClassroom = ref(false);
 const dialogConfirmationClassroom = ref(false);
 const showAlert = inject('showAlert');
@@ -163,6 +165,30 @@ const headers = ref([
     { title: '# Students', key: 'number_students', align: 'center', sortable: false  },
     { title: 'Actions', key: 'actions', align: 'center', sortable: false  },
 ]);
+
+const goToNewWeeklySchedule = () => {
+  localStorage.removeItem('idCenter');
+  localStorage.removeItem('centerName');
+  localStorage.removeItem('idClass');
+  localStorage.removeItem('className');
+  localStorage.removeItem('idYear');
+  localStorage.removeItem('yearName');
+  localStorage.removeItem('idMonth');
+  localStorage.removeItem('monthName');
+  router.push('/home/new-weekly-schedule');
+};
+
+const goToEditWeeklySchedule = (item) => {
+  localStorage.removeItem('idCenter');
+  localStorage.removeItem('centerName');
+  localStorage.removeItem('idClass');
+  localStorage.removeItem('className');
+  localStorage.removeItem('idYear');
+  localStorage.removeItem('yearName');
+  localStorage.removeItem('idMonth');
+  localStorage.removeItem('monthName');
+  router.push(`/home/edit-weekly-schedule/${item.id}`);
+};
 
 onMounted(() => {
   getDataClassrooms();

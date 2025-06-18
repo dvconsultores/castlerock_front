@@ -12,7 +12,7 @@
     </div>
 
     <div v-if="!isTeacher" class="sheet-menu-div mt-10">
-      <v-sheet v-for="(item, index) in dataSheets" :key="index" class="sheet-menu pointer" @click="$router.push(item.route)">
+      <v-sheet v-for="(item, index) in dataSheets" :key="index" class="sheet-menu pointer" @click="item.onClick ? item.onClick() : $router.push(item.route)">
         <div class="flexstart flexcol">
           <img :src="item.imgIcon" alt="Calendar">
           <div class="jspace fullw">
@@ -219,7 +219,9 @@ import weekOfYear from 'dayjs/plugin/weekOfYear';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import 'dayjs/locale/en';
 import avatarImg from '@/assets/sources/images/avatar.svg';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();  
 const showAlert = inject('showAlert');
 const isTeacher = ref(false);
 
@@ -353,12 +355,24 @@ const sheetDataAbsences = ref ([]);
 //   },
 // ]);
 
+const goToNewWeeklySchedule = () => {
+  localStorage.removeItem('idCenter');
+  localStorage.removeItem('centerName');
+  localStorage.removeItem('idClass');
+  localStorage.removeItem('className');
+  localStorage.removeItem('idYear');
+  localStorage.removeItem('yearName');
+  localStorage.removeItem('idMonth');
+  localStorage.removeItem('monthName');
+  router.push('/home/new-weekly-schedule');
+};
+
 const dataSheets = ref([
   {
     imgIcon: calendar,
-    titleSheet: 'New Enrollment',
+    titleSheet: 'Enrollment',
     subTitleSheet: 'Plan Your Week',
-    route: "/home/new-weekly-schedule",
+    onClick: goToNewWeeklySchedule,
   },
   {
     imgIcon: classroms,

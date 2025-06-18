@@ -408,14 +408,25 @@ const getTeachers = async () => {
   try {
     const response = await axiosInstance.get('/teachers');
 
-    dataTeachers.value = response.data.result.map((teacher) => {
-      return {
-        teacher_id: teacher.id,
-        teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
-        teacher_img: teacher.user.image || avatarImg,
-        teacher_type: 'Teacher',
-      };
-    });
+    dataTeachers.value = response.data.result
+      .filter(teacher =>
+        teacher.classes?.some(classes => classes.name === class_name.value) 
+      )
+      .map((teacher) => {
+        return {
+          teacher_id: teacher.id,
+          teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
+          teacher_img: teacher.user.image || avatarImg,
+          teacher_type: 'Teacher',
+        };
+      });
+
+      sheetTeacherSelected.value = dataTeachers.value.map(teacher => ({
+        id: teacher.teacher_id,
+        teacher_name: teacher.teacher_name,
+        teacher_img: teacher.teacher_img,
+        teacher_type: teacher.teacher_type,
+      }));
   } catch (error) {
     showAlert('Error', 'error');
   }
@@ -566,18 +577,30 @@ const createNewDailySchedule = async () =>{
     }
 };
 
-onMounted(async () => { 
-  await getTeachers();    
+onMounted(async () => {
+  const idCenter = localStorage.getItem('idCenter') ? Number(localStorage.getItem('idCenter')) : null;
+  const idClass = localStorage.getItem('idClass') ? Number(localStorage.getItem('idClass')) : null;
+  const idYear = localStorage.getItem('idYear') ? Number(localStorage.getItem('idYear')) : null;
+  const idMonth = localStorage.getItem('idMonth') ? Number(localStorage.getItem('idMonth')) : null;
+
+  // await getTeachers();
   planningId.value = route.query.planningId || 0;
   day.value = route.query.day || '';
   dayNumber.value = route.query.dayNumber || '00';
   
   if (planningId.value) {
     await fetchPlanningData();
-    await getStudents(); 
+    await getStudents();
+    await getTeachers();
   } else {
-    await getStudents(); 
+    await getStudents();
+    await getTeachers();
   }
+
+  if (idCenter) select_center.value = idCenter;
+  if (idClass) select_class.value = idClass;
+  if (idYear) year.value = idYear;
+  if (idMonth) month.value = idMonth;
 });
 
 

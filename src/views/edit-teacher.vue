@@ -251,15 +251,24 @@ const updateTeacher = async () => {
   dialogAddTeacher.value = false;
   loadingCreate.value = true;
 
-  try{
+  try {
+    // Obtener los IDs y filtrar valores no válidos (undefined, null, etc.)
+    const classIds = dataForClass.value
+      .map(item => item.select_class?.id)
+      .filter(id => id !== undefined && id !== null)
+      .map(Number); // Asegurar que sean números (por si acaso)
+
     const response = await axiosInstance.patch(`/teachers/${teacherId.value}`, {
-      campus: select_center.value
+      campus: select_center.value,
+      classIds: classIds // Esto enviará, por ejemplo: { classIds: [8] }
     });
+    
     loadingCreate.value = false;
     dialogConfirmationTeacher.value = true;
-  }catch(error){
+  } catch(error) {
     showAlert('Failed to update teacher', 'error');
     loadingCreate.value = false;
+    console.error("Error details:", error.response?.data); // Para debug
   }
 };
 
@@ -294,7 +303,17 @@ const getTeacher = async () => {
     
     teacher_name.value = teacher.user.firstName + ' ' + teacher.user.lastName;
     select_center.value = teacher.campus.id;
-    select_class.value = teacher.classes.id;
+    
+    if (teacher.classes && teacher.classes.length > 0) {
+      dataForClass.value = teacher.classes.map(cls => ({
+        select_class: cls.id
+      }));
+      
+      selectClassItems.value = teacher.classes.map(cls => ({
+        id: cls.id,
+        name: cls.name
+      }));
+    }
   } catch (error) {
     console.error('Failed to load center data', error);
   }

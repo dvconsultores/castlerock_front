@@ -1,7 +1,7 @@
 <template>
   <nav id="navbar">
     <div class="left-container">
-      <v-icon @click="$router.go(-1)">mdi-chevron-left</v-icon>
+      <v-icon @click="handleBack">mdi-chevron-left</v-icon>
       <div class="flexcol">
         <h3>
           {{ currentTitle  }}
@@ -53,6 +53,14 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const handleBack = () => {
+  router.go(-1);
+};
+
 import { useRoute } from 'vue-router';
 import { toggleDrawer } from '@/store/drawerState.js';
 import axiosInstance from '@/plugins/axios';

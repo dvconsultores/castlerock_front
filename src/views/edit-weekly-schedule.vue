@@ -189,15 +189,16 @@
               </div>
 
               <div v-if="day.maxStudents" class="attendance-div">
+                <span class="f9">Availability</span>
                 <v-sheet>
-                  <span class="f12" style="color: #4E444B;">{{day.realStudent}} / {{ day.maxStudents }} </span>
+                  <span class="f12" style="color: #4E444B;">{{day.dataAvailable}}</span>
                 </v-sheet>
               </div>
             </div>
 
             <div class="time-zone-div">
               <span class="f10 w600">{{ day.place }}</span>
-              <span class="f10 w600" style="color: #7583D9;">{{ day.time }}</span>
+              <!-- <span class="f10 w600" style="color: #7583D9;">{{ day.time }}</span> -->
             </div>
 
             <div class="flex center mt-2 div-icons" style="gap: 10px;">
@@ -571,6 +572,7 @@ const transformResponseToMonthlySchedule = (response) => {
         imgStudent5: null,
         realStudent: '',
         maxStudents: '',
+        dataAvailable: '',
         time: '',
         place: '',
         icon_pencil: '',
@@ -598,6 +600,7 @@ const transformResponseToMonthlySchedule = (response) => {
         dayData.imgStudent5 = dayData.students[4]?.image || null;
         dayData.realStudent = dayData.students.length || '0';
         dayData.maxStudents = planning.class?.maxCapacity?.toString() || '0';
+        dayData.dataAvailable = planning.class?.maxCapacity - dayData.students.length;
         dayData.teacherType = 'Teacher';
         dayData.time = '9:00 - 12:00';
         dayData.dailyScheduleId = daySchedule.id;

@@ -57,24 +57,24 @@
               <span
                 v-for="(student, index) in item.students"
                 :key="index"
-                class="f10 tstart font2"
+                class="f10 tstart font2 mr-4"
               >
                 {{ student.firstName || '' }} {{ student.lastName || '' }}
               </span>
             </div>
 
             <div class="attendance-div">
-              <span class="f8 tend" style="color: #4E444B;">Attendance</span>
+              <span class="f8 tend" style="color: #4E444B;">Availability</span>
 
               <v-sheet>
-                <span class="f12" style="color: #4E444B;">{{item.realAttendance}}/{{ item.estimatedAttendance }}</span>
+                <span class="f12" style="color: #4E444B;">{{item.dataAvailability}}</span>
               </v-sheet>
             </div>
           </div>
 
-          <div class="time-zone-div">
+          <div class="time-zone-div mb-4">
             <span class="f10 w600">{{ item.place }}</span>
-            <span class="f10 w600" style="color: #7583D9;">{{ item.time }}</span>
+            <!-- <span class="f10 w600" style="color: #7583D9;">{{ item.time }}</span> -->
           </div>
 
           <div class="flex center mt-2" style="gap: 10px;">
@@ -89,7 +89,7 @@
       </div>
     </div>
 
-    <h3 class="font2 mb-0 mt-8 h3-on">Before Classes</h3>
+    <h3 class="font2 mb-0 mt-8 h3-on">Next Day Attendance</h3>
     <div class="ongoing-classes-div">
       <div class="cards-ongoing-div">
         <v-card flat v-for="(item, index) in dataClassesBefore" :key="index">
@@ -122,24 +122,24 @@
               <span
                 v-for="(student, index) in item.students"
                 :key="index"
-                class="f10 tstart font2"
+                class="f10 tstart font2 mr-4"
               >
                 {{ student.firstName || '' }} {{ student.lastName || '' }}
               </span>
             </div>
 
             <div class="attendance-div">
-              <span class="f8 tend" style="color: #4E444B;">Attendance</span>
+              <span class="f8 tend" style="color: #4E444B;">Availability</span>
 
               <v-sheet>
-                <span class="f12" style="color: #4E444B;">{{item.realAttendance}}/{{ item.estimatedAttendance }}</span>
+                <span class="f12" style="color: #4E444B;">{{item.dataAvailability}}</span>
               </v-sheet>
             </div>
           </div>
 
-          <div class="time-zone-div">
+          <div class="time-zone-div mb-4">
             <span class="f10 w600">{{ item.place }}</span>
-            <span class="f10 w600" style="color: #7583D9;">{{ item.time }}</span>
+            <!-- <span class="f10 w600" style="color: #7583D9;">{{ item.time }}</span> -->
           </div>
 
           <div class="flex center mt-2" style="gap: 10px;">
@@ -424,6 +424,7 @@ const loadDaily = async () => {
       imgStudent5: item.students?.[4]?.image || null,
       realAttendance: item.students?.length || 0,
       estimatedAttendance: item.planning?.class?.maxCapacity,
+      dataAvailability: item.planning?.class?.maxCapacity - item.students?.length,
       place: item.planning?.class?.name,
       time: '9:00 am - 12:15pm',
       teachers: item.teachers || [],
@@ -454,6 +455,7 @@ const loadDailyBefore = async () => {
       imgStudent5: item.students?.[4]?.image || null,
       realAttendance: item.students?.length || 0,
       estimatedAttendance: item.planning?.class?.maxCapacity,
+      dataAvailability: item.planning?.class?.maxCapacity - item.students?.length,
       place: item.planning?.class?.name,
       time: '9:00 am - 12:15pm',
       teachers: item.teachers || [],

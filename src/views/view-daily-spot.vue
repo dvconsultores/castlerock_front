@@ -3,60 +3,32 @@
     <h3 class="font2 tleft" style="color: #262B63;">
       {{ class_name }} - <span>{{ program.charAt(0).toUpperCase() + program.slice(1).toLowerCase() }}</span>
     </h3>
-    <h5 class="font2 tleft" style="color: #4E444B;">
+    <!-- <h5 class="font2 tleft" style="color: #4E444B;">
       {{ day }}, {{ dayNumber }} - ({{ campus_name }})
-    </h5>
+    </h5> -->
 
     <v-row class="fullw mt-10">
       <v-col cols="12" sm="12">
-        <div class="big-div">
-          <h5 class="font2 f24 tleft mb-0" style="color: #262262;">Daily Plan</h5>
+        <div class="big-div big-div-spot">
+          <h5 class="font2 f24 tleft mb-0" style="color: #262262;">Weekly Spots</h5>
           <hr>
 
-          <v-sheet v-for="(item, index) in sheetTeacherSelected" :key="index" class="sheet-teacher">
-            <div class="absences-info-div"> 
-              <div class="img-absences-card">
-                <img :src="item.teacher_img" alt="user">
-              </div>
-
-              <div class="flexcol">
-                <span class="f12 font2 tleft" style="color: #4E444B;">{{ item.teacher_name }}</span>
-                <span class="f10 tleft" style="color: #4E444B;">{{ item.teacher_type }}</span>
-              </div>
-            </div>
-          </v-sheet>
-
-          <span class="f16 font2 tleft mt-4 mb-4" style="color: #262262;">
-            Students {{dataStudents.length}}/ {{ maxCapacity }}
-          </span>
-
-          <div class="students-selected-container">
-            <v-card v-for="(item, index) in dataStudents" :key="index" flat>
-              <div class="rounde-div">
-                <img :src="item.student_img" alt="Student">
-              </div>
-              <span class="f12 font2 tcenter" style="color: #4E444B;">
-                {{item.student_name}}
+          <div class="students-selected-container spots-container">
+            <v-card v-for="(item, index) in dailySchedules" :key="index" flat>
+              <span class="f17 font2 tcenter" style="color: #4E444B;">
+                {{ item.day }}
               </span>
-              <span class="f10 w400 tcenter" style="color: #4E444B;">
-                {{item.student_program}}
+              <span class="f16 mt-2 w400 tcenter" style="color: #4E444B;">
+                Max Capacity: {{ maxCapacity }}
               </span>
-              <span class="f10 tcenter w500" style="color: #6BBDAE;">
-                {{ item.days_enrolled }}
+              <span class="f16 mt-2 w400 tcenter" style="color: #4E444B;">
+                Filled spots: {{ item.studentsLength }}
+              </span>
+              <span class="f16 mt-2 w400 tcenter" style="color: #4E444B;">
+                Available spots: {{ item.studentsCount }}
               </span>
             </v-card>
           </div>
-
-          <v-textarea
-          v-model="notes"
-          density="compact"
-          placeholder="There are no notes" variant="solo"
-          flat
-          readonly
-          hide-details
-          bg-color="#F0F0F0"
-          class="text-area mt-8 fullw"
-          ></v-textarea>
         </div>
       </v-col>
     </v-row>
@@ -92,7 +64,8 @@ const sunday = ref(false);
 const campus_name = ref('');
 const sheetTeacherSelected = ref([]);
 const maxCapacity = ref(0);
-
+const program_id = ref(null);
+const dailySchedules = ref([]);
 
 const formatDays = (days) => {
   const dayAbbreviations = {
@@ -136,28 +109,28 @@ const getDailySchedule = async () => {
       campus_name.value = scheduleData.planning.campus.name;
       class_name.value = scheduleData.planning.class.name;
       program.value = scheduleData.planning.class.program;
+      program_id.value = scheduleData.planning.id;
       notes.value = scheduleData.notes || '';
       day.value = scheduleData.day;
-      dayNumber.value = dayjs(scheduleData.date).format('DD/MM/YY');;
-      // sheetTeacherSelected.value = [{
-      //   id: scheduleData.teacher.id,
-      //   teacher_name: scheduleData.teacher.user.firstName + ' ' + scheduleData.teacher.user.lastName,
-      //   teacher_img: scheduleData.teacher.user.image,
-      //   teacher_type: 'Teacher'
-      // }];
+      dayNumber.value = dayjs(scheduleData.date).format('DD/MM/YY');
 
-      sheetTeacherSelected.value = scheduleData.teachers.map(teacher => ({
-        id: teacher.id,
-        teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
-        teacher_img: teacher.user.image,
-        teacher_type: 'Teacher'
-      }));
+      console.log('Fetching planning for program_id:', program_id.value);
+      const planningResponse = await axiosInstance.get(`/planning/${program_id.value}`);
+      console.log('Full planning response:', planningResponse);
       
-      dataStudents.value = scheduleData.students.map(student => ({
-        student_id: student.id,
-        student_name: `${student.firstName} ${student.lastName}`,
-        student_img: student.image || imgAvatar,
-      }));
+      if (planningResponse?.data?.result?.dailySchedules?.length) {
+        console.log('Found dailySchedules:', planningResponse.data.result.dailySchedules);
+        dailySchedules.value = planningResponse.data.result.dailySchedules.map(schedule => ({
+          id: schedule.id,
+          day: schedule.day,
+          date: schedule.date,
+          studentsLength: schedule.students?.length || 0,
+          studentsCount: maxCapacity.value - schedule.students?.length,
+        }));
+      } else {
+        console.warn('No dailySchedules found in response');
+        dailySchedules.value = [];
+      }
     }
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');

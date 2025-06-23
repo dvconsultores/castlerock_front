@@ -356,6 +356,17 @@
       }
     }
 
+    .spots-container{
+      gap: 24px;
+      height: 200px;
+      max-height: 200px;
+      min-height: 180px;
+
+      .v-card{
+        height: 145px;
+      }
+    }
+
     .login-textfield{    
       width: 100%;
       i{
@@ -448,6 +459,10 @@
         font-size: 15px;
       }
     }
+  }
+
+  .big-div-spot{
+    height: max-content;
   }
 }
 

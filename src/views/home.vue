@@ -78,6 +78,7 @@
           </div>
 
           <div class="flex center mt-2" style="gap: 10px;">
+            <v-icon color="#474649" @click="$router.push(`/home/view-daily-spot/${item.id}`)">mdi-calendar</v-icon>
             <v-icon color="#474649" @click="$router.push(`/home/view-daily-schedule/${item.id}`)">mdi-eye-outline</v-icon>
             <v-icon color="#474649" @click="$router.push(`/home/edit-daily-attendance/${item.id}`)">mdi-pencil-outline</v-icon>
           </div>
@@ -143,6 +144,7 @@
           </div>
 
           <div class="flex center mt-2" style="gap: 10px;">
+            <v-icon color="#474649" @click="$router.push(`/home/view-daily-spot/${item.id}`)">mdi-calendar</v-icon>
             <v-icon color="#474649" @click="$router.push(`/home/view-daily-schedule/${item.id}`)">mdi-eye-outline</v-icon>
             <v-icon color="#474649" @click="$router.push(`/home/edit-daily-attendance/${item.id}`)">mdi-pencil-outline</v-icon>
           </div>

@@ -12,7 +12,7 @@
     </div>
 
     <div v-if="!isTeacher" class="sheet-menu-div mt-10">
-      <v-sheet v-for="(item, index) in dataSheets" :key="index" class="sheet-menu pointer" @click="$router.push(item.route)">
+      <v-sheet v-for="(item, index) in dataSheets" :key="index" class="sheet-menu pointer" @click="item.onClick ? item.onClick() : $router.push(item.route)">
         <div class="flexstart flexcol">
           <img :src="item.imgIcon" alt="Calendar">
           <div class="jspace fullw">
@@ -32,7 +32,7 @@
             <span>{{ item.date }}</span>
           </div>
 
-          <div class="techaer-div">
+          <!-- <div class="techaer-div">
             <div class="rounder-avatar">
               <img :src="item.imgUser" alt="User">
             </div>
@@ -40,42 +40,45 @@
               <span class="f12 tstart font2">{{ item.teacherName }}</span>
               <span class="f10 tstart">{{ item.teacherType }}</span>
             </div>
+          </div> -->
+
+          <div class="slider-teacher">
+            <span v-for="(teacher, index) in item.teachers" :key="index" class="f12 tstart font2">
+              {{ teacher.user.firstName }} {{ teacher.user.lastName }} - Teacher
+            </span>
           </div>
 
+          <span class="f10 tstart font2">
+            Students
+          </span>
+
           <div class="students-div">
-            <div class="students-img-div">
-              <div v-if="item.imgStudent" class="img-student-card">
-                <img :src="item.imgStudent" alt="Student">
-              </div>
-              <div v-if="item.imgStudent2" class="img-student-card">
-                <img :src="item.imgStudent2" alt="Student">
-              </div>
-              <div v-if="item.imgStudent3" class="img-student-card">
-                <img :src="item.imgStudent3" alt="Student">
-              </div>
-              <div v-if="item.imgStudent4" class="img-student-card">
-                <img :src="item.imgStudent4" alt="Student">
-              </div>
-              <div v-if="item.imgStudent5" class="img-student-card">
-                <img :src="item.imgStudent5" alt="Student">
-              </div>
+            <div class="students-names">
+              <span
+                v-for="(student, index) in item.students"
+                :key="index"
+                class="f10 tstart font2 mr-4"
+              >
+                {{ student.firstName || '' }} {{ student.lastName || '' }}
+              </span>
             </div>
 
             <div class="attendance-div">
-              <span class="f8 tend" style="color: #4E444B;">Attendance</span>
+              <span class="f8 tend" style="color: #4E444B;">Availability</span>
 
               <v-sheet>
-                <span class="f16" style="color: #4E444B;">{{item.realAttendance}}/{{ item.estimatedAttendance }}</span>
+                <span class="f12" style="color: #4E444B;">{{item.dataAvailability}}</span>
               </v-sheet>
             </div>
           </div>
 
-          <div class="time-zone-div">
+          <div class="time-zone-div mb-4">
             <span class="f10 w600">{{ item.place }}</span>
-            <span class="f10 w600" style="color: #7583D9;">{{ item.time }}</span>
+            <!-- <span class="f10 w600" style="color: #7583D9;">{{ item.time }}</span> -->
           </div>
 
           <div class="flex center mt-2" style="gap: 10px;">
+            <v-icon color="#474649" @click="$router.push(`/home/view-daily-spot/${item.id}`)">mdi-calendar</v-icon>
             <v-icon color="#474649" @click="$router.push(`/home/view-daily-schedule/${item.id}`)">mdi-eye-outline</v-icon>
             <v-icon color="#474649" @click="$router.push(`/home/edit-daily-attendance/${item.id}`)">mdi-pencil-outline</v-icon>
           </div>
@@ -87,7 +90,7 @@
       </div>
     </div>
 
-    <h3 class="font2 mb-0 mt-8 h3-on">Before Classes</h3>
+    <h3 class="font2 mb-0 mt-8 h3-on">Next Day Attendance</h3>
     <div class="ongoing-classes-div">
       <div class="cards-ongoing-div">
         <v-card flat v-for="(item, index) in dataClassesBefore" :key="index">
@@ -95,7 +98,7 @@
             <span>{{ item.date }}</span>
           </div>
 
-          <div class="techaer-div">
+          <!-- <div class="techaer-div">
             <div class="rounder-avatar">
               <img :src="item.imgUser" alt="User">
             </div>
@@ -103,42 +106,45 @@
               <span class="f12 tstart font2">{{ item.teacherName }}</span>
               <span class="f10 tstart">{{ item.teacherType }}</span>
             </div>
+          </div> -->
+
+          <div class="slider-teacher">
+            <span v-for="(teacher, index) in item.teachers" :key="index" class="f12 tstart font2">
+              {{ teacher.user.firstName }} {{ teacher.user.lastName }} - Teacher
+            </span>
           </div>
 
+          <span class="f10 tstart font2">
+            Students
+          </span>
+
           <div class="students-div">
-            <div class="students-img-div">
-              <div v-if="item.imgStudent" class="img-student-card">
-                <img :src="item.imgStudent" alt="Student">
-              </div>
-              <div v-if="item.imgStudent2" class="img-student-card">
-                <img :src="item.imgStudent2" alt="Student">
-              </div>
-              <div v-if="item.imgStudent3" class="img-student-card">
-                <img :src="item.imgStudent3" alt="Student">
-              </div>
-              <div v-if="item.imgStudent4" class="img-student-card">
-                <img :src="item.imgStudent4" alt="Student">
-              </div>
-              <div v-if="item.imgStudent5" class="img-student-card">
-                <img :src="item.imgStudent5" alt="Student">
-              </div>
+            <div class="students-names">
+              <span
+                v-for="(student, index) in item.students"
+                :key="index"
+                class="f10 tstart font2 mr-4"
+              >
+                {{ student.firstName || '' }} {{ student.lastName || '' }}
+              </span>
             </div>
 
             <div class="attendance-div">
-              <span class="f8 tend" style="color: #4E444B;">Attendance</span>
+              <span class="f8 tend" style="color: #4E444B;">Availability</span>
 
               <v-sheet>
-                <span class="f16" style="color: #4E444B;">{{item.realAttendance}}/{{ item.estimatedAttendance }}</span>
+                <span class="f12" style="color: #4E444B;">{{item.dataAvailability}}</span>
               </v-sheet>
             </div>
           </div>
 
-          <div class="time-zone-div">
+          <div class="time-zone-div mb-4">
             <span class="f10 w600">{{ item.place }}</span>
-            <span class="f10 w600" style="color: #7583D9;">{{ item.time }}</span>
+            <!-- <span class="f10 w600" style="color: #7583D9;">{{ item.time }}</span> -->
           </div>
 
           <div class="flex center mt-2" style="gap: 10px;">
+            <v-icon color="#474649" @click="$router.push(`/home/view-daily-spot/${item.id}`)">mdi-calendar</v-icon>
             <v-icon color="#474649" @click="$router.push(`/home/view-daily-schedule/${item.id}`)">mdi-eye-outline</v-icon>
             <v-icon color="#474649" @click="$router.push(`/home/edit-daily-attendance/${item.id}`)">mdi-pencil-outline</v-icon>
           </div>
@@ -215,7 +221,9 @@ import weekOfYear from 'dayjs/plugin/weekOfYear';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import 'dayjs/locale/en';
 import avatarImg from '@/assets/sources/images/avatar.svg';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();  
 const showAlert = inject('showAlert');
 const isTeacher = ref(false);
 
@@ -349,12 +357,24 @@ const sheetDataAbsences = ref ([]);
 //   },
 // ]);
 
+const goToNewWeeklySchedule = () => {
+  localStorage.removeItem('idCenter');
+  localStorage.removeItem('centerName');
+  localStorage.removeItem('idClass');
+  localStorage.removeItem('className');
+  localStorage.removeItem('idYear');
+  localStorage.removeItem('yearName');
+  localStorage.removeItem('idMonth');
+  localStorage.removeItem('monthName');
+  router.push('/home/new-weekly-schedule');
+};
+
 const dataSheets = ref([
   {
     imgIcon: calendar,
-    titleSheet: 'New Enrollment',
+    titleSheet: 'Enrollment',
     subTitleSheet: 'Plan Your Week',
-    route: "/home/new-weekly-schedule",
+    onClick: goToNewWeeklySchedule,
   },
   {
     imgIcon: classroms,
@@ -399,15 +419,18 @@ const loadDaily = async () => {
       imgUser: item.teacher?.user.image || null,
       teacherName: item.teacher?.user.firstName + ' ' + item.teacher?.user.lastName || 'Teacher',
       teacherType: 'Teacher',
-      imgStudent: item.students?.[0]?.image || avatarImg, 
+      imgStudent: item.students?.[0]?.image || avatarImg,
       imgStudent2: item.students?.[1]?.image || null,
       imgStudent3: item.students?.[2]?.image || null,
       imgStudent4: item.students?.[3]?.image || null,
       imgStudent5: item.students?.[4]?.image || null,
       realAttendance: item.students?.length || 0,
       estimatedAttendance: item.planning?.class?.maxCapacity,
+      dataAvailability: item.planning?.class?.maxCapacity - item.students?.length,
       place: item.planning?.class?.name,
-      time: '9:00 am - 12:15pm'
+      time: '9:00 am - 12:15pm',
+      teachers: item.teachers || [],
+      students: item.students || []
     }));
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
@@ -434,8 +457,11 @@ const loadDailyBefore = async () => {
       imgStudent5: item.students?.[4]?.image || null,
       realAttendance: item.students?.length || 0,
       estimatedAttendance: item.planning?.class?.maxCapacity,
+      dataAvailability: item.planning?.class?.maxCapacity - item.students?.length,
       place: item.planning?.class?.name,
-      time: '9:00 am - 12:15pm'
+      time: '9:00 am - 12:15pm',
+      teachers: item.teachers || [],
+      students: item.students || []
     }));
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');

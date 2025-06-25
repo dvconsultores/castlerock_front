@@ -181,7 +181,7 @@
               </div>
             </div>
 
-            <v-icon class="pointer" @click="deleteSelectedTeacher()">mdi-trash-can-outline</v-icon>
+            <v-icon class="pointer" @click="deleteSelectedTeacher(index)">mdi-trash-can-outline</v-icon>
           </v-sheet>
 
           <span class="f16 font2 tleft mt-4 mb-4" style="color: #262262;">
@@ -310,18 +310,19 @@ const scheduleId = ref(null);
 const maxCapacity = ref(0);
 
 const selectedTeacher = (item) => {
-  const alreadySelected = sheetTeacherSelected.value.length
+  const exists = sheetTeacherSelected.value.some(teacher => teacher.id === item.teacher_id);
 
-  if (alreadySelected === 0) {
-    sheetTeacherSelected.value.push({
-      id: item.teacher_id,
-      teacher_name: item.teacher_name,
-      teacher_img: item.teacher_img,
-      teacher_type: 'Teacher',
-    });
-  } else {
-    showAlert('The teacher has already been selected.', 'error');
+  if (exists) {
+    showAlert('This teacher has already been selected.', 'error');
+    return;
   }
+
+  sheetTeacherSelected.value.push({
+    id: item.teacher_id,
+    teacher_name: item.teacher_name,
+    teacher_img: item.teacher_img,
+    teacher_type: 'Teacher',
+  });
 };
 
 const deleteStudent = (index) =>{
@@ -349,8 +350,8 @@ const selectedStudent = (item) => {
   }
 };
 
-const deleteSelectedTeacher = () => {
-  sheetTeacherSelected.value = [];
+const deleteSelectedTeacher = (index) => {
+  sheetTeacherSelected.value.splice(index,1)
 };
 
 const filteredTeachers = computed(() => {
@@ -431,8 +432,23 @@ const getStudents = async () =>{
   try{
     const response = await axiosInstance.get('/students');
 
+    const dayAbbreviations = {
+      "Monday": "Mon",
+      "Tuesday": "Tue",
+      "Wednesday": "Wed",
+      "Thursday": "Thu",
+      "Friday": "Fri",
+      "Saturday": "Sat",
+      "Sunday": "Sun"
+    };
+    const currentDayAbbr = dayAbbreviations[day.value];
+
     dataStudents.value = response.data.result
-      .filter(student => student.program === program.value)
+      .filter(student =>
+        student.program === program.value &&
+        student.classes?.some(cls => cls.name === class_name.value) &&
+        (student.daysEnrolled?.includes(day.value) || false)
+      )
       .map((student) =>{
       return{
         student_id: student.id,
@@ -480,13 +496,13 @@ const getDailySchedule = async () => {
     
     if (scheduleData) {
       notes.value = scheduleData.notes || '';
-      
-      sheetTeacherSelected.value = [{
-        id: scheduleData.teacher.id,
-        teacher_name: scheduleData.teacher.user.firstName + ' ' + scheduleData.teacher.user.lastName,
-        teacher_img: scheduleData.teacher.user.image || avatarImg, 
+
+      sheetTeacherSelected.value = scheduleData.teachers.map(teacher => ({
+        id: teacher.id,
+        teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
+        teacher_img: teacher.user.image || avatarImg, 
         teacher_type: 'Teacher'
-      }];
+      }));
       
       dataStudentSelected.value = scheduleData.students.map(student => ({
         student_id: student.id,
@@ -543,7 +559,7 @@ const createNewDailySchedule = async () =>{
       const response = await axiosInstance.patch(`/daily-schedules/${scheduleId.value}`, {
       planningId: planningId.value,
       day: day.value,
-      teacherId: sheetTeacherSelected.value[0].id,
+      teacherIds: sheetTeacherSelected.value.map(teacher => teacher.id),
       studentIds: dataStudentSelected.value.map(student => student.student_id),
       notes: notes.value,
 

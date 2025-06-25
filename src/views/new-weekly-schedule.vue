@@ -1,6 +1,6 @@
 <template>
   <div id="new-plan">
-    <h3 class="font2" style="color: #262B63">New Weekly Enrollment</h3>
+    <h3 class="font2" style="color: #262B63">Enrollment</h3>
 
     <v-row class="form-div" no-gutters>
       <v-col cols="12" sm="6" class="pb-0 pl-1 pr-1 pt-1">
@@ -124,7 +124,7 @@
               <span>{{ day.date }}</span>
             </div>
 
-            <div class="techaer-div">
+            <!-- <div class="techaer-div">
               <div v-if="day.imgUser" class="rounder-avatar">
                 <img :src="day.imgUser" alt="User">
               </div>
@@ -132,9 +132,21 @@
                 <span class="f12 tstart font2">{{ day.teacherName }}</span>
                 <span class="f10 tstart">{{ day.teacherType }}</span>
               </div>
+            </div> -->
+
+            <div class="slider-teacher">
+              <span
+                v-for="(teacher, index) in day.teachers || []"
+                :key="index"
+                class="f12 tstart font2"
+              >
+                <span v-if="teacher?.user">
+                  {{ teacher.user.firstName || '' }} {{ teacher.user.lastName || '' }} - Teacher
+                </span>
+              </span>
             </div>
 
-            <div v-if="day.imgStudent" class="students-div">
+            <!-- <div v-if="day.imgStudent" class="students-div">
               <div class="students-img-div">
                 <div class="img-student-card">
                   <img :src="day.imgStudent" alt="Student">
@@ -158,14 +170,35 @@
                   <span class="f16" style="color: #4E444B;">+{{day.realStudent}}</span>
                 </v-sheet>
               </div>
+            </div> -->
+
+            <span v-if="day.maxStudents" class="f12 tstart font2">Students</span>
+
+            <div class="students-div">
+              <div class="students-names">
+                <span
+                  v-for="(student, index) in day.students || []"
+                  :key="index"
+                  class="f10 tstart font2 mr-4"
+                >
+                  {{ student?.firstName || '' }} {{ student?.lastName || '' }}
+                </span>
+              </div>
+
+              <div v-if="day.maxStudents" class="attendance-div">
+                <span class="f9">Availability</span>
+                <v-sheet>
+                  <span class="f12" style="color: #4E444B;">{{day.dataAvailable}}</span>
+                </v-sheet>
+              </div>
             </div>
 
             <div class="time-zone-div">
               <span class="f10 w600">{{ day.place }}</span>
-              <span class="f10 w600" style="color: #7583D9;">{{ day.time }}</span>
+              <!-- <span class="f10 w600" style="color: #7583D9;">{{ day.time }}</span> -->
             </div>
 
-            <div class="hr-div"></div>
+            <!-- <div class="hr-div"></div> -->
 
             <div class="flex center mt-2 div-icons" style="gap: 10px;">
               <v-icon color="#474649" @click.stop="handleViewDay(day, weekIndex)">mdi-{{ day.eye_icon }}</v-icon>
@@ -258,6 +291,11 @@ const showAlert = inject('showAlert');
 const router = useRouter();
 
 const handleNewDay = (day, weekIndex) => {
+  if (day.no_click.value === true || day.dailyScheduleId || (day.students && day.students.length > 0) || (day.teachers && day.teachers.length > 0)) {
+    console.warn('This day has existing schedule or data and cannot be modified');
+    return;
+  }
+    
   const weekData = monthlySchedule.value[weekIndex];
   if (!weekData?.planningId) {
     console.error('No planningId found for week', weekIndex + 1);
@@ -265,6 +303,15 @@ const handleNewDay = (day, weekIndex) => {
   }
 
   const dayName = day.date.split(',')[0].trim();
+
+  localStorage.setItem('idCenter', select_center.value);
+  localStorage.setItem('centerName', selectCenterItems.value.find(c => c.id === select_center.value)?.name || '');
+  localStorage.setItem('idClass', select_class.value);
+  localStorage.setItem('className', selectedClassItems.value.find(c => c.id === select_class.value)?.name || '');
+  localStorage.setItem('idYear', year.value?.id);
+  localStorage.setItem('yearName', year.value?.name || '');
+  localStorage.setItem('idMonth', month.value?.id);
+  localStorage.setItem('monthName', month.value?.name || '');
   
   router.push({
     name: 'daily-schedule',
@@ -284,6 +331,15 @@ const handleEditDay = (day, weekIndex) => {
   }
 
   const dayName = day.date.split(',')[0].trim();
+  
+  localStorage.setItem('idCenter', select_center.value);
+  localStorage.setItem('centerName', selectCenterItems.value.find(c => c.id === select_center.value)?.name || '');
+  localStorage.setItem('idClass', select_class.value);
+  localStorage.setItem('className', selectedClassItems.value.find(c => c.id === select_class.value)?.name || '');
+  localStorage.setItem('idYear', year.value?.id);
+  localStorage.setItem('yearName', year.value?.name || '');
+  localStorage.setItem('idMonth', month.value?.id);
+  localStorage.setItem('monthName', month.value?.name || '');
   
   router.push({
     name: 'edit-daily-schedule',
@@ -305,8 +361,18 @@ const handleViewDay = (day, weekIndex) => {
 
   const dayName = day.date.split(',')[0].trim();
   
+  localStorage.setItem('idCenter', select_center.value);
+  localStorage.setItem('centerName', selectCenterItems.value.find(c => c.id === select_center.value)?.name || '');
+  localStorage.setItem('idClass', select_class.value);
+  localStorage.setItem('className', selectedClassItems.value.find(c => c.id === select_class.value)?.name || '');
+  localStorage.setItem('idYear', year.value?.id);
+  localStorage.setItem('yearName', year.value?.name || '');
+  localStorage.setItem('idMonth', month.value?.id);
+  localStorage.setItem('monthName', month.value?.name || '');
+
   router.push({
     name: 'view-daily-schedule',
+    params: { id: day.dailyScheduleId },
     query: {
       planningId: weekData.planningId,
       day: dayName,
@@ -360,7 +426,7 @@ const weeksArray = ref([]);
     const monthNum = month.value.id;
     
     // Get first day of month
-    const firstDay = dayjs().year(yearNum).month(monthNum - 1).date(1);
+    const firstDay = dayjs().year(Number(yearNum)).month(Number(monthNum) - 1).date(1);
     // Find first Monday of month
     let firstMonday = firstDay.day(1);
     if (firstMonday.date() > 7) {
@@ -499,31 +565,42 @@ const transformResponseToMonthlySchedule = (response) => {
         imgStudent4: null,
         imgStudent5: null,
         realStudent: '',
+        dataAvailable: '',
         time: '',
         place: '',
         icon_pencil: '',
         trash_icon: '',
         eye_icon: '',
+        no_click: false,
       };
 
       // Sobrescribir con datos reales si existen
       if (daySchedule) {
         dayData.imgUser = daySchedule.teacher?.user?.image || imgUser;
-        dayData.teacherName = daySchedule.teacher
-          ? `${daySchedule.teacher.user.firstName} ${daySchedule.teacher.user.lastName}`
+        dayData.teachers = (daySchedule.teachers || []).filter(t => t?.user);
+        dayData.teacherName = dayData.teachers.length
+          ? dayData.teachers.map(t => `${t.user?.firstName || ''} ${t.user?.lastName || ''}`.trim()).filter(n => n).join(', ')
           : 'No teacher assigned';
-        dayData.imgStudent = daySchedule.students?.[0]?.image || imgStudent;
-        dayData.imgStudent2 = daySchedule.students?.[1]?.image || null;
-        dayData.imgStudent3 = daySchedule.students?.[2]?.image || null;
-        dayData.imgStudent4 = daySchedule.students?.[3]?.image || null;
-        dayData.imgStudent5 = daySchedule.students?.[4]?.image || null;
-        dayData.realStudent = daySchedule.students?.length || '0';
+        dayData.students = (daySchedule.students || []).map(student => ({
+          firstName: student?.firstName || '',
+          lastName: student?.lastName || '',
+          image: student?.image || null
+        }));
+        dayData.imgStudent = dayData.students[0]?.image || imgStudent;
+        dayData.imgStudent2 = dayData.students[1]?.image || null;
+        dayData.imgStudent3 = dayData.students[2]?.image || null;
+        dayData.imgStudent4 = dayData.students[3]?.image || null;
+        dayData.imgStudent5 = dayData.students[4]?.image || null;
+        dayData.realStudent = dayData.students.length || '0';
+        dayData.maxStudents = planning.class?.maxCapacity?.toString() || '0';
+        dayData.dataAvailable = planning.class?.maxCapacity - dayData.students.length;
         dayData.teacherType = 'Teacher';
         dayData.time = '9:00 - 12:00';
         dayData.dailyScheduleId = daySchedule.id;
         dayData.icon_pencil = 'pencil-outline';
         dayData.trash_icon = 'trash-can-outline';
         dayData.eye_icon = 'eye-outline';
+        dayData.no_click = true;
       }
 
       days.push(dayData);
@@ -674,6 +751,16 @@ const deleteDailySchedule = async (dailyScheduleId) => {
 };
 
 onMounted(() =>{
+  select_center.value = localStorage.getItem('idCenter') ? Number(localStorage.getItem('idCenter')) : null;
+  select_class.value = localStorage.getItem('idClass') ? Number(localStorage.getItem('idClass')) : null;
+  year.value = localStorage.getItem('idYear') ? {
+    id: Number(localStorage.getItem('idYear')),
+    name: localStorage.getItem('yearName') || String(localStorage.getItem('idYear'))
+  } : null;
+  month.value = localStorage.getItem('idMonth') ? {
+    id: Number(localStorage.getItem('idMonth')),
+    name: localStorage.getItem('monthName') || monthsArray.value.find(m => m.id === Number(localStorage.getItem('idMonth')))?.name || ''
+  } : null;
   getCenters();
   getClasses();
 });

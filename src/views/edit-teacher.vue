@@ -99,6 +99,47 @@
         </v-col>
       </v-row> -->
 
+       <v-row class="fullw mt-10 big-checkboxes-container">
+        <v-col cols="12" align="left">
+          <span class="font2 f24 tleft" style="color: #262262;">Class</span>
+        </v-col>
+
+        <v-btn flat class="add-icon btn" @click="addClass">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+
+        <v-col
+          v-for="(item, index) in dataForClass"
+          :key="index"
+          cols="12"
+          sm="12"
+          class="pa-2 flex center gap4"
+        >
+          <v-autocomplete
+            v-model.number="item.select_class"
+            placeholder="Select Class"
+            flat
+            bg-color="#F0F0F0 "
+            class="autocomplete-register"
+            hide-details
+            menu-icon="mdi-chevron-up"
+            :items="selectClassItems"
+            item-value="id"
+            item-title="name"
+            return-object
+            @update:modelValue="val => select_class = val?.id"
+            variant="solo"
+            :menu-props="{
+              contentClass: 'rounded-menu',
+            }"
+          ></v-autocomplete>
+
+          <v-btn class="btn" flat @click="deleteClass(index)">
+            <v-icon>mdi-trash-can-outline</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+
       <v-row class="mt-10">
         <v-col cols="12" align="right">
           <v-btn flat class="btn-save" @click="openSaveTeacher">Save</v-btn>
@@ -171,6 +212,36 @@ const selectTeacherItems = ref([]);
 const loadingCreate = ref(false);
 const teacherId = ref(route.params.id);
 const teacher_name = ref('');
+const select_class = ref(null);
+const selectClassItems = ref([]);
+const dataClasses = ref([]);
+
+const addClass = () => {
+  dataForClass.value.push({ placeholder: 'Select Class' });
+};
+
+const dataForClass = ref([
+  { select_class: 'Select Class' },
+]);
+
+const deleteClass = (index) => {
+  dataForClass.value.splice(index, 1);
+};
+
+const getClasses = async () => {
+  try {
+    const response = await axiosInstance.get('/classes');
+    
+    dataClasses.value = response.data.result.map(classes => ({
+      id: classes.id,
+      name: classes.name,
+    }));
+
+    selectClassItems.value = dataClasses.value;
+  } catch (error) {
+    showAlert('Error fetching classes', 'error');
+  }
+};
 
 const selectedCenterName = computed(() => {
   return selectCenterItems.value.find(c => c.id === select_center.value)?.name;
@@ -180,15 +251,24 @@ const updateTeacher = async () => {
   dialogAddTeacher.value = false;
   loadingCreate.value = true;
 
-  try{
+  try {
+    // Obtener los IDs y filtrar valores no válidos (undefined, null, etc.)
+    const classIds = dataForClass.value
+      .map(item => item.select_class?.id)
+      .filter(id => id !== undefined && id !== null)
+      .map(Number); // Asegurar que sean números (por si acaso)
+
     const response = await axiosInstance.patch(`/teachers/${teacherId.value}`, {
-      campus: select_center.value
+      campus: select_center.value,
+      classIds: classIds // Esto enviará, por ejemplo: { classIds: [8] }
     });
+    
     loadingCreate.value = false;
     dialogConfirmationTeacher.value = true;
-  }catch(error){
+  } catch(error) {
     showAlert('Failed to update teacher', 'error');
     loadingCreate.value = false;
+    console.error("Error details:", error.response?.data); // Para debug
   }
 };
 
@@ -223,6 +303,17 @@ const getTeacher = async () => {
     
     teacher_name.value = teacher.user.firstName + ' ' + teacher.user.lastName;
     select_center.value = teacher.campus.id;
+    
+    if (teacher.classes && teacher.classes.length > 0) {
+      dataForClass.value = teacher.classes.map(cls => ({
+        select_class: cls.id
+      }));
+      
+      selectClassItems.value = teacher.classes.map(cls => ({
+        id: cls.id,
+        name: cls.name
+      }));
+    }
   } catch (error) {
     console.error('Failed to load center data', error);
   }
@@ -231,6 +322,7 @@ const getTeacher = async () => {
 onMounted(() => {
   getCenters();
   getTeacher();
+  getClasses();
 });
 </script>
 

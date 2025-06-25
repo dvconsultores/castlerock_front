@@ -127,6 +127,7 @@ const headers = ref([
     { title: '', key: 'teacher_img', sortable: false },
     { title: 'Id.', key: 'id_teacher', align:'center', sortable: false },
     { title: 'Teacher Name', key: 'teacher_name', align:'center', sortable: false },
+    { title: 'Center', key: 'center', align:'center', sortable: false },
     { title: 'Actions', key: 'actions', align: 'center', sortable: false  },
 ]);
 
@@ -139,6 +140,7 @@ const getTeachers = async () => {
         id: teacher.id,
         id_teacher: index + 1,
         teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
+        center: teacher.campus.name,
         teacher_img: teacher.user.image,
         actions: ''
       };

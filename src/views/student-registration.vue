@@ -480,6 +480,48 @@
         <v-checkbox v-model="sunday_after" density="compact" hide-details label="Sunday" color="#3C3C434D"></v-checkbox>
       </v-col>
     </v-row>
+
+    <v-row class="fullw mt-10 big-checkboxes-container" :class="{'border-red': classIdError}">
+      <v-col cols="12" align="left">
+        <span class="font2 f24 tleft" style="color: #262262;">Class</span>
+      </v-col>
+
+      <v-btn flat class="add-icon btn" @click="addClass">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+
+      <v-col
+        v-for="(item, index) in dataForClass"
+        :key="index"
+        cols="12"
+        sm="12"
+        class="pa-2 flex center gap4"
+      >
+        <v-autocomplete
+          v-model.number="item.select_class"
+          placeholder="Select Class"
+          flat
+          bg-color="#F0F0F0 "
+          class="autocomplete-register"
+          hide-details
+          menu-icon="mdi-chevron-up"
+          :items="selectClassItems"
+          item-value="id"
+          item-title="name"
+          return-object
+          @update:modelValue="val => select_class = val?.id"
+          variant="solo"
+          :menu-props="{
+            contentClass: 'rounded-menu',
+          }"
+        ></v-autocomplete>
+
+        <v-btn class="btn" flat @click="deleteClass(index)">
+          <v-icon>mdi-trash-can-outline</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+
     <v-row class="fullw mt-10 big-checkboxes-container" :class="{'border-red': additionalProgramsIdsError}">
       <v-col cols="12" align="left">
         <span class="font2 f24 tleft" style="color: #262262;">Additional Programs</span>
@@ -671,6 +713,7 @@ const genderError = ref('');
 const notesError = ref('');
 const daysEnrolledError = ref('');
 const additionalProgramsIdsError = ref('');
+const classIdError = ref('');
 const campusError = ref('');
 const contactsError = ref('');
 const imageError = ref('');
@@ -728,10 +771,14 @@ const sessions = ref('');
 const duration = ref('');
 const selectCenterItems = ref([]);
 const dataCenters = ref([]);
+const selectClassItems = ref([]);
+const dataClasses = ref([]);
+const select_class = ref(null);
 const select_center = ref(null);
 const mothers_role = ref(null);
 const fathers_role = ref(null);
 const dataIdsProgram = ref(null);
+const dataIdsClass = ref(null);
 const mothers_name = ref('');
 const fathers_name = ref('');
 const mothers_number = ref('');
@@ -795,6 +842,18 @@ const deleteProgram = (index) => {
   dataForProgram.value.splice(index, 1);
 };
 
+const dataForClass = ref([
+  { select_class: 'Select Class' },
+])
+
+const addClass = () => {
+  dataForClass.value.push({ placeholder: 'Select Class' });
+};
+
+const deleteClass = (index) => {
+  dataForClass.value.splice(index, 1);
+};
+
 const handleFileChange = (file) => {
   if (file) {
     imagePreviewStudent.value = URL.createObjectURL(file);
@@ -839,6 +898,7 @@ const createStudent = async () => {
   notesError.value = '';
   daysEnrolledError.value = '';
   additionalProgramsIdsError.value = '';
+  classIdError.value = '';
   campusError.value = '';
   contactsError.value = '';
   imageError.value = '';
@@ -888,6 +948,10 @@ const createStudent = async () => {
   }
   if (!dataForProgram.value.length || !dataForProgram.value.some(item => item.selected_program && item.selected_program.id)) {
     additionalProgramsIdsError.value = 'Please select at least one additional program';
+    hasError = true;
+  }
+  if (!dataForClass.value.length || !dataForClass.value.some(item => item.select_class && item.select_class.id)) {
+    classIdError.value = 'Please select at least one class';
     hasError = true;
   }
   if (
@@ -961,6 +1025,10 @@ const createStudent = async () => {
       const programData = [];
       if (dataIdsProgram.value) programData.push(dataIdsProgram.value);
       formData.append('additionalProgramIds', programData)
+      dataIdsClass.value =  dataForClass.value.map(item => item.select_class?.id).filter(id => id);
+      const classData = [];
+      if (dataIdsClass.value) classData.push(dataIdsClass.value);
+      formData.append('classIds', classData)
       formData.append('campus', select_center.value.toString());
       const contactsData = [];
       if (mothers_name.value) {
@@ -1034,6 +1102,22 @@ const getPrograms = async () => {
   }
 };
 
+const getClasses = async () => {
+  try {
+    const response = await axiosInstance.get('/classes');
+    
+    dataClasses.value = response.data.result.map(classes => ({
+      id: classes.id,
+      name: classes.name,
+    }));
+
+    selectClassItems.value = dataClasses.value;
+  } catch (error) {
+    showAlert('Error fetching classes', 'error');
+  }
+};
+
+
 const getCenters = async () => {
   try {
     const response = await axiosInstance.get('/campus');
@@ -1052,6 +1136,7 @@ const getCenters = async () => {
 onMounted(() => {
   getPrograms();
   getCenters();
+  getClasses();
 });
 </script>
 

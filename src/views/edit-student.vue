@@ -481,6 +481,48 @@
         <v-checkbox v-model="sunday_after" density="compact" hide-details label="Sunday" color="#3C3C434D"></v-checkbox>
       </v-col>
     </v-row>
+
+    
+    <v-row class="fullw mt-10 big-checkboxes-container">
+      <v-col cols="12" align="left">
+        <span class="font2 f24 tleft" style="color: #262262;">Class</span>
+      </v-col>
+
+      <v-btn flat class="add-icon btn" @click="addClass">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+
+      <v-col
+        v-for="(item, index) in dataForClass"
+        :key="index"
+        cols="12"
+        sm="12"
+        class="pa-2 flex center gap4"
+      >
+        <v-autocomplete
+          v-model.number="item.select_class"
+          placeholder="Select Class"
+          flat
+          bg-color="#F0F0F0 "
+          class="autocomplete-register"
+          hide-details
+          menu-icon="mdi-chevron-up"
+          :items="selectClassItems"
+          item-value="id"
+          item-title="name"
+          return-object
+          @update:modelValue="val => select_class = val?.id"
+          variant="solo"
+          :menu-props="{
+            contentClass: 'rounded-menu',
+          }"
+        ></v-autocomplete>
+
+        <v-btn class="btn" flat @click="deleteClass(index)">
+          <v-icon>mdi-trash-can-outline</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
     
     <v-row class="fullw mt-10 big-checkboxes-container">
       <v-col cols="12" align="left">
@@ -647,7 +689,7 @@
         <span class="f16 w400 tcenter">The student <span class="w600" style="color: #7583D9;">{{ firstName + ' ' + lastName }}</span> has been successfully updated.</span>
         <div class="btn-divs mt-8">
           <v-btn flat class="btn1" @click="$router.push('/home/students')">Go to Students</v-btn>
-          <v-btn flat class="btn2" @click="dialogConfirmationStudent">Edit Student</v-btn>
+          <v-btn flat class="btn2" @click="dialogConfirmationStudent = false">Edit Student</v-btn>
         </div>
         <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home')">Go home</span>
       </v-card>
@@ -733,6 +775,10 @@ const contact_number2 = ref('');
 const type_relationship1 = ref(null);
 const type_relationship2 = ref(null);
 const nothing = ref(false);
+const selectClassItems = ref([]);
+const dataClasses = ref([]);
+const select_class = ref(null);
+const dataIdsClass = ref(null);
 
 const monday_enrolled = ref(false);
 const tuesday_enrolled = ref(false);
@@ -786,6 +832,18 @@ const deleteProgram = (index) => {
   dataForProgram.value.splice(index, 1);
 };
 
+const dataForClass = ref([
+  { select_class: 'Select Class' },
+])
+
+const addClass = () => {
+  dataForClass.value.push({ placeholder: 'Select Class' });
+};
+
+const deleteClass = (index) => {
+  dataForClass.value.splice(index, 1);
+};
+
 const handleFileChange = (file) => {
   if (file) {
     imagePreviewStudent.value = URL.createObjectURL(file);
@@ -834,6 +892,21 @@ const getPrograms = async () => {
     selectProgramItem.value = dataPrograms.value;
   } catch (error) {
     showAlert('Error fetching programs', 'error');
+  }
+};
+
+const getClasses = async () => {
+  try {
+    const response = await axiosInstance.get('/classes');
+    
+    dataClasses.value = response.data.result.map(classes => ({
+      id: classes.id,
+      name: classes.name,
+    }));
+
+    selectClassItems.value = dataClasses.value;
+  } catch (error) {
+    showAlert('Error fetching classes', 'error');
   }
 };
 
@@ -913,6 +986,9 @@ const getDataStudent = async () => {
     dataForProgram.value = student.additionalPrograms.map(program => ({
       selected_program: program.id,
     }));
+    dataForClass.value = student.classes.map(classe => ({
+      select_class: classe.id,
+    }));
   } catch (error) {
     showAlert(error, 'error');
   }
@@ -969,10 +1045,16 @@ const updateStudent = async () => {
       if (saturday_after.value) selectedDaysAfter.push("Saturday");
       if (sunday_after.value) selectedDaysAfter.push("Sunday")
       appendDays('afterSchoolDays', selectedDaysAfter);
-      dataIdsProgram.value =  dataForProgram.value.map(item => item.selected_program?.id).filter(id => id);
-      const programData = [];
-      if (dataIdsProgram.value) programData.push(dataIdsProgram.value);
-      formData.append('additionalProgramIds', programData)
+    
+      const currentProgramIds = dataForProgram.value.map(item => item.selected_program?.id).filter(id => id);
+      if (currentProgramIds.length > 0) {
+        formData.append('additionalProgramIds', currentProgramIds);
+      }
+
+      const currentClassIds = dataForClass.value.map(item => item.select_class?.id).filter(id => id);
+      if (currentClassIds.length > 0) {
+        formData.append('classIds', currentClassIds);
+      }
       formData.append('campus', select_center.value.toString());
       const contactsData = [];
       if (mothers_name.value) {
@@ -1043,6 +1125,7 @@ onMounted(() => {
   getPrograms();
   getCenters();
   getDataStudent();
+  getClasses();
 });
 </script>
 

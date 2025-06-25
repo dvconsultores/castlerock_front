@@ -66,6 +66,28 @@
         }
       }
     }
+
+    .big-checkboxes-container{
+      padding: 12px 32px 18px 32px;
+      border-radius: 16px;
+      background-color: #FFFFFF;
+      position: relative;
+
+      .container-checkboxes-inset{
+        background-color: #F0F0F0 ;
+        border-radius: 16px;
+        width: 100%;
+        padding: 16px;
+      }
+
+      .add-icon{
+        position: absolute;
+        right: 40px;
+        top: 20px;
+        background-color: #7583D9;
+        min-width: 1px;
+      }
+    }
   }
 
   .card-img-upload{

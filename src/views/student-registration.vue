@@ -7,7 +7,7 @@
         </h3>
       </v-col>
       <v-col sm="2" cols="12" :rows="2" align="center" class="pl-0">
-        <div :class="{'img-container-error': imageError, 'img-container': true, 'mt-2': true}">
+        <div :class="{'img-container': true, 'mt-2': true}">
           <img v-if="imagePreviewStudent" :src="imagePreviewStudent" alt="Student">
           <span v-if="!imagePreviewStudent" class="add-image f12" style="color: #46464C;">
             Add Image
@@ -361,7 +361,7 @@
         maxlength="300"
         hide-details
         bg-color="#F0F0F0"
-        :class="{'textfield-error': notesError, 'text-area': true}"
+        :class="{'text-area': true}"
         ></v-textarea>
       </v-col>
     </v-row>
@@ -522,7 +522,7 @@
       </v-col>
     </v-row>
 
-    <v-row class="fullw mt-10 big-checkboxes-container" :class="{'border-red': additionalProgramsIdsError}">
+    <v-row class="fullw mt-10 big-checkboxes-container">
       <v-col cols="12" align="left">
         <span class="font2 f24 tleft" style="color: #262262;">Additional Programs</span>
       </v-col>
@@ -895,13 +895,10 @@ const createStudent = async () => {
   lastNameError.value = '';
   dateOfBirthError.value = '';
   genderError.value = '';
-  notesError.value = '';
   daysEnrolledError.value = '';
-  additionalProgramsIdsError.value = '';
   classIdError.value = '';
   campusError.value = '';
   contactsError.value = '';
-  imageError.value = '';
   startDateError.value = '';
   savingStudent.value = true;
 
@@ -923,16 +920,8 @@ const createStudent = async () => {
     genderError.value = 'Please select a gender';
     hasError = true;
   }
-  if (!notes.value?.trim()) {
-    notesError.value = 'Please enter notes';
-    hasError = true;
-  }
   if (!select_center.value) {
     campusError.value = 'Please select a center';
-    hasError = true;
-  }
-  if (!selectedImgStudent.value) {
-    imageError.value = 'Please upload a student image';
     hasError = true;
   }
   if (!start_date_class.value) {
@@ -944,10 +933,6 @@ const createStudent = async () => {
     (!mothers_number.value && !fathers_number.value && !contact_number.value && !contact_number2.value)
   ) {
     contactsError.value = 'Please provide at least one contact with a phone number';
-    hasError = true;
-  }
-  if (!dataForProgram.value.length || !dataForProgram.value.some(item => item.selected_program && item.selected_program.id)) {
-    additionalProgramsIdsError.value = 'Please select at least one additional program';
     hasError = true;
   }
   if (!dataForClass.value.length || !dataForClass.value.some(item => item.select_class && item.select_class.id)) {
@@ -976,9 +961,7 @@ const createStudent = async () => {
   !lastName.value || 
   !dateOfBirth.value || 
   !gender.value || 
-  !notes.value ||
-  !select_center.value ||
-  !selectedImgStudent.value ) {
+  !select_center.value ) {
     showAlert('Please fill in all required fields', 'error');
     savingStudent.value = false;
     return;

@@ -59,7 +59,6 @@
                   placeholder="Date of Birth"
                   variant="solo"
                   flat
-                  readonly
                   hide-details
                   append-inner-icon="mdi-calendar"
                   v-bind="props"
@@ -382,7 +381,6 @@
               placeholder="First day of school"
               variant="solo"
               flat
-              readonly
               hide-details
               append-inner-icon="mdi-calendar"
               v-bind="props"
@@ -731,7 +729,7 @@ const formatDate = (date) => {
     formattedDate.value = '';
     return;
   }
-  formattedDate.value = dayjs(jsDate).format('YYYY-DD-MM');
+  formattedDate.value = dayjs(jsDate).format('MM-DD-YYYY');
 };
 const formatStartDate = (date) => {
   if (!date) {
@@ -743,7 +741,7 @@ const formatStartDate = (date) => {
     formattedStartDate.value = '';
     return;
   }
-  formattedStartDate.value = dayjs(jsDate).format('YYYY-DD-MM');
+  formattedStartDate.value = dayjs(jsDate).format('MM-DD-YYYY');
 };
 
 const dialogConfirmationStudent = ref(false);

@@ -972,10 +972,14 @@ const getDataStudent = async () => {
     firstName.value = student.firstName;
     lastName.value = student.lastName;
     gender.value = student.gender;
-    dateOfBirth.value = student.dateOfBirth;
+    const formatDate = (dateStr) => {
+      const [year, month, day] = dateStr.split('-');
+      return `${month}-${day}-${year}`;
+    };
+    dateOfBirth.value = formatDate(student.dateOfBirth);
     imagePreviewStudent.value = student.image || avatarImg;
     notes.value = student.notes;
-    start_date_class.value = student.startDateOfClasses;
+    start_date_class.value = formatDate(student.startDateOfClasses);
     monday_enrolled.value = student.daysEnrolled.includes('Monday');
     tuesday_enrolled.value = student.daysEnrolled.includes('Tuesday');
     wednesday_enrolled.value = student.daysEnrolled.includes('Wednesday');

@@ -58,8 +58,7 @@
                   class="login-textfield"
                   placeholder="YYYY-DD-MM"
                   variant="solo"
-                  flat
-                  readonly
+                  flat                  
                   hide-details
                   append-inner-icon="mdi-calendar"
                   v-bind="props"
@@ -383,7 +382,6 @@
               placeholder="YYYY-DD-MM"
               variant="solo"
               flat
-              readonly
               hide-details
               append-inner-icon="mdi-calendar"
               v-bind="props"
@@ -717,7 +715,7 @@ const formatDate = (date) => {
     formattedDate.value = '';
     return;
   }
-  formattedDate.value = dayjs(jsDate).format('YYYY-MM-DD');
+  formattedDate.value = dayjs(jsDate).format('MM-DD-YYYY');
 };
 
 const formatStartDate = (date) => {
@@ -730,7 +728,7 @@ const formatStartDate = (date) => {
     formattedStartDate.value = '';
     return;
   }
-  formattedStartDate.value = dayjs(jsDate).format('YYYY-MM-DD');
+  formattedStartDate.value = dayjs(jsDate).format('MM-DD-YYYY');
 };
 
 const dialogConfirmationStudent = ref(false);
@@ -999,8 +997,7 @@ const updateStudent = async () => {
   if (!firstName.value || 
   !lastName.value || 
   !dateOfBirth.value || 
-  !gender.value || 
-  !notes.value ||
+  !gender.value ||
   !start_date_class.value ||
   !select_center.value ) {
     showAlert('Please fill in all required fields', 'error');

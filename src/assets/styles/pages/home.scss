@@ -358,6 +358,223 @@
     }
   }
 
+  .ongoing-classes-div-absence{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    margin-top: 24px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    .cards-ongoing-div{
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 16px;
+      
+
+      .no-data-div{
+        height: 200px;
+        width: 80vw;
+        display: grid;
+        place-items: center;
+        span{
+          font-family: var(--font-2);
+          font-size: 20px;
+          color: #262B63;
+        }
+      }
+
+      .v-card:nth-child(odd) .div-header {
+        background-color: #7583D9;  
+      }
+      
+      .v-card:nth-child(even) .div-header {
+        background-color: #6BBDAE;  
+      }
+
+      .v-card{
+        width: 180px;
+        height: 160px;
+        background-color: #FFFFFF;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        padding-top: 50px;
+
+        .div-header{
+          position: absolute;
+          top: 0;
+          height: 40px;
+          width: 100%;
+          display: grid;
+          place-items: center;
+
+          span{
+            font-family: var(--font-2);
+            font-size: 16px;
+            color: #FFFFFF;
+          }
+        }
+
+        
+          .slider-teacher{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 210px;
+            margin-inline: auto;
+            gap: 0px;
+            margin-bottom: 0px;
+            padding-inline: 10px;
+            max-height: 40px;
+            text-align: center;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            &::-webkit-scrollbar {
+              display: none;
+            }
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
+
+        .techaer-div{
+          margin-inline: 16px;
+          display: flex;
+          gap: 10px;
+          justify-content: flex-start;
+          align-items: center;
+
+          .rounder-avatar{
+            border: 1px solid #7583D9;
+            border-radius: 50%;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            width: 40px;
+            height: 40px;
+            
+            img{
+              width: 40px;
+              height: 40px;
+              object-fit: cover;
+            }
+          }
+        }
+
+        .students-div{
+          display: flex;
+          margin-inline: 8px;
+          justify-content: center;
+          align-items: center;
+          margin-top: 0px;
+
+          .students-names{
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 120px;
+            padding-inline: 0px;
+            gap: 5px;
+            max-height: 40px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            &::-webkit-scrollbar {
+              display: none;
+            }
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
+
+          .students-img-div{
+            display: flex;
+            
+            .img-student-card{
+              border: 2px solid #6BBDAE;
+              border-radius: 50%;
+              overflow: hidden;
+              display: grid;
+              place-items: center;
+              width: 32px;
+              height: 32px;
+              
+              img{
+                width: 32px;
+                height: 32px;
+                object-fit: cover;
+              }
+            }
+
+            
+            .img-student-card:nth-child(1){
+              position: relative;
+              z-index: 1;
+            }
+            .img-student-card:nth-child(2){
+              position: relative;
+              z-index: 2;
+              left: -15px;
+            }
+            .img-student-card:nth-child(3){
+              position: relative;
+              z-index: 3;
+              left: -30px;
+            }
+            .img-student-card:nth-child(4){
+              position: relative;
+              z-index: 4;
+              left: -50px;
+            }
+            .img-student-card:nth-child(5){
+              position: relative;
+              z-index: 5;
+              left: -65px;
+            }
+          }
+
+          .attendance-div{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            // position: relative;
+            // left: -40px;
+            // top: 0px;
+
+            .v-sheet{
+              width: 38px;
+              height: 28px;
+              border-radius: 8px;
+              border: 1px solid rgba(#000000, 0.1);
+              display: grid;
+              place-items: center;
+            }
+          }
+        }
+
+        .time-zone-div{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          margin-top: 0px;
+          margin-inline: 16px;
+          padding-bottom: 4px;
+        }
+      }
+    }
+  }
+
   .before-div{
     display: flex;
     flex-direction: column;

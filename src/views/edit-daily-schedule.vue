@@ -4,7 +4,7 @@
       {{ class_name }} - <span>{{ program.charAt(0).toUpperCase() + program.slice(1).toLowerCase() }}</span>
     </h3>
     <h5 class="font2 tleft" style="color: #4E444B;">
-      {{ day }}, {{ dayNumber }}/{{ month }}/{{ year }}  - ({{ campus_name }})
+      {{ day }}, {{ month }}/{{ dayNumber }}/{{ year }}  - ({{ campus_name }})
     </h5>
 
     <v-row class="fullw mt-10">

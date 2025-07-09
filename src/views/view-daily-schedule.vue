@@ -138,7 +138,7 @@ const getDailySchedule = async () => {
       program.value = scheduleData.planning.class.program;
       notes.value = scheduleData.notes || '';
       day.value = scheduleData.day;
-      dayNumber.value = dayjs(scheduleData.date).format('DD/MM/YY');;
+      dayNumber.value = dayjs(scheduleData.date).format('MM/DD/YY');
       // sheetTeacherSelected.value = [{
       //   id: scheduleData.teacher.id,
       //   teacher_name: scheduleData.teacher.user.firstName + ' ' + scheduleData.teacher.user.lastName,
@@ -166,7 +166,7 @@ const getDailySchedule = async () => {
 
 
 onMounted(() => {
-  scheduleId.value = route.params.id;
+  scheduleId.value = route.query.scheduleId || route.params.id || null;
 
   if (scheduleId.value) {
     getDailySchedule();

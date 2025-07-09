@@ -24,7 +24,7 @@
       </v-sheet>
     </div>
 
-    <h3 class="font2 mb-0 mt-8 h3-on">Ongoing Classes</h3>
+    <h3 class="font2 mb-0 mt-8 h3-on">Daily Roster</h3>
     <div class="ongoing-classes-div">
       <div class="cards-ongoing-div">
         <v-card flat v-for="(item, index) in dataClasses" :key="index">
@@ -90,7 +90,7 @@
       </div>
     </div>
 
-    <h3 class="font2 mb-0 mt-8 h3-on">Next Day Attendance</h3>
+    <h3 class="font2 mb-0 mt-8 h3-on">Next Day Roster</h3>
     <div class="ongoing-classes-div">
       <div class="cards-ongoing-div">
         <v-card flat v-for="(item, index) in dataClassesBefore" :key="index">
@@ -184,25 +184,32 @@
       </div>
     </div> -->
 
-    <div class="absences-div mt-6">
-      <h3 class="font2 tleft mb-2" style="color: #4E444B;">Today's Absences</h3>      
-      <span class="f18 w400 tleft mb-6" style="color: #262B63;">{{ formattedDateAbsence }}</span>
-
-      <div class="div-sheet-absences">
-        <v-sheet v-for="(item, index) in sheetDataAbsences" :key="index" class="sheet-absences">
-          <div class="absences-info-div"> 
-            <div class="img-absences-card">
-              <img :src="item.absence_img" alt="user">
-            </div>
-
-            <div class="flexcol">
-              <span class="f12 font2 tleft" style="color: #4E444B;">{{ item.absences_name }}</span>
-              <span class="f10 tleft" style="color: #4E444B;">{{ item.center_desc }}</span>
-            </div>
-            
-            <v-icon>mdi-chevron-right</v-icon>
+    <h3 class="font2 mb-0 mt-8 h3-on">Spots Available</h3>
+    <div class="ongoing-classes-div-absence">
+      <div class="cards-ongoing-div">
+        <v-card flat v-for="(item, index) in dataClasses" :key="index">
+          <div class="div-header">
+            <span>{{ item.date }}</span>
           </div>
-        </v-sheet>
+
+          <div class="time-zone-div mb-4">
+            <span class="f16 w600">{{ item.place }}</span>
+          </div>
+
+          <div class="students-div">
+            <div class="attendance-div">
+              <span class="f16 tend" style="color: #4E444B;">Availability</span>
+
+              <v-sheet>
+                <span class="f14" style="color: #4E444B;">{{item.dataAvailability}}</span>
+              </v-sheet>
+            </div>
+          </div>
+        </v-card>
+
+        <div v-if="dataClasses.length === 0" class="no-data-div">
+          <span>No data available</span>
+        </div>
       </div>
     </div>
   </div>
@@ -411,7 +418,7 @@ const loadDaily = async () => {
     const response = await axiosInstance.get(`/daily-schedules/`);
     const today = currentDate.value.format('YYYY-MM-DD');
     const todayClasses = response.data.result.filter(item => item.date === today);
-    
+    console.log('Today Classes:', todayClasses);
     scheduleData.value = todayClasses;
     dataClasses.value = todayClasses.map(item => ({
       id: item.id,

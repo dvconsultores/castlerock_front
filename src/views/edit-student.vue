@@ -63,6 +63,7 @@
                   append-inner-icon="mdi-calendar"
                   v-bind="props"
                   @click:append-inner="props.onClick"
+                  @change="onDateInputChange"
                 ></v-text-field>
               </template>
 
@@ -386,6 +387,7 @@
               append-inner-icon="mdi-calendar"
               v-bind="props"
               @click:append-inner="props.onClick"
+              @change="onDateInputChangeStartDate"
             ></v-text-field>
           </template>
 
@@ -729,6 +731,35 @@ const formatStartDate = (date) => {
     return;
   }
   formattedStartDate.value = dayjs(jsDate).format('MM-DD-YYYY');
+};
+
+// Sync manual input from text field to dateOfBirth model
+const onDateInputChange = () => {
+  if (!formattedDate.value) {
+    dateOfBirth.value = null;
+    return;
+  }
+  // Try to parse the input using dayjs
+  const parsed = dayjs(formattedDate.value, ['MM-DD-YYYY', 'YYYY-MM-DD'], true);
+  if (parsed.isValid()) {
+    dateOfBirth.value = parsed.toDate();
+  } else {
+    dateOfBirth.value = null;
+  }
+};
+
+const onDateInputChangeStartDate = () => {
+  if (!formattedStartDate.value) {
+    start_date_class.value = null;
+    return;
+  }
+  // Try to parse the input using dayjs
+  const parsed = dayjs(formattedStartDate.value, ['MM-DD-YYYY', 'YYYY-MM-DD'], true);
+  if (parsed.isValid()) {
+    start_date_class.value = parsed.toDate();
+  } else {
+    start_date_class.value = null;
+  }
 };
 
 const dialogConfirmationStudent = ref(false);

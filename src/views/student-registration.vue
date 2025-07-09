@@ -63,7 +63,8 @@
                   append-inner-icon="mdi-calendar"
                   v-bind="props"
                   @click:append-inner="props.onClick"
-                ></v-text-field>
+                  @change="onDateInputChange"
+                />
               </template>
 
               <v-date-picker
@@ -385,6 +386,7 @@
               append-inner-icon="mdi-calendar"
               v-bind="props"
               @click:append-inner="props.onClick"
+              @change="onDateInputChangeStartDate"
             ></v-text-field>
           </template>
 
@@ -718,7 +720,6 @@ const imageError = ref('');
 const formattedDate = ref('');
 const formattedStartDate = ref('');
 const startDateError = ref('');
-
 const formatDate = (date) => {
   if (!date) {
     formattedDate.value = '';
@@ -731,6 +732,36 @@ const formatDate = (date) => {
   }
   formattedDate.value = dayjs(jsDate).format('MM-DD-YYYY');
 };
+
+// Sync manual input from text field to dateOfBirth model
+const onDateInputChange = () => {
+  if (!formattedDate.value) {
+    dateOfBirth.value = null;
+    return;
+  }
+  // Try to parse the input using dayjs
+  const parsed = dayjs(formattedDate.value, ['MM-DD-YYYY', 'YYYY-MM-DD'], true);
+  if (parsed.isValid()) {
+    dateOfBirth.value = parsed.toDate();
+  } else {
+    dateOfBirth.value = null;
+  }
+};
+
+const onDateInputChangeStartDate = () => {
+  if (!formattedStartDate.value) {
+    start_date_class.value = null;
+    return;
+  }
+  // Try to parse the input using dayjs
+  const parsed = dayjs(formattedStartDate.value, ['MM-DD-YYYY', 'YYYY-MM-DD'], true);
+  if (parsed.isValid()) {
+    start_date_class.value = parsed.toDate();
+  } else {
+    start_date_class.value = null;
+  }
+};
+
 const formatStartDate = (date) => {
   if (!date) {
     formattedStartDate.value = '';
@@ -896,7 +927,6 @@ const createStudent = async () => {
   daysEnrolledError.value = '';
   classIdError.value = '';
   campusError.value = '';
-  contactsError.value = '';
   startDateError.value = '';
   savingStudent.value = true;
 
@@ -924,13 +954,6 @@ const createStudent = async () => {
   }
   if (!start_date_class.value) {
     startDateError.value = 'Please select a start date';
-    hasError = true;
-  }
-  if (
-    (!mothers_name.value && !fathers_name.value && !contact_name.value && !contact_name2.value) ||
-    (!mothers_number.value && !fathers_number.value && !contact_number.value && !contact_number2.value)
-  ) {
-    contactsError.value = 'Please provide at least one contact with a phone number';
     hasError = true;
   }
   if (!dataForClass.value.length || !dataForClass.value.some(item => item.select_class && item.select_class.id)) {

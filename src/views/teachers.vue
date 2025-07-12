@@ -22,6 +22,9 @@
         </div>
       </template>
 
+       <template v-slot:item.classes="{ item }">
+        <div class="center" v-html="item.classes"></div>
+      </template>
 
       <template v-slot:item.actions="{ item }">
         <div class="flex center gap2">
@@ -116,7 +119,9 @@ const filteredTeachers = computed(() => {
   return dataTeachers.value.filter(teacher => {
     const safeToString = (value) => value ? value.toString().toLowerCase() : '';
     return (
-      safeToString(teacher.teacher_name).includes(query)
+      safeToString(teacher.teacher_name).includes(query) ||
+      safeToString(teacher.center).includes(query) ||
+      safeToString(teacher.classes).includes(query)
     );
   }
   );
@@ -128,6 +133,7 @@ const headers = ref([
     { title: 'Id.', key: 'id_teacher', align:'center', sortable: false },
     { title: 'Teacher Name', key: 'teacher_name', align:'center', sortable: false },
     { title: 'Center', key: 'center', align:'center', sortable: false },
+    { title: 'Classes', key: 'classes', align:'center', sortable: false },
     { title: 'Actions', key: 'actions', align: 'center', sortable: false  },
 ]);
 
@@ -141,6 +147,7 @@ const getTeachers = async () => {
         id_teacher: index + 1,
         teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
         center: teacher.campus.name,
+        classes: Array.isArray(teacher.classes) ? teacher.classes.map(c => c.name).join('<br>') : '',
         teacher_img: teacher.user.image,
         actions: ''
       };

@@ -149,6 +149,7 @@ const getDataClassrooms = async () => {
         center: classes.campus.name,
         number_students: classes.maxCapacity,
         classroom_img: classes.image,
+        
       }
     });
   } catch (error) {
@@ -162,7 +163,8 @@ const headers = ref([
     { title: 'Name', key: 'name', align:'center', sortable: false },
     { title: 'Program', key: 'program', align: 'center', sortable: false  },
     { title: 'Center', key: 'center', align: 'center', sortable: false  },
-    { title: '# Students', key: 'number_students', align: 'center', sortable: false  },
+    { title: 'Max Capacity', key: 'number_students', align: 'center', sortable: false  },
+    { title: 'Total Students', key: 'students_length', align: 'center', sortable: false  },
     { title: 'Actions', key: 'actions', align: 'center', sortable: false  },
 ]);
 

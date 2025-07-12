@@ -400,15 +400,16 @@ const activeStudents = () =>{
 const getTeachers = async () => {
   try {
     const response = await axiosInstance.get('/teachers');
-
-    dataTeachers.value = response.data.result.map((teacher) => {
-      return {
-        teacher_id: teacher.id,
-        teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
-        teacher_img: teacher.user.image || avatarImg,
-        teacher_type: 'Teacher',
-      };
-    });
+    dataTeachers.value = response.data.result
+      .filter(teacher => Array.isArray(teacher.classes) && teacher.classes.some(cls => cls.name === class_name.value))
+      .map((teacher) => {
+        return {
+          teacher_id: teacher.id,
+          teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
+          teacher_img: teacher.user.image || avatarImg,
+          teacher_type: 'Teacher',
+        };
+      });
   } catch (error) {
     showAlert('Error', 'error');
   }
@@ -445,7 +446,6 @@ const getStudents = async () =>{
 
     dataStudents.value = response.data.result
       .filter(student =>
-        student.program === program.value &&
         student.classes?.some(cls => cls.name === class_name.value) &&
         (student.daysEnrolled?.includes(day.value) || false)
       )
@@ -574,7 +574,7 @@ const createNewDailySchedule = async () =>{
 };
 
 onMounted(async () => {
-  getTeachers();
+  
   planningId.value = route.query.planningId || 0;
   scheduleId.value = route.params.scheduleId || null;
   day.value = route.query.day || '';
@@ -587,6 +587,7 @@ onMounted(async () => {
   if (planningId.value) {
     await fetchPlanningData();
     await getStudents(); 
+    await getTeachers();
   } else {
     await getStudents(); 
   }

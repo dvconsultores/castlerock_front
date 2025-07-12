@@ -35,6 +35,10 @@
         </div>
       </template>
 
+      <template v-slot:item.classes="{ item }">
+        <div class="center" v-html="item.classes"></div>
+      </template>
+
       <template v-slot:item.actions="{ item }">
         <div class="flex center gap2">
           <v-icon color="#474649" size="24" class="pointer" @click="$router.push(`/home/student-profile/${item.id}`)">mdi-eye-outline</v-icon>
@@ -123,7 +127,7 @@ const headers = ref([
     { title: 'Age', key: 'age', align: 'center', sortable: false  },
     { title: 'Gender', key: 'gender', align: 'center', sortable: false  },
     { title: 'Center', key: 'center', align: 'center', sortable: false  },
-    { title: 'Program', key: 'program', align: 'center', sortable: false  },
+    { title: 'Classes', key: 'classes', align: 'center', sortable: false  },
     { title: 'Actions', key: 'actions', align: 'center', sortable: false  },
 ]);
 
@@ -143,7 +147,8 @@ const filteredStudents = computed(() => {
       safeToString(student.age).includes(query) ||
       safeToString(student.gender).includes(query) ||
       safeToString(student.center).includes(query) ||
-      safeToString(student.program).includes(query)
+      safeToString(student.program).includes(query) ||
+      safeToString(student.classes).includes(query)
     );
   }
   );
@@ -176,7 +181,7 @@ const getStudents = async () => {
         age: ageDisplay,
         gender: student.gender,
         center: student.campus.name,
-        program: student.program,
+        classes: Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '',
         actions: ''
       };
     });

@@ -306,12 +306,7 @@ const getTeacher = async () => {
     
     if (teacher.classes && teacher.classes.length > 0) {
       dataForClass.value = teacher.classes.map(cls => ({
-        select_class: cls.id
-      }));
-      
-      selectClassItems.value = teacher.classes.map(cls => ({
-        id: cls.id,
-        name: cls.name
+        select_class: { id: cls.id, name: cls.name }
       }));
     }
   } catch (error) {

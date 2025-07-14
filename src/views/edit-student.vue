@@ -1013,10 +1013,10 @@ const getDataStudent = async () => {
     contact_number2.value = student.contacts.find(contact => contact.role === 'EMERGENCY_2')?.phone || '';
     type_relationship2.value = student.contacts.find(contact => contact.role === 'EMERGENCY_2')?.relation || '';
     dataForProgram.value = student.additionalPrograms.map(program => ({
-      selected_program: program.id,
+      selected_program: { id: program.id, name: program.name },
     }));
     dataForClass.value = student.classes.map(classe => ({
-      select_class: classe.id,
+      select_class: { id: classe.id, name: classe.name },
     }));
   } catch (error) {
     showAlert(error, 'error');

@@ -463,7 +463,6 @@ const getStudents = async () =>{
 
     dataStudents.value = response.data.result
       .filter(student =>
-        student.program === program.value &&
         student.classes?.some(cls => cls.name === class_name.value) &&
         (student.daysEnrolled?.includes(day.value) || false)
       )

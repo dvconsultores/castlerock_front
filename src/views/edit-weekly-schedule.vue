@@ -43,11 +43,10 @@
           v-model.number="select_class"
           placeholder="Classroom"
           flat
-          readonly
           :class="{'textfield-error': classError, 'autocomplete-register': true}"
           model
           return-object
-          menu-icon=""
+          menu-icon="mdi-chevron-up"
           :items="selectedClassItems"
           item-value="id"
           item-title="name"

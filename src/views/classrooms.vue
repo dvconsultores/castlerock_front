@@ -149,7 +149,7 @@ const getDataClassrooms = async () => {
         center: classes.campus.name,
         number_students: classes.maxCapacity,
         classroom_img: classes.image,
-        
+        students_length: classes.students.length,
       }
     });
   } catch (error) {

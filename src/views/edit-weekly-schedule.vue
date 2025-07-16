@@ -724,6 +724,18 @@ watch(
 );
 
 watch(
+  () => select_class.value,
+  (newClass, oldClass) => {
+    if (newClass !== oldClass && newClass !== null) {
+      class_id.value = newClass;
+      if (select_center.value && year.value && month.value) {
+        searchPlannings();
+      }
+    }
+  }
+);
+
+watch(
   () => ({
     week: week.value,
   }),

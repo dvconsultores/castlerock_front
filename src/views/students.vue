@@ -5,7 +5,7 @@
         <v-text-field
           v-model="searchQuery"
           class="login-textfield"
-          placeholder="Search Student"
+          placeholder="Search"
           variant="solo" 
           maxlength="150"
           flat

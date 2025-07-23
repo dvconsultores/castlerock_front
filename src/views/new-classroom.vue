@@ -38,6 +38,7 @@
             menu-icon="mdi-chevron-up"
             :items="['PRIMARY', 'TODDLER']"
             variant="solo"
+            hide-details
             :menu-props="{
               contentClass: 'rounded-menu',
             }"
@@ -55,7 +56,27 @@
             item-value="id"
             item-title="name"
             return-object
+            hide-details
             @update:modelValue="val => select_center = val?.id"
+            variant="solo"
+            :menu-props="{
+              contentClass: 'rounded-menu',
+            }"
+          ></v-autocomplete>
+        </v-col>
+
+        <v-col cols="12" class="pb-0 mb-6">
+          <v-autocomplete
+            v-model="classType"
+            placeholder="Select Class Type"
+            flat
+            :class="{'textfield-error': selectClassTypeError, 'autocomplete-register': true}"
+            menu-icon="mdi-chevron-up"
+            :items="selectClassTypeItems"
+            item-value="id"
+            item-title="name"
+            return-object
+            hide-details
             variant="solo"
             :menu-props="{
               contentClass: 'rounded-menu',
@@ -154,6 +175,14 @@ const maxCapacityError = ref('');
 const programError = ref('');
 const selectCenterError = ref('');
 const imgError = ref('');
+const classType = ref(null);
+const selectClassTypeError = ref('');
+
+const selectClassTypeItems = ref([
+  { id: 'ENROLLED', name: 'Enrolled' },
+  { id: 'AFTER_SCHOOL', name: 'After School' },
+  { id: 'BEFORE_SCHOOL', name: 'Before School' },
+]);
 
 const handleFileChange = (file) => {
   if (file) {
@@ -184,6 +213,7 @@ const openSaveClassroom = () => {
   programError.value = '';
   selectCenterError.value = '';
   imgError.value = '';
+  selectClassTypeError.value = '';
 
   const errors = [];
   
@@ -208,6 +238,11 @@ const openSaveClassroom = () => {
   if (!select_center.value) {
     selectCenterError.value = 'Please select a valid center';
     errors.push(selectCenterError.value);
+  }
+
+  if (!classType.value) {
+    selectClassTypeError.value = 'Please select a valid class type';
+    errors.push(selectClassTypeError.value);
   }
 
   if (!imagePreview.value) {
@@ -246,6 +281,7 @@ const createClass = async () => {
     formData.append('maxCapacity', Number(maxCapacity.value));
     formData.append('program', program.value.toString());
     formData.append('campus', select_center.value);
+    formData.append('classType', classType.value.id);
     
     if (selectedImgClassroom.value) {
       formData.append('image', selectedImgClassroom.value);

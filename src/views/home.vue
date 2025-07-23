@@ -2,7 +2,7 @@
   <div id="home">
     <div class="title-home-div">
       <div class="div1">
-        <h3 class="tstart">Good morning,<br>{{ userName }} {{ userLastName }}!</h3>
+        <h3 class="tstart">Hello,<br>{{ userName }} {{ userLastName }}!</h3>
       </div>
 
       <div class="divcol div2">
@@ -57,7 +57,7 @@
               <span
                 v-for="(student, index) in item.students"
                 :key="index"
-                class="f10 tstart font2 mr-4"
+                class="f11 tstart font2 mr-4"
               >
                 {{ student.firstName || '' }} {{ student.lastName || '' }}
               </span>
@@ -123,7 +123,7 @@
               <span
                 v-for="(student, index) in item.students"
                 :key="index"
-                class="f10 tstart font2 mr-4"
+                class="f11 tstart font2 mr-4"
               >
                 {{ student.firstName || '' }} {{ student.lastName || '' }}
               </span>
@@ -397,8 +397,8 @@ const dataSheets = ref([
   },
   {
     imgIcon: teachers,
-    titleSheet: 'New Teacher',
-    subTitleSheet: 'Register a Teacher',
+    titleSheet: 'Teacher',
+    subTitleSheet: 'Assign a Classroom',
     route: '/home/new-teacher'
   },
   {

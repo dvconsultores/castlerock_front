@@ -481,7 +481,7 @@
       </v-col>
     </v-row>
 
-    <v-row class="fullw mt-10 big-checkboxes-container" :class="{'border-red': classIdError}">
+    <v-row class="fullw mt-10 big-checkboxes-container overlay-class-width" :class="{'border-red': classIdError}">
       <v-col cols="12" align="left">
         <span class="font2 f24 tleft" style="color: #262262;">Class</span>
       </v-col>
@@ -498,7 +498,7 @@
         class="pa-2 flex center gap4"
       >
         <v-autocomplete
-          v-model.number="item.select_class"
+          v-model="item.select_class"
           placeholder="Select Class"
           flat
           bg-color="#F0F0F0 "
@@ -507,9 +507,8 @@
           menu-icon="mdi-chevron-up"
           :items="selectClassItems"
           item-value="id"
-          item-title="name"
+          :item-title="item => item && item.name && item.class ? `${item.name} - ${item.class}` : ''"
           return-object
-          @update:modelValue="val => select_class = val?.id"
           variant="solo"
           :menu-props="{
             contentClass: 'rounded-menu',
@@ -872,11 +871,11 @@ const deleteProgram = (index) => {
 };
 
 const dataForClass = ref([
-  { select_class: 'Select Class' },
+  { select_class: null },
 ])
 
 const addClass = () => {
-  dataForClass.value.push({ placeholder: 'Select Class' });
+  dataForClass.value.push({ select_class: null });
 };
 
 const deleteClass = (index) => {
@@ -1113,6 +1112,7 @@ const getClasses = async () => {
     dataClasses.value = response.data.result.map(classes => ({
       id: classes.id,
       name: classes.name,
+      class: classes.campus.name,
     }));
 
     selectClassItems.value = dataClasses.value;

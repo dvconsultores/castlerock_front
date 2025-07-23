@@ -44,12 +44,10 @@
             v-model="phone"
             class="textfield-registration"
             placeholder="Phone"
-            type="number"
+            type="text"
             maxlength="150"
             variant="solo" 
             hide-spin-buttons
-            @keypress="(e) => { if (!/^\d$/.test(e.key) || phone.length >= 20) e.preventDefault(); }"
-            @paste="e => { e.preventDefault(); }"
             flat
             hide-details
           ></v-text-field>

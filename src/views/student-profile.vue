@@ -469,18 +469,17 @@
 
         <v-col v-for="(item, index) in dataForClass" :key="index" cols="12" sm="12" class="pa-2 flex center gap4">
           <v-autocomplete
-            v-model.number="item.selected_class"
+            v-model="item.selected_class"
+            :items="selectClassItem"
+            item-value="id"
+            :item-title="classItem => classItem.name + ' - ' + (classItem.campus?.name || '')"
+            return-object
             placeholder="Select Class"
             flat
-            bg-color="#F0F0F0 "
+            bg-color="#F0F0F0"
             class="autocomplete-register"
             hide-details
             menu-icon=""
-            :items="selectClassItem"
-            item-value="id"
-            item-title="name"
-            return-object
-            @update:modelValue="val => selected_class = val?.id"
             variant="solo"
             readonly
             :menu-props="{
@@ -1026,7 +1025,7 @@ const getDataStudent = async () => {
       selected_program: program.id,
     }));
     dataForClass.value = student.classes.map(classe => ({
-      selected_class: classe.id,
+      selected_class: classe,
     }));
   } catch (error) {
     showAlert(error, 'error');

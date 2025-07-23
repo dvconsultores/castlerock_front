@@ -38,6 +38,7 @@
             menu-icon="mdi-chevron-up"
             :items="['PRIMARY', 'TODDLER']"
             variant="solo"
+            hide-details
             :menu-props="{
               contentClass: 'rounded-menu',
             }"
@@ -54,8 +55,27 @@
             :items="selectCenterItems"
             item-value="id"
             item-title="name"
+            hide-details
             return-object
             @update:modelValue="val => select_center = val?.id"
+            variant="solo"
+            :menu-props="{
+              contentClass: 'rounded-menu',
+            }"
+          ></v-autocomplete>
+        </v-col>
+
+        <v-col cols="12" class="pb-0">
+          <v-autocomplete
+            v-model.number="classType"
+            placeholder="Select Class Type"
+            flat
+            class="autocomplete-register"
+            menu-icon="mdi-chevron-up"
+            :items="selectClassTypeItems"
+            item-value="id"
+            item-title="name"
+            return-object
             variant="solo"
             :menu-props="{
               contentClass: 'rounded-menu',
@@ -152,6 +172,12 @@ const dialogConfirmationClassroom = ref(false);
 const route = useRoute();
 const classroomId = ref(route.params.id);
 const centerId = ref(null);
+const classType = ref(null);
+const selectClassTypeItems = ref([
+  { id: 'ENROLLED', name: 'Enrolled' },
+  { id: 'AFTER_SCHOOL', name: 'After School' },
+  { id: 'BEFORE_SCHOOL', name: 'Before School' },
+]);
 
 const handleFileChange = (file) => {
   if (file) {
@@ -204,6 +230,7 @@ const loadClassroomData = async () => {
     program.value = classroom.program;
     imagePreview.value = classroom.image;
     select_center.value = classroom.campus.id;
+    classType.value = selectClassTypeItems.value.find(item => item.id === classroom.classType) || null;
   } catch (error) {
     console.error('Failed to load center data', error);
   }
@@ -217,7 +244,8 @@ const updateClass = async () => {
     formData.append('maxCapacity', Number(maxCapacity.value));
     formData.append('program', program.value.toString());
     formData.append('campus', select_center.value);
-    
+    formData.append('classType', classType.value.id);
+
     if (selectedImgClassroom.value) {
       formData.append('image', selectedImgClassroom.value);
     }

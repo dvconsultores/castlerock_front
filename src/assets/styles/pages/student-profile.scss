@@ -223,6 +223,13 @@
     }
   }
 
+  .overlay-class-width{
+    .v-overlay__content{
+      max-width: 900px!important;
+      min-width: 1px!important;
+    }
+  }
+
   .border-red{
     border: 2px solid red;
   }
@@ -390,6 +397,6 @@
 
 
 .v-overlay__content{
-  max-width: 400px!important;
-  min-width: 1px!important;
+  max-width: 400px;
+  min-width: 1px;
 }

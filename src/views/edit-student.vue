@@ -500,22 +500,19 @@
         class="pa-2 flex center gap4"
       >
         <v-autocomplete
-          v-model.number="item.select_class"
+          v-model="item.select_class"
           placeholder="Select Class"
           flat
-          bg-color="#F0F0F0 "
+          bg-color="#F0F0F0"
           class="autocomplete-register"
           hide-details
           menu-icon="mdi-chevron-up"
           :items="selectClassItems"
           item-value="id"
-          item-title="name"
+          :item-title="classItem => classItem.name + ' - ' + (classItem.campus?.name || '')"
           return-object
-          @update:modelValue="val => select_class = val?.id"
           variant="solo"
-          :menu-props="{
-            contentClass: 'rounded-menu',
-          }"
+          :menu-props="{ contentClass: 'rounded-menu' }"
         ></v-autocomplete>
 
         <v-btn class="btn" flat @click="deleteClass(index)">
@@ -931,6 +928,7 @@ const getClasses = async () => {
     dataClasses.value = response.data.result.map(classes => ({
       id: classes.id,
       name: classes.name,
+      campus: classes.campus,
     }));
 
     selectClassItems.value = dataClasses.value;
@@ -1016,7 +1014,7 @@ const getDataStudent = async () => {
       selected_program: { id: program.id, name: program.name },
     }));
     dataForClass.value = student.classes.map(classe => ({
-      select_class: { id: classe.id, name: classe.name },
+      select_class: classe,
     }));
   } catch (error) {
     showAlert(error, 'error');

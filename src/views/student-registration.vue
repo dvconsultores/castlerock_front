@@ -481,7 +481,7 @@
       </v-col>
     </v-row>
 
-    <v-row class="fullw mt-10 big-checkboxes-container" :class="{'border-red': classIdError}">
+    <v-row class="fullw mt-10 big-checkboxes-container overlay-class-width" :class="{'border-red': classIdError}">
       <v-col cols="12" align="left">
         <span class="font2 f24 tleft" style="color: #262262;">Class</span>
       </v-col>

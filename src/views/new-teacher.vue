@@ -123,7 +123,7 @@
           class="pa-2 flex center gap4"
         >
           <v-autocomplete
-            v-model.number="item.select_class"
+            v-model="item.select_class"
             placeholder="Select Class"
             flat
             bg-color="#F0F0F0 "
@@ -132,9 +132,8 @@
             menu-icon="mdi-chevron-up"
             :items="selectClassItems"
             item-value="id"
-            item-title="name"
             return-object
-            @update:modelValue="val => select_class = val?.id"
+            :item-title="item => item && item.name && item.class ? `${item.name} - ${item.class}` : ''"
             variant="solo"
             :menu-props="{
               contentClass: 'rounded-menu',
@@ -241,6 +240,7 @@ const getClasses = async () => {
     dataClasses.value = response.data.result.map(classes => ({
       id: classes.id,
       name: classes.name,
+      class: classes.campus.name,
     }));
 
     selectClassItems.value = dataClasses.value;

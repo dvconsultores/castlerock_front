@@ -151,7 +151,7 @@ const loginFunction = async () => {
   } catch (error) {
     loadingLogin.value = false;
     console.error('Login failed', error);
-    showAlert(error.response.data.message, 'error');
+    showAlert('Invalid Credentials', 'error');
   }
   } else {
     showAlert('Please fill in all fields', 'error');

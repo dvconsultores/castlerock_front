@@ -73,8 +73,7 @@
           </div>
 
           <div class="time-zone-div mb-4">
-            <span class="f10 w600">{{ item.place }}</span>
-            <!-- <span class="f10 w600" style="color: #7583D9;">{{ item.time }}</span> -->
+            <span class="f10 w600">{{ item.place }}<br>{{ item.campus_name }}</span>
           </div>
 
           <div class="flex center mt-2" style="gap: 10px;">
@@ -139,8 +138,7 @@
           </div>
 
           <div class="time-zone-div mb-4">
-            <span class="f10 w600">{{ item.place }}</span>
-            <!-- <span class="f10 w600" style="color: #7583D9;">{{ item.time }}</span> -->
+            <span class="f10 w600">{{ item.place }}<br>{{ item.campus_name }}</span>
           </div>
 
           <div class="flex center mt-2" style="gap: 10px;">
@@ -193,7 +191,7 @@
           </div>
 
           <div class="time-zone-div mb-4">
-            <span class="f16 w600">{{ item.place }}</span>
+            <span class="f14 w600">{{ item.place }}<br>{{ item.campus_name }}</span>
           </div>
 
           <div class="students-div">
@@ -435,6 +433,7 @@ const loadDaily = async () => {
       estimatedAttendance: item.planning?.class?.maxCapacity,
       dataAvailability: item.planning?.class?.maxCapacity - item.students?.length,
       place: item.planning?.class?.name,
+      campus_name: item.planning?.campus?.name,
       time: '9:00 am - 12:15pm',
       teachers: item.teachers || [],
       students: item.students || []
@@ -466,6 +465,7 @@ const loadDailyBefore = async () => {
       estimatedAttendance: item.planning?.class?.maxCapacity,
       dataAvailability: item.planning?.class?.maxCapacity - item.students?.length,
       place: item.planning?.class?.name,
+      campus_name: item.planning?.campus?.name,
       time: '9:00 am - 12:15pm',
       teachers: item.teachers || [],
       students: item.students || []

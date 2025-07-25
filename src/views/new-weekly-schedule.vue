@@ -499,6 +499,8 @@ const createNewPlanning = async () => {
   }
   
   loadingCreate.value = true;
+  const minWait = new Promise(resolve => setTimeout(resolve, 2000));
+  let endpointError = null;
   try {
     const response = await axiosInstance.post('/planning', {
       year: year.value?.id,
@@ -513,11 +515,13 @@ const createNewPlanning = async () => {
     }
     showStatePlanning.value = true;
   } catch(error) {
+    endpointError = error;
     const errorMessage = error.response?.data?.message ||
                         error.message ||
                         'Failed to create planning';
     showAlert(errorMessage, 'error');
   } finally {
+    await minWait;
     loadingCreate.value = false;
   }
 };

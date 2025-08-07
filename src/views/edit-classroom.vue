@@ -140,7 +140,7 @@
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
         <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully updated!</span>
         <hr class="mt-2 mb-5">
-        <span class="f16 w400 tcenter">The class <span class="w600" style="color: #7583D9;">{{ name }}</span> has been successfully update.</span>
+        <span class="f16 w400 tcenter">The class <span class="w600" style="color: #7583D9;">{{ name }}</span> has been successfully updated.</span>
         <div class="btn-divs mt-8">
           <v-btn flat class="btn1" @click="$router.push('/home/classrooms')">Classrooms</v-btn>
           <v-btn flat class="btn2" @click="dialogConfirmationClassroom = false">Edit Classrooms</v-btn>

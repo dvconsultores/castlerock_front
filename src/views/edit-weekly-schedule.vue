@@ -119,7 +119,7 @@
 
     <v-card v-if="showStatePlanning" flat class="card-rounded">
       <div v-for="(week, weekIndex) in monthlySchedule" :key="weekIndex" class="div-container-weeks-cards">
-        <h3>{{ week.weekTitle }} {{ week.monthTitle }}</h3>
+        <h3>{{ week.weekTitle }} {{ week.monthTitle }} <v-icon style="font-size: 26px; cursor: pointer;" @click="openDeletePlanningDialog(weekIndex)">mdi-trash-can-outline</v-icon></h3>
         <div class="slider-div">
           <v-card flat v-for="(day, dayIndex) in week.days" :key="dayIndex" @click="handleNewDay(day, weekIndex)">
             <div class="div-header">
@@ -225,6 +225,17 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="dialogOpenDeletePlanning" content-class="dialogAdd" persistent>
+      <v-card class="card-add-program">
+        <img src="@/assets/sources/icons/save.svg" alt="Save">
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Are you sure you want to delete this planning week?</span>
+        <div class="btn-divs mt-8">
+          <v-btn flat class="btn1" @click="deleteWeek()" :loading="loadingDeletePlanning">Yes, delete</v-btn>
+          <v-btn flat class="btn2" @click="dialogOpenDeletePlanning = false">Cancel</v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
+
     <v-dialog v-model="dialogConfirmationDaily" content-class="dialogConfirmationDaily" persistent>
       <v-card class="card-confirmation-program">
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
@@ -257,6 +268,9 @@ dayjs.locale(locale);
 
 const route = useRoute();
 const idClass = ref(route.params.id);
+const dialogOpenDeletePlanning = ref(false);
+const loadingDeletePlanning = ref(false);
+const weekIndexToDelete = ref(null);
 const dialogOpenDelete = ref(false);
 const dialogConfirmationDaily = ref(false);
 const loadingDelete = ref(false);
@@ -483,6 +497,8 @@ const createNewPlanning = async () => {
   }
   
   loadingCreate.value = true;
+  const minWait = new Promise(resolve => setTimeout(resolve, 2000));
+  let endpointError = null;
   try {
     const response = await axiosInstance.post('/planning', {
       year: year.value?.id,
@@ -497,11 +513,13 @@ const createNewPlanning = async () => {
     }
     showStatePlanning.value = true;
   } catch(error) {
+    endpointError = error;
     const errorMessage = error.response?.data?.message ||
                         error.message ||
                         'Failed to create planning';
     showAlert(errorMessage, 'error');
   } finally {
+    await minWait;
     loadingCreate.value = false;
   }
 };
@@ -766,6 +784,38 @@ const deleteDailySchedule = async (dailyScheduleId) => {
   }
 };
 
+const openDeletePlanningDialog = (weekIndex) => {
+  weekIndexToDelete.value = weekIndex;
+  dialogOpenDeletePlanning.value = true;
+};
+
+const deleteWeek = async () => {
+  const week = monthlySchedule.value[weekIndexToDelete.value];
+  if (!week || !week.planningId) {
+    showAlert('No planningId found for this week', 'error');
+    dialogOpenDeletePlanning.value = false;
+    weekIndexToDelete.value = null;
+    return;
+  }
+  const planningId = week.planningId;
+  const minWait = new Promise(resolve => setTimeout(resolve, 2000));
+  loadingDeletePlanning.value = true;
+  try {
+    await axiosInstance.delete(`/planning/${planningId}`);
+    showAlert('Planning week deleted successfully!', 'success');
+    monthlySchedule.value.splice(weekIndexToDelete.value, 1);
+    if (typeof searchPlannings === 'function') {
+      searchPlannings();
+    }
+    dialogOpenDeletePlanning.value = false;
+    weekIndexToDelete.value = null;
+  } catch (error) {
+    showAlert(error.response?.data?.message || 'Error deleting planning week', 'error');
+  } finally {
+    await minWait;
+    loadingDeletePlanning.value = false;
+  }
+}
 const loadClass = async () =>{
   try{
     const response = await axiosInstance.get(`/classes/${idClass.value}`)
@@ -784,10 +834,13 @@ onMounted(() =>{
     id: Number(localStorage.getItem('idYear')),
     name: localStorage.getItem('yearName') || String(localStorage.getItem('idYear'))
   } : null;
+  
   month.value = localStorage.getItem('idMonth') ? {
     id: Number(localStorage.getItem('idMonth')),
-    name: localStorage.getItem('monthName') || monthsArray.value.find(m => m.id === Number(localStorage.getItem('idMonth')))?.name || ''
+    name: localStorage.getItem('monthName') || 
+      (monthsArray.value.find(m => m.id === Number(localStorage.getItem('idMonth')))?.name || '')
   } : null;
+
   getCenters();
   getClasses();
   loadClass();

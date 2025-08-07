@@ -116,7 +116,7 @@
           class="pa-2 flex center gap4"
         >
           <v-autocomplete
-            v-model.number="item.select_class"
+            v-model="item.select_class"
             placeholder="Select Class"
             flat
             bg-color="#F0F0F0 "
@@ -125,9 +125,8 @@
             menu-icon="mdi-chevron-up"
             :items="selectClassItems"
             item-value="id"
-            item-title="name"
+            :item-title="classItem => classItem.name + (classItem.campus && classItem.campus.name ? ' - ' + classItem.campus.name : '')"
             return-object
-            @update:modelValue="val => select_class = val?.id"
             variant="solo"
             :menu-props="{
               contentClass: 'rounded-menu',
@@ -231,12 +230,11 @@ const deleteClass = (index) => {
 const getClasses = async () => {
   try {
     const response = await axiosInstance.get('/classes');
-    
     dataClasses.value = response.data.result.map(classes => ({
       id: classes.id,
       name: classes.name,
+      campus: classes.campus,
     }));
-
     selectClassItems.value = dataClasses.value;
   } catch (error) {
     showAlert('Error fetching classes', 'error');
@@ -300,13 +298,11 @@ const getTeacher = async () => {
   try {
     const response = await axiosInstance.get(`/teachers/${teacherId.value}`);
     const teacher = response.data.result;
-    
     teacher_name.value = teacher.user.firstName + ' ' + teacher.user.lastName;
     select_center.value = teacher.campus.id;
-    
     if (teacher.classes && teacher.classes.length > 0) {
-      dataForClass.value = teacher.classes.map(cls => ({
-        select_class: { id: cls.id, name: cls.name }
+      dataForClass.value = teacher.classes.map(classe => ({
+        select_class: selectClassItems.value.find(c => c.id === classe.id) || classe,
       }));
     }
   } catch (error) {

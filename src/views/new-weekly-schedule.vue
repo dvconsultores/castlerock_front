@@ -117,7 +117,7 @@
 
     <v-card v-if="showStatePlanning" flat class="card-rounded">
       <div v-for="(week, weekIndex) in monthlySchedule" :key="weekIndex" class="div-container-weeks-cards">
-        <h3>{{ week.weekTitle }} {{ week.monthTitle }}</h3>
+        <h3>{{ week.weekTitle }} {{ week.monthTitle }} <v-icon style="font-size: 26px; cursor: pointer;" @click="openDeletePlanningDialog(weekIndex)">mdi-trash-can-outline</v-icon></h3>
         <div class="slider-div">
           <v-card flat v-for="(day, dayIndex) in week.days" :key="dayIndex" @click="handleNewDay(day, weekIndex)">
             <div class="div-header">
@@ -225,6 +225,17 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="dialogOpenDeletePlanning" content-class="dialogAdd" persistent>
+      <v-card class="card-add-program">
+        <img src="@/assets/sources/icons/save.svg" alt="Save">
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Are you sure you want to delete this planning week?</span>
+        <div class="btn-divs mt-8">
+          <v-btn flat class="btn1" @click="deleteWeek()" :loading="loadingDeletePlanning">Yes, delete</v-btn>
+          <v-btn flat class="btn2" @click="dialogOpenDeletePlanning = false">Cancel</v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
+
     <v-dialog v-model="dialogConfirmationDaily" content-class="dialogConfirmationDaily" persistent>
       <v-card class="card-confirmation-program">
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
@@ -254,7 +265,9 @@ dayjs.extend(weekOfYear);
 dayjs.extend(isLeapYear);
 dayjs.locale(locale);
 
-
+const dialogOpenDeletePlanning = ref(false);
+const loadingDeletePlanning = ref(false);
+const weekIndexToDelete = ref(null);
 const centerError = ref('');
 const classError = ref('');
 const yearError = ref('');
@@ -754,6 +767,39 @@ const deleteDailySchedule = async (dailyScheduleId) => {
   }
 };
 
+const openDeletePlanningDialog = (weekIndex) => {
+  weekIndexToDelete.value = weekIndex;
+  dialogOpenDeletePlanning.value = true;
+};
+
+const deleteWeek = async () => {
+  const week = monthlySchedule.value[weekIndexToDelete.value];
+  if (!week || !week.planningId) {
+    showAlert('No planningId found for this week', 'error');
+    dialogOpenDeletePlanning.value = false;
+    weekIndexToDelete.value = null;
+    return;
+  }
+  const planningId = week.planningId;
+  const minWait = new Promise(resolve => setTimeout(resolve, 2000));
+  loadingDeletePlanning.value = true;
+  try {
+    await axiosInstance.delete(`/planning/${planningId}`);
+    showAlert('Planning week deleted successfully!', 'success');
+    monthlySchedule.value.splice(weekIndexToDelete.value, 1);
+    if (typeof searchPlannings === 'function') {
+      searchPlannings();
+    }
+    dialogOpenDeletePlanning.value = false;
+    weekIndexToDelete.value = null;
+  } catch (error) {
+    showAlert(error.response?.data?.message || 'Error deleting planning week', 'error');
+  } finally {
+    await minWait;
+    loadingDeletePlanning.value = false;
+  }
+};
+
 onMounted(() =>{
   select_center.value = localStorage.getItem('idCenter') ? Number(localStorage.getItem('idCenter')) : null;
   select_class.value = localStorage.getItem('idClass') ? Number(localStorage.getItem('idClass')) : null;
@@ -761,6 +807,7 @@ onMounted(() =>{
     id: Number(localStorage.getItem('idYear')),
     name: localStorage.getItem('yearName') || String(localStorage.getItem('idYear'))
   } : null;
+
   month.value = localStorage.getItem('idMonth') ? {
     id: Number(localStorage.getItem('idMonth')),
     name: localStorage.getItem('monthName') || monthsArray.value.find(m => m.id === Number(localStorage.getItem('idMonth')))?.name || ''

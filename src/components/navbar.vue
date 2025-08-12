@@ -177,7 +177,9 @@ const currentTitle = computed(() => {
     return 'Daily Attendance';
   }else if (route.path.startsWith('/home/edit-daily-schedule')) {
     return 'Edit daily schedule';
-  }else 
+  }else if (route.path.startsWith('/home/view-daily-spot')) {
+    return 'Daily Spot';
+  }
   return pageTitles[route.path] || 'Dashboard';
 });
 

@@ -27,6 +27,22 @@
               <span class="f16 mt-2 w400 tcenter" style="color: #4E444B;">
                 Available spots: {{ item.studentsCount }}
               </span>
+
+              <div class="students-div">
+                <span class="f16 font2 tcenter mt-4" style="color: #4E444B;">Students Enrolled</span>
+
+                <div v-if="item.studentsList && item.studentsList.length > 0">
+                  <div v-for="(student, studentIndex) in item.studentsList" 
+                      :key="studentIndex" 
+                      class="f16 mt-2 w400 tcenter" 
+                      style="color: #4E444B;">
+                    {{ studentIndex + 1 }} - {{ student }} 
+                  </div>
+                </div>
+                <div v-else class="f16 mt-2 w400 tcenter" style="color: #4E444B;">
+                  No students enrolled
+                </div>
+              </div>
             </v-card>
           </div>
         </div>
@@ -114,23 +130,25 @@ const getDailySchedule = async () => {
       day.value = scheduleData.day;
       dayNumber.value = dayjs(scheduleData.date).format('DD/MM/YY');
 
-      console.log('Fetching planning for program_id:', program_id.value);
-      const planningResponse = await axiosInstance.get(`/planning/${program_id.value}`);
-      console.log('Full planning response:', planningResponse);
+      const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
       
-      if (planningResponse?.data?.result?.dailySchedules?.length) {
-        console.log('Found dailySchedules:', planningResponse.data.result.dailySchedules);
-        dailySchedules.value = planningResponse.data.result.dailySchedules.map(schedule => ({
-          id: schedule.id,
-          day: schedule.day,
-          date: schedule.date,
-          studentsLength: schedule.students?.length || 0,
-          studentsCount: maxCapacity.value - schedule.students?.length,
-        }));
-      } else {
-        console.warn('No dailySchedules found in response');
-        dailySchedules.value = [];
-      }
+      dailySchedules.value = daysOfWeek.map(day => {
+        const studentsForDay = scheduleData.students?.filter(student => 
+          student.daysEnrolled?.includes(day)
+        ) || [];
+        
+        return {
+          id: day,
+          day: day,
+          studentsLength: studentsForDay.length,
+          studentsCount: maxCapacity.value - studentsForDay.length,
+          studentsList: studentsForDay.map(student => 
+            `${student.firstName} ${student.lastName}`
+          )
+        };
+      });
+
+      console.log('Daily schedules with students:', dailySchedules.value);
     }
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');

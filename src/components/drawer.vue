@@ -92,8 +92,8 @@ const logOut = () => {
   }
 
   .logo{
-    width: 90px;
-    height: 109px;
+    width: 100px;
+    height: 159px;
     margin-top: 32px;
     margin-bottom: 32px!important;
   }

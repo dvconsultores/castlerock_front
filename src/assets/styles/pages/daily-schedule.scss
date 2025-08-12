@@ -358,12 +358,20 @@
 
     .spots-container{
       gap: 24px;
-      height: 200px;
-      max-height: 200px;
+      height: max-content;
+      max-height: max-content;
       min-height: 180px;
+      align-items: flex-start;
 
       .v-card{
-        height: 145px;
+        height: max-content;
+
+        .students-div{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
       }
     }
 

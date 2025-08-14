@@ -15,28 +15,30 @@
 
           <div class="students-selected-container spots-container">
             <v-card v-for="(item, index) in dailySchedules" :key="index" flat>
-              <span class="f17 font2 tcenter" style="color: #4E444B;">
-                {{ item.day }}
-              </span>
-              <span class="f16 mt-2 w400 tcenter" style="color: #4E444B;">
-                Max Capacity: {{ maxCapacity }}
-              </span>
-              <span class="f16 mt-2 w400 tcenter" style="color: #4E444B;">
-                Filled spots: {{ item.studentsLength }}
-              </span>
-              <span class="f16 mt-2 w400 tcenter" style="color: #4E444B;">
-                Available spots: {{ item.studentsCount }}
-              </span>
+              <div class="flexcol cards-display">
+                <span class="f17 font2 tcenter" style="color: #4E444B;">
+                  {{ item.day }}
+                </span>
+                <span class="f16 mt-2 w400 tcenter" style="color: #4E444B;">
+                  Max Capacity: {{ maxCapacity }}
+                </span>
+                <span class="f16 mt-2 w400 tcenter" style="color: #4E444B;">
+                  Filled spots: {{ item.studentsLength }}
+                </span>
+                <span class="f16 mt-2 w400 tcenter" style="color: #4E444B;">
+                  Available spots: {{ item.studentsCount }}
+                </span>
+              </div>
 
-              <div class="students-div">
-                <span class="f16 font2 tcenter mt-4" style="color: #4E444B;">Students Enrolled</span>
+              <div class="students-div cards-display mt-5">
+                <span class="f16 font2 tcenter" style="color: #4E444B;">Students Enrolled</span>
 
                 <div v-if="item.studentsList && item.studentsList.length > 0">
                   <div v-for="(student, studentIndex) in item.studentsList" 
                       :key="studentIndex" 
-                      class="f16 mt-2 w400 tcenter" 
+                      class="f15 mt-1 w400 tcenter" 
                       style="color: #4E444B;">
-                    {{ studentIndex + 1 }} - {{ student }} 
+                    {{ studentIndex + 1 }} - {{ student }}
                   </div>
                 </div>
                 <div v-else class="f16 mt-2 w400 tcenter" style="color: #4E444B;">
@@ -131,10 +133,35 @@ const getDailySchedule = async () => {
       dayNumber.value = dayjs(scheduleData.date).format('DD/MM/YY');
 
       const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+      const classType = scheduleData.planning.class.classType;
       
+      const calculateAge = (dateOfBirth) => {
+        const birthDate = dayjs(dateOfBirth);
+        const today = dayjs();
+        
+        const years = today.diff(birthDate, 'year');
+        const months = today.diff(birthDate, 'month') % 12;
+        
+        return `${years} Y ${months} M`;
+      };
+
       dailySchedules.value = daysOfWeek.map(day => {
+        // Determinar qué propiedad de días usar según el tipo de clase
+        let daysProperty;
+        switch(classType) {
+          case 'BEFORE_SCHOOL':
+            daysProperty = 'beforeSchoolDays';
+            break;
+          case 'AFTER_SCHOOL':
+            daysProperty = 'afterSchoolDays';
+            break;
+          case 'ENROLLED':
+          default:
+            daysProperty = 'daysEnrolled';
+        }
+
         const studentsForDay = scheduleData.students?.filter(student => 
-          student.daysEnrolled?.includes(day)
+          student[daysProperty]?.includes(day)
         ) || [];
         
         return {
@@ -143,12 +170,12 @@ const getDailySchedule = async () => {
           studentsLength: studentsForDay.length,
           studentsCount: maxCapacity.value - studentsForDay.length,
           studentsList: studentsForDay.map(student => 
-            `${student.firstName} ${student.lastName}`
+            `${student.firstName} ${student.lastName} (${calculateAge(student.dateOfBirth)})`
           )
         };
       });
 
-      console.log('Daily schedules with students:', dailySchedules.value);
+      console.log('Daily schedules with students and ages:', dailySchedules.value);
     }
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');

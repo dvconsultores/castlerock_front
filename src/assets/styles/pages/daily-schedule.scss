@@ -365,6 +365,16 @@
 
       .v-card{
         height: max-content;
+        background-color: transparent;
+        width: 260px;
+
+        .cards-display{
+          background-color: rgba(#000000, 0.1);
+          width: 260px;
+          padding-block: 10px;
+          padding-inline: 4px;
+          border-radius: 16px;
+        }
 
         .students-div{
           display: flex;

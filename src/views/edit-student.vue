@@ -1014,9 +1014,7 @@ const updateStudent = async () => {
       formData.append('gender', gender.value);
       formData.append('notes', notes.value);
       formData.append('startDateOfClasses', start_date_class.value);
-      const appendDays = (fieldName, days) => {
-        days.forEach(day => formData.append(fieldName, day));
-      };
+
       const selectedDaysEnrolled = [];
       if (monday_enrolled.value) selectedDaysEnrolled.push("Monday");
       if (tuesday_enrolled.value) selectedDaysEnrolled.push("Tuesday");
@@ -1024,8 +1022,9 @@ const updateStudent = async () => {
       if (thursday_enrolled.value) selectedDaysEnrolled.push("Thursday");
       if (friday_enrolled.value) selectedDaysEnrolled.push("Friday");
       if (saturday_enrolled.value) selectedDaysEnrolled.push("Saturday");
-      if (sunday_enrolled.value) selectedDaysEnrolled.push("Sunday")
-      appendDays('daysEnrolled', selectedDaysEnrolled);
+      if (sunday_enrolled.value) selectedDaysEnrolled.push("Sunday");
+      formData.append('daysEnrolled', selectedDaysEnrolled.join(','));
+
       const selectedDaysBefore = [];
       if (monday_before.value) selectedDaysBefore.push("Monday");
       if (tuesday_before.value) selectedDaysBefore.push("Tuesday");
@@ -1033,8 +1032,9 @@ const updateStudent = async () => {
       if (thursday_before.value) selectedDaysBefore.push("Thursday");
       if (friday_before.value) selectedDaysBefore.push("Friday");
       if (saturday_before.value) selectedDaysBefore.push("Saturday");
-      if (sunday_before.value) selectedDaysBefore.push("Sunday")
-      appendDays('beforeSchoolDays', selectedDaysBefore);
+      if (sunday_before.value) selectedDaysBefore.push("Sunday");
+      formData.append('beforeSchoolDays', selectedDaysBefore.join(','));
+
       const selectedDaysAfter = [];
       if (monday_after.value) selectedDaysAfter.push("Monday");
       if (tuesday_after.value) selectedDaysAfter.push("Tuesday");
@@ -1042,8 +1042,8 @@ const updateStudent = async () => {
       if (thursday_after.value) selectedDaysAfter.push("Thursday");
       if (friday_after.value) selectedDaysAfter.push("Friday");
       if (saturday_after.value) selectedDaysAfter.push("Saturday");
-      if (sunday_after.value) selectedDaysAfter.push("Sunday")
-      appendDays('afterSchoolDays', selectedDaysAfter);
+      if (sunday_after.value) selectedDaysAfter.push("Sunday");
+      formData.append('afterSchoolDays', selectedDaysAfter.join(','));
     
       const currentProgramIds = dataForProgram.value.map(item => item.selected_program?.id).filter(id => id);
       if (currentProgramIds.length > 0) {

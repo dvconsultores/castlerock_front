@@ -1000,7 +1000,6 @@ const updateStudent = async () => {
   !lastName.value || 
   !dateOfBirth.value || 
   !gender.value || 
-  !notes.value ||
   !start_date_class.value ||
   !select_center.value ) {
     showAlert('Please fill in all required fields', 'error');
@@ -1107,6 +1106,12 @@ const updateStudent = async () => {
       } else if(typeof selectedImgFather.value === 'string') {
         nothing.value=true;
       } 
+      const formDataObject = {};
+formData.forEach((value, key) => {
+  formDataObject[key] = value;
+});
+
+console.log('Form data being sent:', formDataObject);
       const response = await axiosInstance.patch(`/students/${studentId.value}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',

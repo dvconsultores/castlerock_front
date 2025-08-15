@@ -58,12 +58,12 @@
                   class="login-textfield"
                   placeholder="YYYY-DD-MM"
                   variant="solo"
-                  flat                  
+                  flat
+                  readonly
                   hide-details
                   append-inner-icon="mdi-calendar"
                   v-bind="props"
                   @click:append-inner="props.onClick"
-                  @change="onDateInputChange"
                 ></v-text-field>
               </template>
 
@@ -383,11 +383,11 @@
               placeholder="YYYY-DD-MM"
               variant="solo"
               flat
+              readonly
               hide-details
               append-inner-icon="mdi-calendar"
               v-bind="props"
               @click:append-inner="props.onClick"
-              @change="onDateInputChangeStartDate"
             ></v-text-field>
           </template>
 
@@ -500,19 +500,22 @@
         class="pa-2 flex center gap4"
       >
         <v-autocomplete
-          v-model="item.select_class"
+          v-model.number="item.select_class"
           placeholder="Select Class"
           flat
-          bg-color="#F0F0F0"
+          bg-color="#F0F0F0 "
           class="autocomplete-register"
           hide-details
           menu-icon="mdi-chevron-up"
           :items="selectClassItems"
           item-value="id"
-          :item-title="classItem => classItem.name + ' - ' + (classItem.campus?.name || '')"
+          item-title="name"
           return-object
+          @update:modelValue="val => select_class = val?.id"
           variant="solo"
-          :menu-props="{ contentClass: 'rounded-menu' }"
+          :menu-props="{
+            contentClass: 'rounded-menu',
+          }"
         ></v-autocomplete>
 
         <v-btn class="btn" flat @click="deleteClass(index)">
@@ -714,7 +717,7 @@ const formatDate = (date) => {
     formattedDate.value = '';
     return;
   }
-  formattedDate.value = dayjs(jsDate).format('MM-DD-YYYY');
+  formattedDate.value = dayjs(jsDate).format('YYYY-MM-DD');
 };
 
 const formatStartDate = (date) => {
@@ -727,36 +730,7 @@ const formatStartDate = (date) => {
     formattedStartDate.value = '';
     return;
   }
-  formattedStartDate.value = dayjs(jsDate).format('MM-DD-YYYY');
-};
-
-// Sync manual input from text field to dateOfBirth model
-const onDateInputChange = () => {
-  if (!formattedDate.value) {
-    dateOfBirth.value = null;
-    return;
-  }
-  // Try to parse the input using dayjs
-  const parsed = dayjs(formattedDate.value, ['MM-DD-YYYY', 'YYYY-MM-DD'], true);
-  if (parsed.isValid()) {
-    dateOfBirth.value = parsed.toDate();
-  } else {
-    dateOfBirth.value = null;
-  }
-};
-
-const onDateInputChangeStartDate = () => {
-  if (!formattedStartDate.value) {
-    start_date_class.value = null;
-    return;
-  }
-  // Try to parse the input using dayjs
-  const parsed = dayjs(formattedStartDate.value, ['MM-DD-YYYY', 'YYYY-MM-DD'], true);
-  if (parsed.isValid()) {
-    start_date_class.value = parsed.toDate();
-  } else {
-    start_date_class.value = null;
-  }
+  formattedStartDate.value = dayjs(jsDate).format('YYYY-MM-DD');
 };
 
 const dialogConfirmationStudent = ref(false);
@@ -928,7 +902,6 @@ const getClasses = async () => {
     dataClasses.value = response.data.result.map(classes => ({
       id: classes.id,
       name: classes.name,
-      campus: classes.campus,
     }));
 
     selectClassItems.value = dataClasses.value;
@@ -1011,10 +984,10 @@ const getDataStudent = async () => {
     contact_number2.value = student.contacts.find(contact => contact.role === 'EMERGENCY_2')?.phone || '';
     type_relationship2.value = student.contacts.find(contact => contact.role === 'EMERGENCY_2')?.relation || '';
     dataForProgram.value = student.additionalPrograms.map(program => ({
-      selected_program: { id: program.id, name: program.name },
+      selected_program: program.id,
     }));
     dataForClass.value = student.classes.map(classe => ({
-      select_class: classe,
+      select_class: classe.id,
     }));
   } catch (error) {
     showAlert(error, 'error');
@@ -1026,7 +999,8 @@ const updateStudent = async () => {
   if (!firstName.value || 
   !lastName.value || 
   !dateOfBirth.value || 
-  !gender.value ||
+  !gender.value || 
+  !notes.value ||
   !start_date_class.value ||
   !select_center.value ) {
     showAlert('Please fill in all required fields', 'error');
@@ -1053,7 +1027,6 @@ const updateStudent = async () => {
       if (saturday_enrolled.value) selectedDaysEnrolled.push("Saturday");
       if (sunday_enrolled.value) selectedDaysEnrolled.push("Sunday")
       appendDays('daysEnrolled', selectedDaysEnrolled);
-
       const selectedDaysBefore = [];
       if (monday_before.value) selectedDaysBefore.push("Monday");
       if (tuesday_before.value) selectedDaysBefore.push("Tuesday");
@@ -1061,13 +1034,8 @@ const updateStudent = async () => {
       if (thursday_before.value) selectedDaysBefore.push("Thursday");
       if (friday_before.value) selectedDaysBefore.push("Friday");
       if (saturday_before.value) selectedDaysBefore.push("Saturday");
-      if (sunday_before.value) selectedDaysBefore.push("Sunday");
-      if (selectedDaysBefore.length > 0) {
-        appendDays('beforeSchoolDays', selectedDaysBefore);
-      } else {
-        formData.append('beforeSchoolDays', '');
-      }
-
+      if (sunday_before.value) selectedDaysBefore.push("Sunday")
+      appendDays('beforeSchoolDays', selectedDaysBefore);
       const selectedDaysAfter = [];
       if (monday_after.value) selectedDaysAfter.push("Monday");
       if (tuesday_after.value) selectedDaysAfter.push("Tuesday");
@@ -1075,25 +1043,17 @@ const updateStudent = async () => {
       if (thursday_after.value) selectedDaysAfter.push("Thursday");
       if (friday_after.value) selectedDaysAfter.push("Friday");
       if (saturday_after.value) selectedDaysAfter.push("Saturday");
-      if (sunday_after.value) selectedDaysAfter.push("Sunday");
-      if (selectedDaysAfter.length > 0) {
-        appendDays('afterSchoolDays', selectedDaysAfter);
-      } else {
-        formData.append('afterSchoolDays', '');
-      }
+      if (sunday_after.value) selectedDaysAfter.push("Sunday")
+      appendDays('afterSchoolDays', selectedDaysAfter);
     
       const currentProgramIds = dataForProgram.value.map(item => item.selected_program?.id).filter(id => id);
       if (currentProgramIds.length > 0) {
         formData.append('additionalProgramIds', currentProgramIds);
-      } else {
-        formData.append('additionalProgramIds', '');
       }
 
       const currentClassIds = dataForClass.value.map(item => item.select_class?.id).filter(id => id);
       if (currentClassIds.length > 0) {
         formData.append('classIds', currentClassIds);
-      } else {
-        formData.append('classIds', '');
       }
       formData.append('campus', select_center.value.toString());
       const contactsData = [];

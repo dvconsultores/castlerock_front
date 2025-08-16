@@ -157,7 +157,6 @@ const filteredStudents = computed(() => {
 const getStudents = async () => {
   try {
     const response = await axiosInstance.get('/students');
-    
     dataStudents.value = response.data.result.map((student, index) => {
       ('Students:', response.data.result);
       const birthDate = dayjs(student.dateOfBirth);
@@ -180,7 +179,7 @@ const getStudents = async () => {
         name: student.firstName + ' ' + student.lastName,
         age: ageDisplay,
         gender: student.gender,
-        center: student.campus.name,
+        center: student.campus ? student.campus.name : '',
         classes: Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '',
         actions: ''
       };

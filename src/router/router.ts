@@ -101,25 +101,25 @@ const router = createRouter({
           path: 'new-weekly-schedule',
           name: 'new-weekly-schedule',
           component: () => import('@/views/new-weekly-schedule.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
           path: 'edit-weekly-schedule/:id',
           name: 'edit-weekly-schedule',
           component: () => import('@/views/edit-weekly-schedule.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
           path: 'daily-schedule/',
           name: 'daily-schedule',
           component: () => import('@/views/daily-schedule.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
           path: 'edit-daily-schedule/',
           name: 'edit-daily-schedule',
           component: () => import('@/views/edit-daily-schedule.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
           path: 'view-daily-schedule/:id',

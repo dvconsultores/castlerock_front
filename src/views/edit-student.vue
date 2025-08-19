@@ -333,12 +333,21 @@
       </v-btn>
 
       <v-col v-for="(item, index) in dataForClass" :key="index" cols="12" sm="12" class="pa-2 flex center gap4">
-        <v-autocomplete v-model.number="item.select_class" placeholder="Select Class" flat bg-color="#F0F0F0 "
-          class="autocomplete-register" hide-details menu-icon="mdi-chevron-up" :items="selectClassItems"
-          item-value="id" item-title="name" return-object @update:modelValue="val => select_class = val?.id"
-          variant="solo" :menu-props="{
-            contentClass: 'rounded-menu',
-          }"></v-autocomplete>
+        <v-autocomplete 
+        v-model.number="item.select_class" 
+        placeholder="Select Class" 
+        flat 
+        bg-color="#F0F0F0 "
+        class="autocomplete-register" 
+        hide-details 
+        menu-icon="mdi-chevron-up" 
+        :items="selectClassItems"
+        item-value="id" 
+        :item-title="item => item && item.name && item.class ? `${item.name} - ${item.class}` : ''"
+        return-object @update:modelValue="val => select_class = val?.id"
+        variant="solo" :menu-props="{
+          contentClass: 'rounded-menu',
+        }"></v-autocomplete>
 
         <v-btn class="btn" flat @click="deleteClass(index)">
           <v-icon>mdi-trash-can-outline</v-icon>
@@ -714,6 +723,7 @@ const getClasses = async () => {
     dataClasses.value = response.data.result.map(classes => ({
       id: classes.id,
       name: classes.name,
+      class: classes.campus.name,
     }));
 
     selectClassItems.value = dataClasses.value;
@@ -862,7 +872,9 @@ const updateStudent = async () => {
         formData.append('additionalProgramIds', currentProgramIds);
       }
 
-      const currentClassIds = dataForClass.value.map(item => item.select_class?.id).filter(id => id);
+      const currentClassIds = dataForClass.value
+        .map(item => typeof item.select_class === 'object' ? item.select_class.id : item.select_class)
+        .filter(id => id);
       if (currentClassIds.length > 0) {
         formData.append('classIds', currentClassIds);
       }

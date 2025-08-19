@@ -101,13 +101,13 @@ const router = createRouter({
           path: 'new-weekly-schedule',
           name: 'new-weekly-schedule',
           component: () => import('@/views/new-weekly-schedule.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
         },
         {
           path: 'edit-weekly-schedule/:id',
           name: 'edit-weekly-schedule',
           component: () => import('@/views/edit-weekly-schedule.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
         },
         {
           path: 'daily-schedule/',

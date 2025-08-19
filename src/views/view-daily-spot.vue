@@ -66,7 +66,6 @@ const notes = ref('');
 const route = useRoute();
 const scheduleId = ref(null);
 const day = ref('');
-const dayNumber = ref('');
 const month = ref('');
 const year = ref('');
 const showAlert = inject('showAlert');
@@ -116,6 +115,7 @@ const transformDatesMonth = async () => {
 };
 
 const scheduleData = ref([]);
+const planningData = ref([]);
 
 const getDailySchedule = async () => {
   try {
@@ -130,58 +130,65 @@ const getDailySchedule = async () => {
       program_id.value = scheduleData.planning.id;
       notes.value = scheduleData.notes || '';
       day.value = scheduleData.day;
-      dayNumber.value = dayjs(scheduleData.date).format('DD/MM/YY');
 
       const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
       const classType = scheduleData.planning.class.classType;
-      
-      const calculateAge = (dateOfBirth) => {
-        const birthDate = dayjs(dateOfBirth);
-        const today = dayjs();
-        
-        const years = today.diff(birthDate, 'year');
-        const months = today.diff(birthDate, 'month') % 12;
-        
-        return `${years} Y ${months} M`;
-      };
 
-      dailySchedules.value = daysOfWeek.map(day => {
-        // Determinar qué propiedad de días usar según el tipo de clase
-        let daysProperty;
-        switch(classType) {
-          case 'BEFORE_SCHOOL':
-            daysProperty = 'beforeSchoolDays';
-            break;
-          case 'AFTER_SCHOOL':
-            daysProperty = 'afterSchoolDays';
-            break;
-          case 'ENROLLED':
-          default:
-            daysProperty = 'daysEnrolled';
-        }
+      try {
+        const response = await axiosInstance.get(`/planning/${program_id.value}`);
+        const planningData = response.data.result;
+        console.log('Planning data:', planningData);
 
-        const studentsForDay = scheduleData.students?.filter(student => 
-          student[daysProperty]?.includes(day)
-        ) || [];
-        
-        return {
-          id: day,
-          day: day,
-          studentsLength: studentsForDay.length,
-          studentsCount: maxCapacity.value - studentsForDay.length,
-          studentsList: studentsForDay.map(student => 
-            `${student.firstName} ${student.lastName} (${calculateAge(student.dateOfBirth)})`
-          )
-        };
-      });
+        dailySchedules.value = daysOfWeek.map(dayName => {
+          const dailySchedule = planningData.dailySchedules.find(ds => ds.day === dayName);
+          
+          const studentsForDay = dailySchedule?.students || [];
+          
+          let daysProperty;
+          switch(classType) {
+            case 'BEFORE_SCHOOL':
+              daysProperty = 'beforeSchoolDays';
+              break;
+            case 'AFTER_SCHOOL':
+              daysProperty = 'afterSchoolDays';
+              break;
+            case 'ENROLLED':
+            default:
+              daysProperty = 'daysEnrolled';
+          }
 
-      console.log('Daily schedules with students and ages:', dailySchedules.value);
+          const calculateAge = (dateOfBirth) => {
+            const birthDate = dayjs(dateOfBirth);
+            const today = dayjs();
+            
+            const years = today.diff(birthDate, 'year');
+            const months = today.diff(birthDate, 'month') % 12;
+            
+            return `${years} Y ${months} M`;
+          };
+
+          return {
+            id: dayName,
+            day: dayName,
+            studentsLength: studentsForDay.length,
+            studentsCount: maxCapacity.value - studentsForDay.length,
+            studentsList: studentsForDay.map(student => 
+              `${student.firstName} ${student.lastName} (${calculateAge(student.dateOfBirth)})`
+            ),
+            date: dailySchedule?.date || '',
+            teachers: dailySchedule?.teachers || [],
+            rawStudents: studentsForDay
+          };
+        });
+
+      } catch (error) {
+        showAlert(error.response?.data?.message || 'Failed to load planning', 'error');
+      }
     }
   } catch (error) {
     showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
   }
 };
-
 
 onMounted(() => {
   scheduleId.value = route.params.id;
@@ -189,7 +196,6 @@ onMounted(() => {
   if (scheduleId.value) {
     getDailySchedule();
   }
-  
 });
 
 

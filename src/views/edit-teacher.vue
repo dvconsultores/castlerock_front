@@ -9,6 +9,7 @@
             class="textfield-registration"
             placeholder="Teacher Name"
             variant="solo" 
+            autocomplete="off"
             flat
             readonly
             hide-details
@@ -20,6 +21,7 @@
             v-model.number="select_center"
             placeholder="Select Center"
             flat
+            autocomplete="off"
             class="autocomplete-register"
             menu-icon="mdi-chevron-up"
             :items="selectCenterItems"
@@ -119,6 +121,7 @@
             v-model="item.select_class"
             placeholder="Select Class"
             flat
+            autocomplete="off"
             bg-color="#F0F0F0 "
             class="autocomplete-register"
             hide-details

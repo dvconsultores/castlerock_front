@@ -9,6 +9,7 @@
             :class="{'textfield-error': nameError, 'textfield-registration': true}"
             placeholder="Classroom Name"
             variant="solo" 
+            autocomplete="off"
             maxlength="150"
             flat
             hide-details
@@ -22,6 +23,7 @@
             placeholder="Number of students"
             variant="solo"
             maxlength="150" 
+            autocomplete="off"
             flat
             hide-details
             type="number"
@@ -34,6 +36,7 @@
             v-model="program"
             placeholder="Program"
             flat
+            autocomplete="off"
             :class="{'textfield-error': programError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="['PRIMARY', 'TODDLER']"
@@ -50,6 +53,7 @@
             v-model.number="select_center"
             placeholder="Select Center"
             flat
+            autocomplete="off"
             :class="{'textfield-error': selectCenterError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="selectCenterItems"
@@ -70,6 +74,7 @@
             v-model="classType"
             placeholder="Select Class Type"
             flat
+            autocomplete="off"
             :class="{'textfield-error': selectClassTypeError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="selectClassTypeItems"

@@ -31,6 +31,7 @@
               :class="{'textfield-error': firstNameError, 'login-textfield': true}"
               placeholder="Student Name"
               variant="solo" 
+              autocomplete="off"
               flat
               maxlength="150"
               hide-details
@@ -43,6 +44,7 @@
               placeholder="Student Last Name"
               variant="solo" 
               flat
+              autocomplete="off"
               maxlength="150"
               hide-details
             ></v-text-field>
@@ -59,6 +61,7 @@
                   placeholder="Date of Birth"
                   variant="solo"
                   flat
+                  autocomplete="off"
                   hide-details
                   append-inner-icon="mdi-calendar"
                   v-bind="props"
@@ -81,6 +84,7 @@
               v-model.number="select_center"
               placeholder="Select Center"
               flat
+              autocomplete="off"
               :class="{'textfield-error': campusError, 'autocomplete-register': true}"
               menu-icon="mdi-chevron-up"
               :items="selectCenterItems"
@@ -119,6 +123,7 @@
               v-model="gender"
               placeholder="Gender"
               flat
+              autocomplete="off"
               :class="{'textfield-error': genderError, 'autocomplete-register': true}"
               menu-icon="mdi-chevron-up"
               :items="['M', 'F', 'Other']"
@@ -173,6 +178,7 @@
           bg-color="#F0F0F0 "
           placeholder="Mother's Name"
           variant="solo" 
+          autocomplete="off"
           maxlength="150"
           flat
           hide-details
@@ -185,6 +191,7 @@
           bg-color="#F0F0F0 "
           placeholder="Father's Name"
           variant="solo" 
+          autocomplete="off"
           maxlength="150"
           flat
           hide-details
@@ -198,6 +205,7 @@
           placeholder="Mother's contact number"
           variant="solo" 
           flat
+          autocomplete="off"
           maxlength="150"
           type="number"
           hide-spin-buttons
@@ -213,6 +221,7 @@
           placeholder="Father's contact number"
           variant="solo" 
           type="number"
+          autocomplete="off"
           maxlength="150"
           hide-spin-buttons
           flat
@@ -225,6 +234,7 @@
           v-model="mothers_role"
           placeholder="Role"
           flat
+          autocomplete="off"
           bg-color="#F0F0F0"
           :class="{'textfield-error': contactsError, 'autocomplete-register': true}"
           menu-icon="mdi-chevron-up"
@@ -241,6 +251,7 @@
           v-model="fathers_role"
           placeholder="Role"
           flat
+          autocomplete="off"
           bg-color="#F0F0F0"
           :class="{'textfield-error': contactsError, 'autocomplete-register': true}"
           menu-icon="mdi-chevron-up"
@@ -264,6 +275,7 @@
           v-model="contact_name"
           class="login-textfield"
           bg-color="#F0F0F0 "
+          autocomplete="off"
           placeholder="Contact Name 1"
           variant="solo" 
           maxlength="150"
@@ -278,6 +290,7 @@
           class="login-textfield"
           bg-color="#F0F0F0 "
           maxlength="150"
+          autocomplete="off"
           placeholder="Contact Name 2"
           variant="solo" 
           flat
@@ -290,6 +303,7 @@
           v-model="type_relationship1"
           placeholder="Type of Relationship 1"
           flat
+          autocomplete="off"
           bg-color="#F0F0F0 "
           class="autocomplete-register"
           menu-icon="mdi-chevron-up"
@@ -307,6 +321,7 @@
           v-model="type_relationship2"
           placeholder="Type of Relationship 2"
           flat
+          autocomplete="off"
           bg-color="#F0F0F0 "
           class="autocomplete-register"
           hide-details
@@ -325,6 +340,7 @@
           class="login-textfield"
           bg-color="#F0F0F0"
           maxlength="150"
+          autocomplete="off"
           placeholder="Contact Number 1"
           variant="solo" 
           append-inner-icon="mdi-phone-outline"
@@ -338,6 +354,7 @@
           v-model="contact_number2"
           class="login-textfield"
           maxlength="150"
+          autocomplete="off"
           bg-color="#F0F0F0 "
           placeholder="Contact Number 2"
           variant="solo" 
@@ -381,6 +398,7 @@
               :class="{'textfield-error': startDateError, 'login-textfield': true}"
               placeholder="First day of school"
               variant="solo"
+              autocomplete="off"
               flat
               hide-details
               append-inner-icon="mdi-calendar"
@@ -501,6 +519,7 @@
           v-model="item.select_class"
           placeholder="Select Class"
           flat
+          autocomplete="off"
           bg-color="#F0F0F0 "
           class="autocomplete-register"
           hide-details
@@ -541,6 +560,7 @@
           v-model.number="item.selected_program"
           placeholder="Select Program"
           flat
+          autocomplete="off"
           bg-color="#F0F0F0 "
           class="autocomplete-register"
           hide-details

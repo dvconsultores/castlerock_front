@@ -12,6 +12,7 @@
       v-model="email"
       variant="solo"
       flat
+      autocomplete="off"
       prepend-inner-icon="mdi-email-outline"
       placeholder="Enter your email or username"
       :class="{'textfield-error': emailError, 'login-textfield': true, 'mt-14': true}"
@@ -25,6 +26,7 @@
       v-model="password"
       variant="solo"
       flat
+      autocomplete="off"
       maxlength="150"
       prepend-inner-icon="mdi-lock-outline"
       :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"

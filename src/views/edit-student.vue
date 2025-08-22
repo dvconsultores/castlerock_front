@@ -23,11 +23,11 @@
       <v-col sm="10" cols="12" class="pl-0 pr-0">
         <v-row no-gutters>
           <v-col cols="12" sm="6" class="pa-2">
-            <v-text-field v-model="firstName" class="login-textfield" placeholder="Student Name" variant="solo"
+            <v-text-field v-model="firstName" autocomplete="off" class="login-textfield" placeholder="Student Name" variant="solo"
               maxLength="150" flat hide-details></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="pa-2">
-            <v-text-field v-model="lastName" class="login-textfield" maxLength="150" placeholder="Student Last Name"
+            <v-text-field v-model="lastName" autocomplete="off" class="login-textfield" maxLength="150" placeholder="Student Last Name"
               variant="solo" flat hide-details></v-text-field>
           </v-col>
         </v-row>
@@ -36,7 +36,7 @@
           <v-col cols="12" sm="4" class="pa-2">
             <v-menu :close-on-content-click="false">
               <template v-slot:activator="{ props }">
-                <v-text-field v-model="formattedDate" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+                <v-text-field v-model="formattedDate" autocomplete="off"class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
                   flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
                   @click:append-inner="props.onClick"></v-text-field>
               </template>
@@ -47,7 +47,7 @@
           </v-col>
           <v-col cols="12" sm="4" class="pa-2">
             <v-autocomplete v-model.number="select_center" placeholder="Select Center" flat
-              class="autocomplete-register" menu-icon="mdi-chevron-up" :items="selectCenterItems" item-value="id"
+              class="autocomplete-register" autocomplete="off" menu-icon="mdi-chevron-up" :items="selectCenterItems" item-value="id"
               item-title="name" return-object @update:modelValue="val => select_center = val?.id" variant="solo"
               :menu-props="{
                 contentClass: 'rounded-menu',
@@ -74,7 +74,7 @@
             ></v-text-field>
           </v-col> -->
           <v-col cols="12" sm="4" class="pa-2">
-            <v-autocomplete v-model="gender" placeholder="Gender" flat class="autocomplete-register"
+            <v-autocomplete v-model="gender" autocomplete="off" placeholder="Gender" flat class="autocomplete-register"
               menu-icon="mdi-chevron-up" :items="['M', 'F', 'Other']" variant="solo" :menu-props="{
                 contentClass: 'rounded-menu',
               }"></v-autocomplete>
@@ -114,32 +114,32 @@
         </div>
       </v-col>
       <v-col cols="12" sm="6" class="pa-2">
-        <v-text-field v-model="mothers_name" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
+        <v-text-field v-model="mothers_name" autocomplete="off" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
           placeholder="Mother's Name" variant="solo" flat hide-details></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" class="pa-2">
-        <v-text-field v-model="fathers_name" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
+        <v-text-field v-model="fathers_name" autocomplete="off" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
           placeholder="Father's Name" variant="solo" flat hide-details></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" class="pa-2">
-        <v-text-field v-model="mothers_number" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
+        <v-text-field v-model="mothers_number" autocomplete="off" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
           placeholder="Mother's contact number" variant="solo" flat type="number" hide-spin-buttons
           append-inner-icon="mdi-phone-outline" hide-details></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" class="pa-2">
-        <v-text-field v-model="fathers_number" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
+        <v-text-field v-model="fathers_number" autocomplete="off" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
           placeholder="Father's contact number" variant="solo" type="number" hide-spin-buttons flat hide-details
           append-inner-icon="mdi-phone-outline"></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" class="pa-2">
-        <v-autocomplete v-model="mothers_role" placeholder="Role" maxLength="150" flat bg-color="#F0F0F0"
+        <v-autocomplete v-model="mothers_role" autocomplete="off" placeholder="Role" maxLength="150" flat bg-color="#F0F0F0"
           class="autocomplete-register" menu-icon="mdi-chevron-up" hide-details :items="['PRIMARY', 'SECONDARY']"
           variant="solo" :menu-props="{
             contentClass: 'rounded-menu',
           }"></v-autocomplete>
       </v-col>
       <v-col cols="12" sm="6" class="pa-2">
-        <v-autocomplete v-model="fathers_role" placeholder="Role" flat bg-color="#F0F0F0" class="autocomplete-register"
+        <v-autocomplete v-model="fathers_role" autocomplete="off" placeholder="Role" flat bg-color="#F0F0F0" class="autocomplete-register"
           menu-icon="mdi-chevron-up" hide-details :items="['PRIMARY', 'SECONDARY']" variant="solo" :menu-props="{
             contentClass: 'rounded-menu',
           }"></v-autocomplete>
@@ -152,17 +152,17 @@
       </v-col>
 
       <v-col cols="12" sm="6" class="pa-2">
-        <v-text-field v-model="contact_name" class="login-textfield" bg-color="#F0F0F0 " maxLength="150"
+        <v-text-field v-model="contact_name" autocomplete="off" class="login-textfield" bg-color="#F0F0F0 " maxLength="150"
           placeholder="Contact Name 1" variant="solo" flat hide-details></v-text-field>
       </v-col>
 
       <v-col cols="12" sm="6" class="pa-2">
-        <v-text-field v-model="contact_name2" class="login-textfield" bg-color="#F0F0F0 " maxLength="150"
+        <v-text-field v-model="contact_name2" autocomplete="off" class="login-textfield" bg-color="#F0F0F0 " maxLength="150"
           placeholder="Contact Name 2" variant="solo" flat hide-details></v-text-field>
       </v-col>
 
       <v-col cols="12" sm="6" class="pa-2">
-        <v-autocomplete v-model="type_relationship1" placeholder="Type of Relationship 1" flat bg-color="#F0F0F0 "
+        <v-autocomplete v-model="type_relationship1" autocomplete="off" placeholder="Type of Relationship 1" flat bg-color="#F0F0F0 "
           class="autocomplete-register" menu-icon="mdi-chevron-up" hide-details
           :items="['Grandmother', 'Grandfather', 'Aunt', 'Uncle', 'Sibling', 'Legal Guardian', 'Family Friend', 'Other']"
           variant="solo" :menu-props="{
@@ -171,7 +171,7 @@
       </v-col>
 
       <v-col cols="12" sm="6" class="pa-2">
-        <v-autocomplete v-model="type_relationship2" placeholder="Type of Relationship 2" flat bg-color="#F0F0F0 "
+        <v-autocomplete v-model="type_relationship2" autocomplete="off" placeholder="Type of Relationship 2" flat bg-color="#F0F0F0 "
           class="autocomplete-register" hide-details menu-icon="mdi-chevron-up"
           :items="['Grandmother', 'Grandfather', 'Aunt', 'Uncle', 'Sibling', 'Legal Guardian', 'Family Friend', 'Other']"
           variant="solo" :menu-props="{
@@ -180,13 +180,13 @@
       </v-col>
 
       <v-col cols="12" sm="6" class="pa-2">
-        <v-text-field v-model="contact_number" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
+        <v-text-field v-model="contact_number" autocomplete="off" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
           placeholder="Contact Number 1" variant="solo" append-inner-icon="mdi-phone-outline" flat
           hide-details></v-text-field>
       </v-col>
 
       <v-col cols="12" sm="6" class="pa-2">
-        <v-text-field v-model="contact_number2" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
+        <v-text-field v-model="contact_number2" autocomplete="off" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
           placeholder="Contact Number 2" variant="solo" append-inner-icon="mdi-phone-outline" flat
           hide-details></v-text-field>
       </v-col>
@@ -213,7 +213,7 @@
       <v-col cols="12" sm="12" class="pa-2">
         <v-menu :close-on-content-click="false">
           <template v-slot:activator="{ props }">
-            <v-text-field v-model="formattedStartDate" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+            <v-text-field v-model="formattedStartDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
               flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
               @click:append-inner="props.onClick"></v-text-field>
           </template>
@@ -337,6 +337,7 @@
         v-model.number="item.select_class" 
         placeholder="Select Class" 
         flat 
+        autocomplete="off"
         bg-color="#F0F0F0 "
         class="autocomplete-register" 
         hide-details 
@@ -365,7 +366,7 @@
       </v-btn>
 
       <v-col v-for="(item, index) in dataForProgram" :key="index" cols="12" sm="12" class="pa-2 flex center gap4">
-        <v-autocomplete v-model.number="item.selected_program" placeholder="Select Program" flat bg-color="#F0F0F0 "
+        <v-autocomplete v-model.number="item.selected_program" autocomplete="off" placeholder="Select Program" flat bg-color="#F0F0F0 "
           class="autocomplete-register" hide-details menu-icon="mdi-chevron-up" :items="selectProgramItem"
           item-value="id" item-title="name" return-object @update:modelValue="val => selected_program = val?.id"
           variant="solo" :menu-props="{

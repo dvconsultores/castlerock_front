@@ -8,6 +8,7 @@
             v-model="first_name"
             class="textfield-registration"
             placeholder="First Name"
+            autocomplete="off"
             variant="solo" 
             maxlength="150"
             flat
@@ -20,6 +21,7 @@
             v-model="last_name"
             class="textfield-registration"
             placeholder="Last Name"
+            autocomplete="off"
             maxlength="150"
             variant="solo" 
             flat
@@ -32,6 +34,7 @@
             v-model="email"
             class="textfield-registration"
             placeholder="Email"
+            autocomplete="off"
             maxlength="150"
             variant="solo" 
             flat
@@ -45,6 +48,7 @@
             class="textfield-registration"
             placeholder="Phone"
             type="text"
+            autocomplete="off"
             maxlength="150"
             variant="solo" 
             hide-spin-buttons
@@ -58,6 +62,7 @@
             v-model="select_role"
             placeholder="Select Role"
             flat
+            autocomplete="off"
             class="autocomplete-register"
             menu-icon="mdi-chevron-up"
             :items="itemsRole"

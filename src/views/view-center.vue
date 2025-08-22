@@ -9,6 +9,7 @@
             class="textfield-registration"
             placeholder="Center Name"
             variant="solo" 
+            autocomplete="off"
             readonly
             flat
             hide-details
@@ -22,6 +23,7 @@
             placeholder="Phone of the center"
             variant="solo" 
             flat
+            autocomplete="off"
             readonly
             hide-details
             type="number"
@@ -36,6 +38,7 @@
             placeholder="Nickname of the center"
             variant="solo" 
             flat
+            autocomplete="off"
             readonly
             hide-details
           ></v-text-field>
@@ -47,6 +50,7 @@
             class="textfield-registration"
             placeholder="Location"
             variant="solo" 
+            autocomplete="off"
             readonly
             flat
             hide-details

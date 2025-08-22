@@ -9,6 +9,7 @@
             :class="{'textfield-error': nameError, 'textfield-registration': true}"
             placeholder="Activity Name"
             variant="solo" 
+            autocomplete="off"
             flat
             hide-details
           ></v-text-field>
@@ -22,6 +23,7 @@
             :class="{'textfield-error': selectCenterError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="selectCenterItems"
+            autocomplete="off"
             item-value="id"
             item-title="name"
             return-object

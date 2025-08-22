@@ -44,6 +44,7 @@
               class="login-textfield mb-6"
               placeholder="Search Student"
               bg-color="#F0F0F0 "
+              autocomplete="off"
               variant="solo" 
               flat
               hide-details

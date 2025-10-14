@@ -383,9 +383,9 @@ const dataSheets = ref([
   },
   {
     imgIcon: classroms,
-    titleSheet: 'Create a Class',
-    subTitleSheet: 'Add class',
-    route: '/home/new-classroom',
+    titleSheet: 'Future Enrollments',
+    subTitleSheet: 'Check Future Enrollments',
+    route: '/home/new-enrollments',
   },
   {
     imgIcon: students,
@@ -394,10 +394,10 @@ const dataSheets = ref([
     route: '/home/student-registration',
   },
   {
-    imgIcon: teachers,
-    titleSheet: 'Teacher',
-    subTitleSheet: 'Assign a Classroom',
-    route: '/home/new-teacher'
+    imgIcon: calendar,
+    titleSheet: 'Withdrawal Dates',
+    subTitleSheet: 'Check Withdrawal Dates',
+    route: '/home/withdrawal-dates',
   },
   {
     imgIcon: centers,

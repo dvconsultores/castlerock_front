@@ -134,6 +134,8 @@ const pageTitles = {
   '/home/users': 'Users',
   '/home/new-user': 'New user',
   '/home/new-classroom': 'New Classroom',
+  '/home/withdrawal-dates': 'Withdrawal Dates',
+  '/home/new-enrollments': 'Future Enrollments',
 };
 
 const currentTitle = computed(() => {

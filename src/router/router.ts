@@ -62,6 +62,18 @@ const router = createRouter({
           meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
+          path: 'new-enrollments',
+          name: 'new-enrollments',
+          component: () => import('@/views/new-enrollments.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+        },
+        {
+          path: 'withdrawal-dates',
+          name: 'withdrawal-dates',
+          component: () => import('@/views/withdrawal-dates.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+        },
+        {
           path: 'programs',
           name: 'programs',
           component: () => import('@/views/programs.vue'),

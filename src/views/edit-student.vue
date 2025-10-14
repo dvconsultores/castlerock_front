@@ -206,155 +206,289 @@
     <v-row class="fullw mt-10 mb-2">
       <v-col cols="12" align="left" class="pa-2">
         <h3 class="font2 tleft" style="color: #262B63;">
-          Enrollment
+          Withdrawal
         </h3>
       </v-col>
 
       <v-col cols="12" sm="12" class="pa-2">
         <v-menu :close-on-content-click="false">
           <template v-slot:activator="{ props }">
-            <v-text-field v-model="formattedStartDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+            <v-text-field v-model="formattedEndDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
               flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
               @click:append-inner="props.onClick"></v-text-field>
           </template>
 
-          <v-date-picker v-model="start_date_class" @update:model-value="formatStartDate" :max-date="new Date()"
+          <v-date-picker v-model="end_date_class" @update:model-value="formatEndDate" :max-date="new Date()"
             :close-on-click="false" :close-on-content-click="false"></v-date-picker>
         </v-menu>
       </v-col>
 
-      <!-- <v-col cols="12" sm="4" class="pa-2">
-        <v-autocomplete
-          v-model="program"
-          placeholder="Program"
-          flat
-          class="autocomplete-register"
-          hide-details
-          menu-icon="mdi-chevron-up"
-          :items="['Primary', 'Toddler']"
-          variant="solo"
-          :menu-props="{
-            contentClass: 'rounded-menu',
-          }"
-        ></v-autocomplete>
-      </v-col>
+      <template v-if="enrolled_btn">
+        <v-col cols="12" align="left">
+          <div class="custom-toggle">
+            <v-btn value="teachers" flat class="toggle-btn" @click="activeEnrolled" :class="{ 'active-toggle': enrolled_btn }"> 
+              Enrolled 
+            </v-btn>
+            <v-btn value="students" flat class="toggle-btn" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
+              Transition 
+            </v-btn>
+          </div>
+        </v-col>
 
-      <v-col cols="12" sm="4" class="pa-2">
-        <v-autocomplete
-          v-model="days"
-          placeholder="Schedule"
-          flat
-          class="autocomplete-register"
-          hide-details
-          menu-icon="mdi-chevron-up"
-          :items="['1 Day', '2 Days', '3 Days', '4 Days', '5 Days']"
-          variant="solo"
-          :menu-props="{
-            contentClass: 'rounded-menu',
-          }"
-        ></v-autocomplete>
-      </v-col> -->
+        <v-col cols="12" align="left" class="pa-2">
+          <h3 class="font2 tleft" style="color: #262B63;">
+            Enrollment
+          </h3>
+        </v-col>
+
+        <v-col cols="12" sm="12" class="pa-2">
+          <v-menu :close-on-content-click="false">
+            <template v-slot:activator="{ props }">
+              <v-text-field v-model="formattedStartDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+                flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
+                @click:append-inner="props.onClick"></v-text-field>
+            </template>
+
+            <v-date-picker v-model="start_date_class" @update:model-value="formatStartDate" :max-date="new Date()"
+              :close-on-click="false" :close-on-content-click="false"></v-date-picker>
+          </v-menu>
+        </v-col>
+      </template>
+
+      <template v-if="transition_btn">
+        <v-col cols="12" align="left">
+          <div class="custom-toggle">
+            <v-btn value="teachers" flat class="toggle-btn" @click="activeEnrolled" :class="{ 'active-toggle': enrolled_btn }"> 
+              Enrolled 
+            </v-btn>
+            <v-btn value="students" flat class="toggle-btn" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
+              Transition 
+            </v-btn>
+          </div>
+        </v-col>
+
+        <v-col cols="12" align="left" class="pa-2">
+          <h3 class="font2 tleft" style="color: #262B63;">
+            Transition
+          </h3>
+        </v-col>
+
+        <v-col cols="12" sm="12" class="pa-2">
+          <v-menu :close-on-content-click="false">
+            <template v-slot:activator="{ props }">
+              <v-text-field v-model="formattedTransitionDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+                flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
+                @click:append-inner="props.onClick"></v-text-field>
+            </template>
+
+            <v-date-picker v-model="transition_date_class" @update:model-value="formatTransitionDate" :max-date="new Date()"
+              :close-on-click="false" :close-on-content-click="false"></v-date-picker>
+          </v-menu>
+        </v-col>
+      </template>
     </v-row>
 
-    <v-row class="container-checkboxes mb-3">
-      <v-col cols="12" align="left">
-        <span class="font2 f24 tleft" style="color: #262262;">Days Enrolled</span>
-      </v-col>
+    <template v-if="enrolled_btn">
+      <v-row class="container-checkboxes mb-3">
+        <v-col cols="12" align="left">
+          <span class="font2 f24 tleft" style="color: #262262;">Days Enrolled</span>
+        </v-col>
 
-      <v-col cols="12" class="jspace">
-        <v-checkbox v-model="monday_enrolled" density="compact" hide-details label="Monday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="tuesday_enrolled" density="compact" hide-details label="Tuesday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="wednesday_enrolled" density="compact" hide-details label="Wednesday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="thursday_enrolled" density="compact" hide-details label="Thursday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="friday_enrolled" density="compact" hide-details label="Friday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="saturday_enrolled" density="compact" hide-details label="Saturday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="sunday_enrolled" density="compact" hide-details label="Sunday"
-          color="#3C3C434D"></v-checkbox>
-      </v-col>
-    </v-row>
+        <v-col cols="12" class="jspace">
+          <v-checkbox v-model="monday_enrolled" density="compact" hide-details label="Monday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="tuesday_enrolled" density="compact" hide-details label="Tuesday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="wednesday_enrolled" density="compact" hide-details label="Wednesday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="thursday_enrolled" density="compact" hide-details label="Thursday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="friday_enrolled" density="compact" hide-details label="Friday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="saturday_enrolled" density="compact" hide-details label="Saturday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="sunday_enrolled" density="compact" hide-details label="Sunday"
+            color="#3C3C434D"></v-checkbox>
+        </v-col>
+      </v-row>
 
-    <v-row class="container-checkboxes mb-3">
-      <v-col cols="12" align="left">
-        <span class="font2 f24 tleft" style="color: #262262;">Before school</span>
-      </v-col>
+      <v-row class="container-checkboxes mb-3">
+        <v-col cols="12" align="left">
+          <span class="font2 f24 tleft" style="color: #262262;">Before school</span>
+        </v-col>
 
-      <v-col cols="12" class="jspace">
-        <v-checkbox v-model="monday_before" density="compact" hide-details label="Monday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="tuesday_before" density="compact" hide-details label="Tuesday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="wednesday_before" density="compact" hide-details label="Wednesday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="thursday_before" density="compact" hide-details label="Thursday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="friday_before" density="compact" hide-details label="Friday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="saturday_before" density="compact" hide-details label="Saturday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="sunday_before" density="compact" hide-details label="Sunday"
-          color="#3C3C434D"></v-checkbox>
-      </v-col>
-    </v-row>
+        <v-col cols="12" class="jspace">
+          <v-checkbox v-model="monday_before" density="compact" hide-details label="Monday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="tuesday_before" density="compact" hide-details label="Tuesday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="wednesday_before" density="compact" hide-details label="Wednesday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="thursday_before" density="compact" hide-details label="Thursday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="friday_before" density="compact" hide-details label="Friday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="saturday_before" density="compact" hide-details label="Saturday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="sunday_before" density="compact" hide-details label="Sunday"
+            color="#3C3C434D"></v-checkbox>
+        </v-col>
+      </v-row>
 
-    <v-row class="container-checkboxes">
-      <v-col cols="12" align="left">
-        <span class="font2 f24 tleft" style="color: #262262;">After school</span>
-      </v-col>
+      <v-row class="container-checkboxes">
+        <v-col cols="12" align="left">
+          <span class="font2 f24 tleft" style="color: #262262;">After school</span>
+        </v-col>
 
-      <v-col cols="12" class="jspace">
-        <v-checkbox v-model="monday_after" density="compact" hide-details label="Monday" color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="tuesday_after" density="compact" hide-details label="Tuesday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="wednesday_after" density="compact" hide-details label="Wednesday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="thursday_after" density="compact" hide-details label="Thursday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="friday_after" density="compact" hide-details label="Friday" color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="saturday_after" density="compact" hide-details label="Saturday"
-          color="#3C3C434D"></v-checkbox>
-        <v-checkbox v-model="sunday_after" density="compact" hide-details label="Sunday" color="#3C3C434D"></v-checkbox>
-      </v-col>
-    </v-row>
+        <v-col cols="12" class="jspace">
+          <v-checkbox v-model="monday_after" density="compact" hide-details label="Monday" color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="tuesday_after" density="compact" hide-details label="Tuesday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="wednesday_after" density="compact" hide-details label="Wednesday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="thursday_after" density="compact" hide-details label="Thursday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="friday_after" density="compact" hide-details label="Friday" color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="saturday_after" density="compact" hide-details label="Saturday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="sunday_after" density="compact" hide-details label="Sunday" color="#3C3C434D"></v-checkbox>
+        </v-col>
+      </v-row>
 
+      <v-row class="fullw mt-10 big-checkboxes-container">
+        <v-col cols="12" align="left">
+          <span class="font2 f24 tleft" style="color: #262262;">Class</span>
+        </v-col>
 
-    <v-row class="fullw mt-10 big-checkboxes-container">
-      <v-col cols="12" align="left">
-        <span class="font2 f24 tleft" style="color: #262262;">Class</span>
-      </v-col>
-
-      <v-btn flat class="add-icon btn" @click="addClass">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-
-      <v-col v-for="(item, index) in dataForClass" :key="index" cols="12" sm="12" class="pa-2 flex center gap4">
-        <v-autocomplete 
-        v-model.number="item.select_class" 
-        placeholder="Select Class" 
-        flat 
-        autocomplete="off"
-        bg-color="#F0F0F0 "
-        class="autocomplete-register" 
-        hide-details 
-        menu-icon="mdi-chevron-up" 
-        :items="selectClassItems"
-        item-value="id" 
-        :item-title="item => item && item.name && item.class ? `${item.name} - ${item.class}` : ''"
-        return-object @update:modelValue="val => select_class = val?.id"
-        variant="solo" :menu-props="{
-          contentClass: 'rounded-menu',
-        }"></v-autocomplete>
-
-        <v-btn class="btn" flat @click="deleteClass(index)">
-          <v-icon>mdi-trash-can-outline</v-icon>
+        <v-btn flat class="add-icon btn" @click="addClass">
+          <v-icon>mdi-plus</v-icon>
         </v-btn>
-      </v-col>
-    </v-row>
+
+        <v-col v-for="(item, index) in dataForClass" :key="index" cols="12" sm="12" class="pa-2 flex center gap4">
+          <v-autocomplete 
+          v-model.number="item.select_class" 
+          placeholder="Select Class" 
+          flat 
+          autocomplete="off"
+          bg-color="#F0F0F0 "
+          class="autocomplete-register" 
+          hide-details 
+          menu-icon="mdi-chevron-up" 
+          :items="selectClassItems"
+          item-value="id" 
+          :item-title="item => item && item.name && item.class ? `${item.name} - ${item.class}` : ''"
+          return-object @update:modelValue="val => select_class = val?.id"
+          variant="solo" :menu-props="{
+            contentClass: 'rounded-menu',
+          }"></v-autocomplete>
+
+          <v-btn class="btn" flat @click="deleteClass(index)">
+            <v-icon>mdi-trash-can-outline</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </template>
+
+    <template v-if="transition_btn">
+      <v-row class="container-checkboxes mb-3">
+        <v-col cols="12" align="left">
+          <span class="font2 f24 tleft" style="color: #262262;">Days Enrolled Transition</span>
+        </v-col>
+
+        <v-col cols="12" class="jspace">
+          <v-checkbox v-model="monday_enrolled_transition" density="compact" hide-details label="Monday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="tuesday_enrolled_transition" density="compact" hide-details label="Tuesday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="wednesday_enrolled_transition" density="compact" hide-details label="Wednesday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="thursday_enrolled_transition" density="compact" hide-details label="Thursday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="friday_enrolled_transition" density="compact" hide-details label="Friday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="saturday_enrolled_transition" density="compact" hide-details label="Saturday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="sunday_enrolled_transition" density="compact" hide-details label="Sunday"
+            color="#3C3C434D"></v-checkbox>
+        </v-col>
+      </v-row>
+
+      <v-row class="container-checkboxes mb-3">
+        <v-col cols="12" align="left">
+          <span class="font2 f24 tleft" style="color: #262262;">Before School Transition</span>
+        </v-col>
+
+        <v-col cols="12" class="jspace">
+          <v-checkbox v-model="monday_before_transition" density="compact" hide-details label="Monday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="tuesday_before_transition" density="compact" hide-details label="Tuesday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="wednesday_before_transition" density="compact" hide-details label="Wednesday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="thursday_before_transition" density="compact" hide-details label="Thursday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="friday_before_transition" density="compact" hide-details label="Friday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="saturday_before_transition" density="compact" hide-details label="Saturday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="sunday_before_transition" density="compact" hide-details label="Sunday"
+            color="#3C3C434D"></v-checkbox>
+        </v-col>
+      </v-row>
+
+      <v-row class="container-checkboxes">
+        <v-col cols="12" align="left">
+          <span class="font2 f24 tleft" style="color: #262262;">After School Transition</span>
+        </v-col>
+
+        <v-col cols="12" class="jspace">
+          <v-checkbox v-model="monday_after_transition" density="compact" hide-details label="Monday" color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="tuesday_after_transition" density="compact" hide-details label="Tuesday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="wednesday_after_transition" density="compact" hide-details label="Wednesday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="thursday_after_transition" density="compact" hide-details label="Thursday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="friday_after_transition" density="compact" hide-details label="Friday" color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="saturday_after_transition" density="compact" hide-details label="Saturday"
+            color="#3C3C434D"></v-checkbox>
+          <v-checkbox v-model="sunday_after_transition" density="compact" hide-details label="Sunday" color="#3C3C434D"></v-checkbox>
+        </v-col>
+      </v-row>
+
+      <v-row class="fullw mt-10 big-checkboxes-container">
+        <v-col cols="12" align="left">
+          <span class="font2 f24 tleft" style="color: #262262;">Class</span>
+        </v-col>
+
+        <v-btn flat class="add-icon btn" @click="addClassTransition">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+
+        <v-col v-for="(item, index) in dataForClassTransition" :key="index" cols="12" sm="12" class="pa-2 flex center gap4">
+          <v-autocomplete 
+          v-model.number="item.select_class_transition" 
+          placeholder="Select Class" 
+          flat 
+          autocomplete="off"
+          bg-color="#F0F0F0 "
+          class="autocomplete-register" 
+          hide-details 
+          menu-icon="mdi-chevron-up" 
+          :items="selectClassItems"
+          item-value="id" 
+          :item-title="item => item && item.name && item.class ? `${item.name} - ${item.class}` : ''"
+          return-object @update:modelValue="val => select_class_transition = val?.id"
+          variant="solo" :menu-props="{
+            contentClass: 'rounded-menu',
+          }"></v-autocomplete>
+
+          <v-btn class="btn" flat @click="deleteClassTransition(index)">
+            <v-icon>mdi-trash-can-outline</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </template>
 
     <v-row class="fullw mt-10 big-checkboxes-container">
       <v-col cols="12" align="left">
@@ -377,120 +511,6 @@
           <v-icon>mdi-trash-can-outline</v-icon>
         </v-btn>
       </v-col>
-
-      <!-- <v-col cols="12" sm="4" class="pa-2">
-        <v-text-field
-          v-model="sessions"
-          class="login-textfield"
-          placeholder="Sessions"
-          variant="solo" 
-          flat
-          bg-color="#F0F0F0"
-          type="number"
-          hide-spin-buttons
-          hide-details
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12" sm="4" class="pa-2">
-        <v-text-field
-          v-model="duration"
-          class="login-textfield"
-          placeholder="Duration"
-          variant="solo" 
-          flat
-          bg-color="#F0F0F0"
-          hide-details
-        ></v-text-field>
-      </v-col> -->
-
-      <!-- <v-col cols="12" sm="3" class="pa-2">
-        <v-autocomplete
-          placeholder="Schedule"
-          flat
-          bg-color="#F0F0F0 "
-          class="autocomplete-register"
-          hide-details
-          menu-icon="mdi-chevron-up"
-          :items="['1 Day', '2 Days', '3 Days', '4 Days', '5 Days']"
-          variant="solo"
-          :menu-props="{
-            contentClass: 'rounded-menu',
-          }"
-        ></v-autocomplete>
-      </v-col> -->
-
-      <!-- <v-col cols="12" class="mt-6" align="center">
-        <v-row class="container-checkboxes-inset pa-0">
-          <v-col cols="12" align="left">
-            <span class="font2 f24 tleft" style="color: #262262;">Before school</span>
-          </v-col>
-
-          <v-col cols="12" class="jspace">
-            <v-checkbox v-model="monday" density="compact" hide-details label="Mon" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="tuesday" density="compact" hide-details label="Tue" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="wednesday" density="compact" hide-details label="Wed" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="thursday" density="compact" hide-details label="Thu" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="friday" density="compact" hide-details label="Fri" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="saturday" density="compact" hide-details label="Sat" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="sunday" density="compact" hide-details label="Sun" color="#3C3C434D"></v-checkbox>
-          </v-col>
-        </v-row>
-      </v-col>
-
-      <v-col cols="12" class="mt-6" align="center">
-        <v-row class="container-checkboxes-inset pa-0">
-          <v-col cols="12" align="left">
-            <span class="font2 f24 tleft" style="color: #262262;">After school</span>
-          </v-col>
-
-          <v-col cols="12" class="jspace">
-            <v-checkbox v-model="monday" density="compact" hide-details label="Mon" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="tuesday" density="compact" hide-details label="Tue" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="wednesday" density="compact" hide-details label="Wed" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="thursday" density="compact" hide-details label="Thu" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="friday" density="compact" hide-details label="Fri" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="saturday" density="compact" hide-details label="Sat" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="sunday" density="compact" hide-details label="Sun" color="#3C3C434D"></v-checkbox>
-          </v-col>
-        </v-row>
-      </v-col>
-
-      <v-col cols="12" class="mt-6" align="center">
-        <v-row class="container-checkboxes-inset pa-0">
-          <v-col cols="12" align="left">
-            <span class="font2 f24 tleft" style="color: #262262;">Enrichment Enrolled - (Dance)</span>
-          </v-col>
-
-          <v-col cols="12" class="jspace">
-            <v-checkbox v-model="monday" density="compact" hide-details label="Mon" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="tuesday" density="compact" hide-details label="Tue" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="wednesday" density="compact" hide-details label="Wed" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="thursday" density="compact" hide-details label="Thu" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="friday" density="compact" hide-details label="Fri" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="saturday" density="compact" hide-details label="Sat" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="sunday" density="compact" hide-details label="Sun" color="#3C3C434D"></v-checkbox>
-          </v-col>
-        </v-row>
-      </v-col>
-
-      <v-col cols="12" class="mt-6" align="center">
-        <v-row class="container-checkboxes-inset pa-0">
-          <v-col cols="12" align="left">
-            <span class="font2 f24 tleft" style="color: #262262;">Pizza</span>
-          </v-col>
-
-          <v-col cols="12" class="jspace">
-            <v-checkbox v-model="monday" density="compact" hide-details label="Mon" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="tuesday" density="compact" hide-details label="Tue" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="wednesday" density="compact" hide-details label="Wed" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="thursday" density="compact" hide-details label="Thu" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="friday" density="compact" hide-details label="Fri" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="saturday" density="compact" hide-details label="Sat" color="#3C3C434D"></v-checkbox>
-            <v-checkbox v-model="sunday" density="compact" hide-details label="Sun" color="#3C3C434D"></v-checkbox>
-          </v-col>
-        </v-row>
-      </v-col> -->
     </v-row>
 
     <v-row class="fullw mt-8 mb-2">
@@ -525,6 +545,20 @@ import axiosInstance from '@/plugins/axios';
 import { useRoute } from 'vue-router';
 import dayjs from 'dayjs';
 
+const enrolled_btn = ref(true);
+const transition_btn = ref(false);
+
+
+const activeEnrolled = () =>{
+  enrolled_btn.value = true;
+  transition_btn.value = false;
+};
+
+const activeTransition = () =>{
+  transition_btn.value = true;
+  enrolled_btn.value = false;
+};
+
 const id = ref(null);
 const route = useRoute();
 const studentId = ref(route.params.id);
@@ -555,6 +589,32 @@ const formatStartDate = (date) => {
   formattedStartDate.value = dayjs(jsDate).format('YYYY-MM-DD');
 };
 
+const formatTransitionDate = (date) => {
+  if (!date) {
+    formattedTransitionDate.value = '';
+    return;
+  }
+  const jsDate = date instanceof Date ? date : new Date(date);
+  if (isNaN(jsDate.getTime())) {
+    formattedTransitionDate.value = '';
+    return;
+  }
+  formattedTransitionDate.value = dayjs(jsDate).format('YYYY-MM-DD');
+};
+
+const formatEndDate = (date) => {
+  if (!date) {
+    formattedEndDate.value = '';
+    return;
+  }
+  const jsDate = date instanceof Date ? date : new Date(date);
+  if (isNaN(jsDate.getTime())) {
+    formattedEndDate.value = '';
+    return;
+  }
+  formattedEndDate.value = dayjs(jsDate).format('YYYY-MM-DD');
+};
+
 const dialogConfirmationStudent = ref(false);
 const savingStudent = ref(false);
 const fileInputStudent = ref(null);
@@ -574,7 +634,11 @@ const formattedDate = ref('');
 const gender = ref(null);
 const notes = ref('');
 const start_date_class = ref(null);
+const end_date_class = ref(null);
 const formattedStartDate = ref('');
+const formattedTransitionDate = ref('');
+const transition_date_class = ref(null);
+const formattedEndDate = ref('');
 const selectProgramItem = ref([]);
 const dataPrograms = ref([]);
 const selected_program = ref(null);
@@ -600,6 +664,7 @@ const nothing = ref(false);
 const selectClassItems = ref([]);
 const dataClasses = ref([]);
 const select_class = ref(null);
+const select_class_transition = ref(null);
 const dataIdsClass = ref(null);
 
 const monday_enrolled = ref(false);
@@ -609,6 +674,30 @@ const thursday_enrolled = ref(false);
 const friday_enrolled = ref(false);
 const saturday_enrolled = ref(false);
 const sunday_enrolled = ref(false);
+
+const monday_enrolled_transition = ref(false);
+const tuesday_enrolled_transition = ref(false);
+const wednesday_enrolled_transition = ref(false);
+const thursday_enrolled_transition = ref(false);
+const friday_enrolled_transition = ref(false);
+const saturday_enrolled_transition = ref(false);
+const sunday_enrolled_transition = ref(false);
+
+const monday_before_transition = ref(false);
+const tuesday_before_transition = ref(false);
+const wednesday_before_transition = ref(false);
+const thursday_before_transition = ref(false);
+const friday_before_transition = ref(false);
+const saturday_before_transition = ref(false);
+const sunday_before_transition = ref(false);
+
+const monday_after_transition = ref(false);
+const tuesday_after_transition = ref(false);
+const wednesday_after_transition = ref(false);
+const thursday_after_transition = ref(false);
+const friday_after_transition = ref(false);
+const saturday_after_transition = ref(false);
+const sunday_after_transition = ref(false);
 
 const monday_before = ref(false);
 const tuesday_before = ref(false);
@@ -664,6 +753,18 @@ const addClass = () => {
 
 const deleteClass = (index) => {
   dataForClass.value.splice(index, 1);
+};
+
+const dataForClassTransition = ref([
+  { select_class_transition: 'Select Class' },
+])
+
+const addClassTransition = () => {
+  dataForClassTransition.value.push({ placeholder: 'Select Class' });
+};
+
+const deleteClassTransition = (index) => {
+  dataForClassTransition.value.splice(index, 1);
 };
 
 const handleFileChange = (file) => {
@@ -762,8 +863,12 @@ const getDataStudent = async () => {
     imagePreviewStudent.value = student.image;
     notes.value = student.notes;
     start_date_class.value = student.startDateOfClasses ? dayjs(student.startDateOfClasses).toDate() : null;
+    transition_date_class.value = student.startDateOfClassesTransition ? dayjs(student.startDateOfClassesTransition).toDate() : null;
+    end_date_class.value = student.endDateOfClasses ? dayjs(student.endDateOfClasses).toDate() : null;
     formatDate(dateOfBirth.value);
     formatStartDate(start_date_class.value);
+    formatTransitionDate(transition_date_class.value);
+    formatEndDate(end_date_class.value);
     monday_enrolled.value = student.daysEnrolled.includes('Monday');
     tuesday_enrolled.value = student.daysEnrolled.includes('Tuesday');
     wednesday_enrolled.value = student.daysEnrolled.includes('Wednesday');
@@ -789,6 +894,35 @@ const getDataStudent = async () => {
       saturday_after.value = student.afterSchoolDays.includes('Saturday');
       sunday_after.value = student.afterSchoolDays.includes('Sunday');
     }
+
+    if(student.daysEnrolledTransition != null){
+      monday_enrolled_transition.value = student.daysEnrolledTransition.includes('Monday');
+      tuesday_enrolled_transition.value = student.daysEnrolledTransition.includes('Tuesday');
+      wednesday_enrolled_transition.value = student.daysEnrolledTransition.includes('Wednesday');
+      thursday_enrolled_transition.value = student.daysEnrolledTransition.includes('Thursday');
+      friday_enrolled_transition.value = student.daysEnrolledTransition.includes('Friday');
+      saturday_enrolled_transition.value = student.daysEnrolledTransition.includes('Saturday');
+      sunday_enrolled_transition.value = student.daysEnrolledTransition.includes('Sunday');
+    }
+    if (student.beforeSchoolDaysTransition != null) {
+      monday_before_transition.value = student.beforeSchoolDaysTransition.includes('Monday');
+      tuesday_before_transition.value = student.beforeSchoolDaysTransition.includes('Tuesday');
+      wednesday_before_transition.value = student.beforeSchoolDaysTransition.includes('Wednesday');
+      thursday_before_transition.value = student.beforeSchoolDaysTransition.includes('Thursday');
+      friday_before_transition.value = student.beforeSchoolDaysTransition.includes('Friday');
+      saturday_before_transition.value = student.beforeSchoolDaysTransition.includes('Saturday');
+      sunday_before_transition.value = student.beforeSchoolDaysTransition.includes('Sunday');
+    }
+    if (student.afterSchoolDaysTransition != null) {
+      monday_after_transition.value = student.afterSchoolDaysTransition.includes('Monday');
+      tuesday_after_transition.value = student.afterSchoolDaysTransition.includes('Tuesday');
+      wednesday_after_transition.value = student.afterSchoolDaysTransition.includes('Wednesday');
+      thursday_after_transition.value = student.afterSchoolDaysTransition.includes('Thursday');
+      friday_after_transition.value = student.afterSchoolDaysTransition.includes('Friday');
+      saturday_after_transition.value = student.afterSchoolDaysTransition.includes('Saturday');
+      sunday_after_transition.value = student.afterSchoolDaysTransition.includes('Sunday');
+    }
+
     select_center.value = student.campus.id;
     mothers_name.value = student.contacts.find(contact => contact.relation === 'Mother')?.fullName || '';
     mothers_number.value = student.contacts.find(contact => contact.relation === 'Mother')?.phone || '';
@@ -811,6 +945,9 @@ const getDataStudent = async () => {
     }));
     dataForClass.value = student.classes.map(classe => ({
       select_class: classe.id,
+    }));
+    dataForClassTransition.value = student.classesTransition.map(classe => ({
+      select_class_transition: classe.id,
     }));
   } catch (error) {
     showAlert(error, 'error');
@@ -837,6 +974,8 @@ const updateStudent = async () => {
       formData.append('gender', gender.value);
       formData.append('notes', notes.value);
       formData.append('startDateOfClasses', start_date_class.value);
+      formData.append('startDateOfClassesTransition', transition_date_class.value);
+      formData.append('endDateOfClasses', end_date_class.value);
 
       const selectedDaysEnrolled = [];
       if (monday_enrolled.value) selectedDaysEnrolled.push("Monday");
@@ -868,6 +1007,36 @@ const updateStudent = async () => {
       if (sunday_after.value) selectedDaysAfter.push("Sunday");
       formData.append('afterSchoolDays', selectedDaysAfter.join(','));
 
+      const selectedDaysEnrolledTransition = [];
+      if (monday_enrolled_transition.value) selectedDaysEnrolledTransition.push("Monday");
+      if (tuesday_enrolled_transition.value) selectedDaysEnrolledTransition.push("Tuesday");
+      if (wednesday_enrolled_transition.value) selectedDaysEnrolledTransition.push("Wednesday");
+      if (thursday_enrolled_transition.value) selectedDaysEnrolledTransition.push("Thursday");
+      if (friday_enrolled_transition.value) selectedDaysEnrolledTransition.push("Friday");
+      if (saturday_enrolled_transition.value) selectedDaysEnrolledTransition.push("Saturday");
+      if (sunday_enrolled_transition.value) selectedDaysEnrolledTransition.push("Sunday");
+      formData.append('daysEnrolledTransition', selectedDaysEnrolledTransition.join(','));
+
+      const selectedDaysBeforeTransition = [];
+      if (monday_before_transition.value) selectedDaysBeforeTransition.push("Monday");
+      if (tuesday_before_transition.value) selectedDaysBeforeTransition.push("Tuesday");
+      if (wednesday_before_transition.value) selectedDaysBeforeTransition.push("Wednesday");
+      if (thursday_before_transition.value) selectedDaysBeforeTransition.push("Thursday");
+      if (friday_before_transition.value) selectedDaysBeforeTransition.push("Friday");
+      if (saturday_before_transition.value) selectedDaysBeforeTransition.push("Saturday");
+      if (sunday_before_transition.value) selectedDaysBeforeTransition.push("Sunday");
+      formData.append('beforeSchoolDaysTransition', selectedDaysBeforeTransition.join(','));
+
+      const selectedDaysAfterTransition = [];
+      if (monday_after_transition.value) selectedDaysAfterTransition.push("Monday");
+      if (tuesday_after_transition.value) selectedDaysAfterTransition.push("Tuesday");
+      if (wednesday_after_transition.value) selectedDaysAfterTransition.push("Wednesday");
+      if (thursday_after_transition.value) selectedDaysAfterTransition.push("Thursday");
+      if (friday_after_transition.value) selectedDaysAfterTransition.push("Friday");
+      if (saturday_after_transition.value) selectedDaysAfterTransition.push("Saturday");
+      if (sunday_after_transition.value) selectedDaysAfterTransition.push("Sunday");
+      formData.append('afterSchoolDaysTransition', selectedDaysAfterTransition.join(','));
+
       const currentProgramIds = dataForProgram.value.map(item => item.selected_program?.id).filter(id => id);
       if (currentProgramIds.length > 0) {
         formData.append('additionalProgramIds', currentProgramIds);
@@ -879,6 +1048,14 @@ const updateStudent = async () => {
       if (currentClassIds.length > 0) {
         formData.append('classIds', currentClassIds);
       }
+
+      const currentClassTransitionIds = dataForClassTransition.value
+        .map(item => typeof item.select_class_transition === 'object' ? item.select_class_transition.id : item.select_class_transition)
+        .filter(id => id);
+      if (currentClassTransitionIds.length > 0) {
+        formData.append('classIdsTransition', currentClassTransitionIds);
+      }
+
       formData.append('campus', select_center.value.toString());
       const contactsData = [];
       if (mothers_name.value) {

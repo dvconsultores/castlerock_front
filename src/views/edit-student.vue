@@ -204,33 +204,14 @@
     </v-row>
 
     <v-row class="fullw mt-10 mb-2">
-      <v-col cols="12" align="left" class="pa-2">
-        <h3 class="font2 tleft" style="color: #262B63;">
-          Withdrawal
-        </h3>
-      </v-col>
-
-      <v-col cols="12" sm="12" class="pa-2">
-        <v-menu :close-on-content-click="false">
-          <template v-slot:activator="{ props }">
-            <v-text-field v-model="formattedEndDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
-              flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
-              @click:append-inner="props.onClick"></v-text-field>
-          </template>
-
-          <v-date-picker v-model="end_date_class" @update:model-value="formatEndDate" :max-date="new Date()"
-            :close-on-click="false" :close-on-content-click="false"></v-date-picker>
-        </v-menu>
-      </v-col>
-
       <template v-if="enrolled_btn">
         <v-col cols="12" align="left">
           <div class="custom-toggle">
             <v-btn value="teachers" flat class="toggle-btn" @click="activeEnrolled" :class="{ 'active-toggle': enrolled_btn }"> 
-              Enrolled 
+              Schedule 
             </v-btn>
-            <v-btn value="students" flat class="toggle-btn" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
-              Transition 
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
+              Transition Schedule
             </v-btn>
           </div>
         </v-col>
@@ -259,10 +240,10 @@
         <v-col cols="12" align="left">
           <div class="custom-toggle">
             <v-btn value="teachers" flat class="toggle-btn" @click="activeEnrolled" :class="{ 'active-toggle': enrolled_btn }"> 
-              Enrolled 
+              Schedule 
             </v-btn>
-            <v-btn value="students" flat class="toggle-btn" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
-              Transition 
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
+              Transition Schedule
             </v-btn>
           </div>
         </v-col>
@@ -510,6 +491,27 @@
         <v-btn class="btn" flat @click="deleteProgram(index)">
           <v-icon>mdi-trash-can-outline</v-icon>
         </v-btn>
+      </v-col>
+    </v-row>
+
+    <v-row class="fullw mt-10 big-checkboxes-container">
+      <v-col cols="12" align="left" class="pa-2">
+        <span class="font2 f24 tleft" style="color: #262262;">
+          Withdrawal
+        </span>
+      </v-col>
+
+      <v-col cols="12" sm="12" class="pa-2">
+        <v-menu :close-on-content-click="false">
+          <template v-slot:activator="{ props }">
+            <v-text-field v-model="formattedEndDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+              flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
+              @click:append-inner="props.onClick"></v-text-field>
+          </template>
+
+          <v-date-picker v-model="end_date_class" @update:model-value="formatEndDate" :max-date="new Date()"
+            :close-on-click="false" :close-on-content-click="false"></v-date-picker>
+        </v-menu>
       </v-col>
     </v-row>
 

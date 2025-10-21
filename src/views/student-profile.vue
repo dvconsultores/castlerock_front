@@ -379,27 +379,14 @@
       </v-row>
 
       <v-row class="fullw mt-10 mb-2">
-        <v-col cols="12" align="left" class="pa-2">
-          <h3 class="font2 tleft" style="color: #262B63;">
-            Withdrawal
-          </h3>
-        </v-col>
-
-        <v-col cols="12" sm="12" class="pa-2">
-           <v-text-field v-model="end_date_class" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
-            flat readonly hide-details append-inner-icon="mdi-calendar"
-            ></v-text-field>
-
-        </v-col>
-
       <template v-if="enrolled_btn">
         <v-col cols="12" align="left">
           <div class="custom-toggle">
             <v-btn value="teachers" flat class="toggle-btn" @click="activeEnrolled" :class="{ 'active-toggle': enrolled_btn }"> 
-              Enrolled 
+              Schedule 
             </v-btn>
-            <v-btn value="students" flat class="toggle-btn" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
-              Transition 
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
+              Transition Schedule
             </v-btn>
           </div>
         </v-col>
@@ -430,10 +417,10 @@
         <v-col cols="12" align="left">
           <div class="custom-toggle">
             <v-btn value="teachers" flat class="toggle-btn" @click="activeEnrolled" :class="{ 'active-toggle': enrolled_btn }"> 
-              Enrolled 
+              Schedule 
             </v-btn>
-            <v-btn value="students" flat class="toggle-btn" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
-              Transition 
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
+              Transition Schedule
             </v-btn>
           </div>
         </v-col>
@@ -640,120 +627,20 @@
             }"
           ></v-autocomplete>
         </v-col>
+      </v-row>
 
-        <!-- <v-col cols="12" sm="4" class="pa-2">
-          <v-text-field
-            v-model="sessions"
-            class="login-textfield"
-            placeholder="Sessions"
-            variant="solo" 
-            flat
-            bg-color="#F0F0F0"
-            type="number"
-            hide-spin-buttons
-            hide-details
-          ></v-text-field>
+      <v-row class="fullw mt-10 big-checkboxes-container">
+        <v-col cols="12" align="left" class="pa-2">
+          <span class="font2 f24 tleft" style="color: #262262;">
+            Withdrawal
+          </span>
         </v-col>
 
-        <v-col cols="12" sm="4" class="pa-2">
-          <v-text-field
-            v-model="duration"
-            class="login-textfield"
-            placeholder="Duration"
-            variant="solo" 
-            flat
-            bg-color="#F0F0F0"
-            hide-details
-          ></v-text-field>
-        </v-col> -->
-
-        <!-- <v-col cols="12" sm="3" class="pa-2">
-          <v-autocomplete
-            placeholder="Schedule"
-            flat
-            bg-color="#F0F0F0 "
-            class="autocomplete-register"
-            hide-details
-            menu-icon="mdi-chevron-up"
-            :items="['1 Day', '2 Days', '3 Days', '4 Days', '5 Days']"
-            variant="solo"
-            :menu-props="{
-              contentClass: 'rounded-menu',
-            }"
-          ></v-autocomplete>
-        </v-col> -->
-
-        <!-- <v-col cols="12" class="mt-6" align="center">
-          <v-row class="container-checkboxes-inset pa-0">
-            <v-col cols="12" align="left">
-              <span class="font2 f24 tleft" style="color: #262262;">Before school</span>
-            </v-col>
-
-            <v-col cols="12" class="jspace">
-              <v-checkbox v-model="monday" density="compact" hide-details label="Mon" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="tuesday" density="compact" hide-details label="Tue" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="wednesday" density="compact" hide-details label="Wed" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="thursday" density="compact" hide-details label="Thu" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="friday" density="compact" hide-details label="Fri" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="saturday" density="compact" hide-details label="Sat" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="sunday" density="compact" hide-details label="Sun" color="#3C3C434D"></v-checkbox>
-            </v-col>
-          </v-row>
+        <v-col cols="12" sm="12" class="pa-2">
+           <v-text-field v-model="end_date_class" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+            flat readonly hide-details append-inner-icon="mdi-calendar"
+            ></v-text-field>
         </v-col>
-
-        <v-col cols="12" class="mt-6" align="center">
-          <v-row class="container-checkboxes-inset pa-0">
-            <v-col cols="12" align="left">
-              <span class="font2 f24 tleft" style="color: #262262;">After school</span>
-            </v-col>
-
-            <v-col cols="12" class="jspace">
-              <v-checkbox v-model="monday" density="compact" hide-details label="Mon" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="tuesday" density="compact" hide-details label="Tue" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="wednesday" density="compact" hide-details label="Wed" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="thursday" density="compact" hide-details label="Thu" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="friday" density="compact" hide-details label="Fri" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="saturday" density="compact" hide-details label="Sat" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="sunday" density="compact" hide-details label="Sun" color="#3C3C434D"></v-checkbox>
-            </v-col>
-          </v-row>
-        </v-col>
-
-        <v-col cols="12" class="mt-6" align="center">
-          <v-row class="container-checkboxes-inset pa-0">
-            <v-col cols="12" align="left">
-              <span class="font2 f24 tleft" style="color: #262262;">Enrichment Enrolled - (Dance)</span>
-            </v-col>
-
-            <v-col cols="12" class="jspace">
-              <v-checkbox v-model="monday" density="compact" hide-details label="Mon" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="tuesday" density="compact" hide-details label="Tue" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="wednesday" density="compact" hide-details label="Wed" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="thursday" density="compact" hide-details label="Thu" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="friday" density="compact" hide-details label="Fri" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="saturday" density="compact" hide-details label="Sat" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="sunday" density="compact" hide-details label="Sun" color="#3C3C434D"></v-checkbox>
-            </v-col>
-          </v-row>
-        </v-col>
-
-        <v-col cols="12" class="mt-6" align="center">
-          <v-row class="container-checkboxes-inset pa-0">
-            <v-col cols="12" align="left">
-              <span class="font2 f24 tleft" style="color: #262262;">Pizza</span>
-            </v-col>
-
-            <v-col cols="12" class="jspace">
-              <v-checkbox v-model="monday" density="compact" hide-details label="Mon" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="tuesday" density="compact" hide-details label="Tue" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="wednesday" density="compact" hide-details label="Wed" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="thursday" density="compact" hide-details label="Thu" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="friday" density="compact" hide-details label="Fri" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="saturday" density="compact" hide-details label="Sat" color="#3C3C434D"></v-checkbox>
-              <v-checkbox v-model="sunday" density="compact" hide-details label="Sun" color="#3C3C434D"></v-checkbox>
-            </v-col>
-          </v-row>
-        </v-col> -->
       </v-row>
 
       <v-dialog v-model="dialogConfirmationStudent" content-class="dialogConfirmationStudent" persistent>

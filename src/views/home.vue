@@ -383,8 +383,8 @@ const dataSheets = ref([
   },
   {
     imgIcon: classroms,
-    titleSheet: 'Future Enrollments',
-    subTitleSheet: 'Check Future Enrollments',
+    titleSheet: 'Transitions',
+    subTitleSheet: 'Future Enrollment Roster',
     route: '/home/new-enrollments',
   },
   {

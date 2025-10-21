@@ -128,8 +128,8 @@ const headers = ref([
     // { title: 'Age', key: 'age', align: 'center', sortable: false  },
     // { title: 'Gender', key: 'gender', align: 'center', sortable: false  },
     { title: 'Center', key: 'center', align: 'center', sortable: false  },
-    { title: 'Current Classes', key: 'classes', align: 'center', sortable: false  },
-    { title: 'Transition Date', key: 'dateOfTransition', align: 'center', sortable: false  },
+    { title: 'Assigned Class', key: 'classes', align: 'center', sortable: false  },
+    { title: 'Start/Transition Date', key: 'dateOfTransition', align: 'center', sortable: false  },
     { title: 'Transition Classes', key: 'nextClasses', align: 'center', sortable: false  },
     { title: 'Actions', key: 'actions', align: 'center', sortable: false  },
 ]);

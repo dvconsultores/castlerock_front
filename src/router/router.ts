@@ -140,6 +140,12 @@ const router = createRouter({
           meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
         },
         {
+          path: 'daily-roster',
+          name: 'daily-roster',
+          component: () => import('@/views/daily-roster.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
+        },
+        {
           path: 'view-daily-spot/:id',
           name: 'view-daily-spot',
           component: () => import('@/views/view-daily-spot.vue'),

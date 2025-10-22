@@ -136,6 +136,7 @@ const pageTitles = {
   '/home/new-classroom': 'New Classroom',
   '/home/withdrawal-dates': 'Withdrawal Dates',
   '/home/new-enrollments': 'Future Enrollments',
+  '/home/daily-roster': 'Daily Roster',
 };
 
 const currentTitle = computed(() => {

@@ -382,16 +382,16 @@ const dataSheets = ref([
     onClick: goToNewWeeklySchedule,
   },
   {
-    imgIcon: classroms,
-    titleSheet: 'Transitions',
-    subTitleSheet: 'Future Enrollment Roster',
-    route: '/home/new-enrollments',
+    imgIcon: students,
+    titleSheet: 'Daily Roster Snapshot',
+    subTitleSheet: 'View Daily Roster',
+    route: '/home/daily-roster',
   },
   {
-    imgIcon: students,
-    titleSheet: 'New Student',
-    subTitleSheet: 'Register a Student',
-    route: '/home/student-registration',
+    imgIcon: classroms,
+    titleSheet: 'New Student Transitions',
+    subTitleSheet: 'Future Enrollment Roster',
+    route: '/home/new-enrollments',
   },
   {
     imgIcon: calendar,
@@ -399,12 +399,12 @@ const dataSheets = ref([
     subTitleSheet: 'Check Withdrawal Dates',
     route: '/home/withdrawal-dates',
   },
-  {
-    imgIcon: centers,
-    titleSheet: 'New Center',
-    subTitleSheet: 'Register a Center',
-    route: '/home/new-center'
-  }
+  // {
+  //   imgIcon: centers,
+  //   titleSheet: 'New Center',
+  //   subTitleSheet: 'Register a Center',
+  //   route: '/home/new-center'
+  // }
 ]);
 
 const scheduleData = ref([]);

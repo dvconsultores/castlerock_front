@@ -356,6 +356,11 @@
       }
     }
 
+    .container-for-daily-roster{
+      height: 550px;
+      max-height: 550px;
+    }
+
     .spots-container{
       gap: 24px;
       height: max-content;
@@ -477,6 +482,10 @@
         font-size: 15px;
       }
     }
+  }
+
+  .big-div-spot{
+    height: max-content;
   }
 
   .big-div-spot{

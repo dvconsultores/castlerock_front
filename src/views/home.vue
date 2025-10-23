@@ -389,7 +389,7 @@ const dataSheets = ref([
   },
   {
     imgIcon: classroms,
-    titleSheet: 'New Student Transitions',
+    titleSheet: 'New Student/Transitions',
     subTitleSheet: 'Future Enrollment Roster',
     route: '/home/new-enrollments',
   },

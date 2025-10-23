@@ -10,7 +10,7 @@
     <v-row class="fullw mt-10">
       <v-col cols="12" sm="12">
         <div class="big-div big-div-spot">
-          <h5 class="font2 f24 tleft mb-0" style="color: #262262;">Daily Plan</h5>
+          <h5 class="font2 f24 tleft mb-0" style="color: #262262;">Daily Roster</h5>
           <hr>
 
           <!-- <v-sheet v-for="(item, index) in sheetTeacherSelected" :key="index" class="sheet-teacher">
@@ -164,6 +164,7 @@ const getDailyScheduleToday = async () => {
       const className = schedule.planning.class.name;
       const classImage = schedule.planning.class.image || null;
       const classMax = schedule.planning.class.maxCapacity || 0;
+      const classType = schedule.planning.class.classType || '';
       const studentsCount = schedule.students ? schedule.students.length : 0;
 
       if (!classMap.has(classId)) {
@@ -172,17 +173,27 @@ const getDailyScheduleToday = async () => {
           className,
           studentsCount,
           maxCapacity: classMax,
-          image: classImage
+          image: classImage,
+          classType
         });
       } else {
         const existing = classMap.get(classId);
         existing.studentsCount += studentsCount;
         existing.maxCapacity += classMax; 
+        existing.classType = existing.classType || classType;
         classMap.set(classId, existing);
       }
     });
 
     classesSummary.value = Array.from(classMap.values());
+
+    const priority = { 'ENROLLED': 0, 'AFTER_SCHOOL': 1, 'BEFORE_SCHOOL': 2 };
+    classesSummary.value.sort((a, b) => {
+      const pa = priority[a.classType] ?? 3;
+      const pb = priority[b.classType] ?? 3;
+      if (pa !== pb) return pa - pb;
+      return (a.className || '').localeCompare(b.className || '');
+    });
 
     maxCapacity.value = processedData.totalMaxCapacity || dataStudents.value.length;
 

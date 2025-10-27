@@ -8,6 +8,7 @@
             class="login-textfield"
             placeholder="Search Teacher"
             variant="solo" 
+            autocomplete="off"
             flat
             maxlength="150"
             hide-details

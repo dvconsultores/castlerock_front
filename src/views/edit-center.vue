@@ -9,6 +9,7 @@
             class="textfield-registration"
             placeholder="Center Name"
             maxlength="150"
+            autocomplete="off"
             variant="solo" 
             flat
             hide-details
@@ -20,7 +21,8 @@
             v-model="phone_center"
             class="textfield-registration"
             placeholder="Phone of the center"
-            variant="solo" 
+            variant="solo"
+            autocomplete="off" 
             maxlength="150"
             flat
             hide-details
@@ -33,6 +35,7 @@
           <v-text-field
             v-model="nickname_center"
             class="textfield-registration"
+            autocomplete="off"
             maxlength="150"
             placeholder="Nickname of the center"
             variant="solo" 
@@ -45,6 +48,7 @@
           <v-text-field
             v-model="address"
             class="textfield-registration"
+            autocomplete="off"
             maxlength="150"
             placeholder="Location"
             variant="solo" 

@@ -125,10 +125,12 @@ const openConfirmation = async () => {
 const headers = ref([
     { title: 'Id.', key: 'id_student', align:'center', sortable: false },
     { title: 'Student Name', key: 'name', align:'center', sortable: false },
-    { title: 'Age', key: 'age', align: 'center', sortable: false  },
-    { title: 'Gender', key: 'gender', align: 'center', sortable: false  },
+    // { title: 'Age', key: 'age', align: 'center', sortable: false  },
+    // { title: 'Gender', key: 'gender', align: 'center', sortable: false  },
     { title: 'Center', key: 'center', align: 'center', sortable: false  },
-    { title: 'Classes', key: 'classes', align: 'center', sortable: false  },
+    { title: 'New/Assigned Class', key: 'classes', align: 'center', sortable: false  },
+    { title: 'Start/Transition Date', key: 'dateOfTransition', align: 'center', sortable: false  },
+    { title: 'Transition Classes', key: 'nextClasses', align: 'center', sortable: false  },
     { title: 'Actions', key: 'actions', align: 'center', sortable: false  },
 ]);
 
@@ -158,33 +160,38 @@ const filteredStudents = computed(() => {
 const getStudents = async () => {
   try {
     const response = await axiosInstance.get('/students');
-    dataStudents.value = response.data.result.map((student, index) => {
-      ('Students:', response.data.result);
-      const birthDate = dayjs(student.dateOfBirth);
-      const now = dayjs();
-      
-      const years = now.diff(birthDate, 'year');
-      const months = now.diff(birthDate, 'month') % 12;
-      
-      let ageDisplay = '';
-      if (years > 0) {
-        ageDisplay = `${years} Y ${months} M`;
-      } else {
-        ageDisplay = `${months} M`;
-      }
-
-      return {
-        id: student.id,
-        id_student: index + 1,
-        student_img: student.image || avatarImg,
-        name: student.firstName + ' ' + student.lastName,
-        age: ageDisplay,
-        gender: student.gender,
-        center: student.campus ? student.campus.name : '',
-        classes: Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '',
-        actions: ''
-      };
-    });
+    dataStudents.value = response.data.result
+      .map((student) => {
+        const birthDate = dayjs(student.dateOfBirth);
+        const now = dayjs();
+        const years = now.diff(birthDate, 'year');
+        const months = now.diff(birthDate, 'month') % 12;
+        let ageDisplay = '';
+        if (years > 0) {
+          ageDisplay = `${years} Y ${months} M`;
+        } else {
+          ageDisplay = `${months} M`;
+        }
+        return {
+          id: student.id,
+          student_img: student.image || avatarImg,
+          name: student.firstName + ' ' + student.lastName,
+          age: ageDisplay,
+          gender: student.gender,
+          dateOfTransition: student.startDateOfClassesTransition,
+          center: student.campus ? student.campus.name : '',
+          classes: Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '',
+          nextClasses: Array.isArray(student.classesTransition) ? student.classesTransition.map(c => c.name).join('<br>') : '',
+          actions: ''
+        };
+      })
+      .filter(student => student.dateOfTransition != null && student.nextClasses != null && student.nextClasses !== '')
+      .sort((a, b) => {
+        const dateA = dayjs(a.dateOfTransition);
+        const dateB = dayjs(b.dateOfTransition);
+        return dateA - dateB;
+      })
+      .map((student, index) => ({ ...student, id_student: index + 1 }));
   } catch (error) {
     console.error('Failed to load students', error);
   }

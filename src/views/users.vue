@@ -8,6 +8,7 @@
           placeholder="Search Users"
           variant="solo" 
           flat
+          autocomplete="off"
           maxlength="150"
           hide-details
           append-inner-icon="mdi-magnify"

@@ -13,6 +13,7 @@
             placeholder="Search Center"
             variant="solo" 
             maxLength="150"
+            autocomplete="off"
             flat
             hide-details
             append-inner-icon="mdi-magnify"

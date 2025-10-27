@@ -8,6 +8,7 @@
             v-model="name"
             class="textfield-registration"
             placeholder="Activity Name"
+            autocomplete="off"
             variant="solo" 
             flat
             readonly
@@ -20,6 +21,7 @@
             v-model.number="select_center"
             placeholder="Select Center"
             flat
+            autocomplete="off"
             class="autocomplete-register"
             menu-icon=""
             readonly

@@ -8,6 +8,7 @@
           v-model.number="select_center"
           placeholder="Select Center"
           flat
+          autocomplete="off"
           :class="{'textfield-error': centerError, 'autocomplete-register': true}"
           menu-icon="mdi-chevron-up"
           :items="selectCenterItems"
@@ -42,6 +43,7 @@
           v-model.number="select_class"
           placeholder="Classroom"
           flat
+          autocomplete="off"
           :class="{'textfield-error': classError, 'autocomplete-register': true}"
           model
           return-object
@@ -62,6 +64,7 @@
           v-model="year"
           placeholder="Select the Year"
           flat
+          autocomplete="off"
           :class="{'textfield-error': yearError, 'autocomplete-register': true}"
           menu-icon="mdi-chevron-up"
           :items="yearsArray"
@@ -80,6 +83,7 @@
           v-model="month"
           placeholder="Select the Month"
           flat
+          autocomplete="off"
           :class="{'textfield-error': monthError, 'autocomplete-register': true}"
           menu-icon="mdi-chevron-up"
           :items="monthsArray"
@@ -98,6 +102,7 @@
           v-model="week"
           placeholder="Select the Week"
           flat
+          autocomplete="off"
           class="autocomplete-register"
           menu-icon="mdi-chevron-up"
           :items="weeksArray"

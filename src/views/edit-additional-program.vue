@@ -6,6 +6,7 @@
         <v-col cols="12" sm="6" class="pb-0 pl-0">
           <v-text-field
             v-model="name"
+            autocomplete="off"
             class="textfield-registration"
             placeholder="Activity Name"
             variant="solo" 
@@ -19,6 +20,7 @@
             v-model.number="select_center"
             placeholder="Select Center"
             flat
+            autocomplete="off"
             class="autocomplete-register"
             menu-icon="mdi-chevron-up"
             :items="selectCenterItems"

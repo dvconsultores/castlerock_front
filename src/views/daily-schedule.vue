@@ -23,6 +23,7 @@
             <v-text-field
               v-model="searchQueryTeachers"
               class="login-textfield"
+              autocomplete="off"
               placeholder="Search Teacher"
               bg-color="#F0F0F0 "
               variant="solo" 
@@ -55,6 +56,7 @@
             <v-text-field
               v-model="searchQueryStudents"
               class="login-textfield"
+              autocomplete="off"
               placeholder="Search Student"
               bg-color="#F0F0F0 "
               variant="solo" 

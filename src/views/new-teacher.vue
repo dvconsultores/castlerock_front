@@ -8,6 +8,7 @@
             v-model.number="select_teacher"
             placeholder="Select a Teacher"
             flat
+            autocomplete="off"
             :class="{'textfield-error': teacherError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="selectTeacherItems"
@@ -27,6 +28,7 @@
             v-model.number="select_center"
             placeholder="Select Center"
             flat
+            autocomplete="off"
             :class="{'textfield-error': centerError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="selectCenterItems"
@@ -126,7 +128,8 @@
             v-model="item.select_class"
             placeholder="Select Class"
             flat
-            bg-color="#F0F0F0 "
+            autocomplete="off"
+            bg-color="#F0F0F0"
             class="autocomplete-register"
             hide-details
             menu-icon="mdi-chevron-up"

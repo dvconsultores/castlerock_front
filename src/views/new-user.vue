@@ -9,6 +9,7 @@
             :class="{'textfield-error': firstNameError, 'textfield-registration': true}"
             placeholder="First Name"
             variant="solo" 
+            autocomplete="off"
             maxlength="150"
             flat
             hide-details
@@ -20,6 +21,7 @@
             v-model="last_name"
             :class="{'textfield-error': lastNameError, 'textfield-registration': true}"
             placeholder="Last Name"
+            autocomplete="off"
             maxlength="150"
             variant="solo" 
             flat
@@ -33,6 +35,7 @@
             :class="{'textfield-error': emailError, 'textfield-registration': true}"
             placeholder="Email"
             maxlength="150"
+            autocomplete="off"
             variant="solo" 
             flat
             hide-details
@@ -45,6 +48,7 @@
             :class="{'textfield-error': phoneError, 'textfield-registration': true}"
             placeholder="Phone"
             type="text"
+            autocomplete="off"
             maxlength="150"
             variant="solo" 
             hide-spin-buttons
@@ -58,6 +62,7 @@
             v-model="select_role"
             placeholder="Select Role"
             flat
+            autocomplete="off"
             :class="{'textfield-error': selectRoleError, 'autocomplete-register': true}"
             menu-icon="mdi-chevron-up"
             :items="itemsRole"
@@ -74,6 +79,7 @@
             :class="{'textfield-error': passwordError, 'textfield-registration': true}"
             placeholder="Default Password"
             maxlength="150"
+            autocomplete="off"
             variant="solo" 
             flat
             hide-details

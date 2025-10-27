@@ -382,29 +382,29 @@ const dataSheets = ref([
     onClick: goToNewWeeklySchedule,
   },
   {
-    imgIcon: classroms,
-    titleSheet: 'Create a Class',
-    subTitleSheet: 'Add class',
-    route: '/home/new-classroom',
-  },
-  {
     imgIcon: students,
-    titleSheet: 'New Student',
-    subTitleSheet: 'Register a Student',
-    route: '/home/student-registration',
+    titleSheet: 'Daily Roster Snapshot',
+    subTitleSheet: 'View Daily Roster',
+    route: '/home/daily-roster',
   },
   {
-    imgIcon: teachers,
-    titleSheet: 'Teacher',
-    subTitleSheet: 'Assign a Classroom',
-    route: '/home/new-teacher'
+    imgIcon: classroms,
+    titleSheet: 'New Student/Transitions',
+    subTitleSheet: 'Future Enrollment Roster',
+    route: '/home/new-enrollments',
   },
   {
-    imgIcon: centers,
-    titleSheet: 'New Center',
-    subTitleSheet: 'Register a Center',
-    route: '/home/new-center'
-  }
+    imgIcon: calendar,
+    titleSheet: 'Withdrawal Dates',
+    subTitleSheet: 'Check Withdrawal Dates',
+    route: '/home/withdrawal-dates',
+  },
+  // {
+  //   imgIcon: centers,
+  //   titleSheet: 'New Center',
+  //   subTitleSheet: 'Register a Center',
+  //   route: '/home/new-center'
+  // }
 ]);
 
 const scheduleData = ref([]);

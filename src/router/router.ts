@@ -62,6 +62,18 @@ const router = createRouter({
           meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
+          path: 'new-enrollments',
+          name: 'new-enrollments',
+          component: () => import('@/views/new-enrollments.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+        },
+        {
+          path: 'withdrawal-dates',
+          name: 'withdrawal-dates',
+          component: () => import('@/views/withdrawal-dates.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+        },
+        {
           path: 'programs',
           name: 'programs',
           component: () => import('@/views/programs.vue'),
@@ -125,6 +137,12 @@ const router = createRouter({
           path: 'view-daily-schedule/:id',
           name: 'view-daily-schedule',
           component: () => import('@/views/view-daily-schedule.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
+        },
+        {
+          path: 'daily-roster',
+          name: 'daily-roster',
+          component: () => import('@/views/daily-roster.vue'),
           meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
         },
         {

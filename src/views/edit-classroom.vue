@@ -9,6 +9,7 @@
             class="textfield-registration"
             placeholder="Classroom Name"
             variant="solo" 
+            autocomplete="off"
             maxlength="150"
             flat
             hide-details
@@ -21,6 +22,7 @@
             class="textfield-registration"
             placeholder="Number of students"
             variant="solo" 
+            autocomplete="off"
             maxlength="150"
             flat
             hide-details
@@ -34,6 +36,7 @@
             v-model="program"
             placeholder="Program"
             flat
+            autocomplete="off"
             class="autocomplete-register"
             menu-icon="mdi-chevron-up"
             :items="['PRIMARY', 'TODDLER']"
@@ -50,6 +53,7 @@
             v-model.number="select_center"
             placeholder="Select Center"
             flat
+            autocomplete="off"
             class="autocomplete-register"
             menu-icon="mdi-chevron-up"
             :items="selectCenterItems"
@@ -70,6 +74,7 @@
             v-model.number="classType"
             placeholder="Select Class Type"
             flat
+            autocomplete="off"
             class="autocomplete-register"
             menu-icon="mdi-chevron-up"
             :items="selectClassTypeItems"

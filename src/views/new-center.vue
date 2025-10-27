@@ -9,6 +9,7 @@
             :class="{'textfield-error': centerError, 'textfield-registration': true}"
             placeholder="Center Name"
             variant="solo" 
+            autocomplete="off"
             maxlength="150"
             flat
             hide-details
@@ -22,6 +23,7 @@
             placeholder="Phone of the center"
             variant="solo" 
             flat
+            autocomplete="off"
             maxlength="150"
             hide-details
             type="number"
@@ -35,6 +37,7 @@
             :class="{'textfield-error': nicknameError, 'textfield-registration': true}"
             placeholder="Nickname of the center"
             variant="solo" 
+            autocomplete="off"
             maxlength="150"
             flat
             hide-details
@@ -47,6 +50,7 @@
             :class="{'textfield-error': addressError, 'textfield-registration': true}"
             placeholder="Location"
             variant="solo" 
+            autocomplete="off"
             maxlength="150"
             flat
             hide-details

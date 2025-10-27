@@ -13,6 +13,7 @@
       v-model="email"
       variant="solo" 
       flat
+      autocomplete="off"
       prepend-inner-icon="mdi-email-outline" 
       placeholder="Enter your email recovery"
       hide-details

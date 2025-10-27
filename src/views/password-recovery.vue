@@ -13,6 +13,7 @@
       v-model="email"
       variant="solo" 
       flat
+      autocomplete="off"
       prepend-inner-icon="mdi-email-outline" 
       placeholder="Enter your email recovery"
       hide-details
@@ -25,6 +26,7 @@
       v-model="token"
       variant="solo"
       flat
+      autocomplete="off"
       prepend-inner-icon="mdi-numeric"
       placeholder="Enter your recovery code"
       hide-details
@@ -41,6 +43,7 @@
       v-model="password"
       variant="solo"
       flat
+      autocomplete="off"
       maxlength="150"
       :append-inner-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off'"
       placeholder="Enter your new password"
@@ -55,6 +58,7 @@
       v-model="passwordConfirmation"
       variant="solo"
       flat
+      autocomplete="off"
       maxlength="150"
       :append-inner-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off'"
       placeholder="Confirm your new password"

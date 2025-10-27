@@ -9,6 +9,7 @@
             class="textfield-registration"
             placeholder="First Name"
             variant="solo" 
+            autocomplete="off"
             maxlength="150"
             readonly
             flat
@@ -21,6 +22,7 @@
             v-model="last_name"
             class="textfield-registration"
             placeholder="Last Name"
+            autocomplete="off"
             maxlength="150"
             readonly
             variant="solo" 
@@ -35,6 +37,7 @@
             class="textfield-registration"
             placeholder="Email"
             maxlength="150"
+            autocomplete="off"
             readonly
             variant="solo" 
             flat
@@ -48,6 +51,7 @@
             class="textfield-registration"
             placeholder="Phone"
             type="number"
+            autocomplete="off"
             readonly
             maxlength="150"
             variant="solo" 
@@ -64,6 +68,7 @@
             v-model="select_role"
             placeholder="Select Role"
             flat
+            autocomplete="off"
             class="autocomplete-register"
             menu-icon=""
             readonly

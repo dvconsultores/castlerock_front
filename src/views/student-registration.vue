@@ -1116,9 +1116,15 @@ const createStudent = async () => {
       formData.append('dateOfBirth', dateOfBirth.value);
       formData.append('gender', gender.value);
       formData.append('notes', notes.value);
-      formData.append('startDateOfClasses', start_date_class.value);
-      formData.append('startDateOfClassesTransition', transition_date_class.value);
-      formData.append('endDateOfClasses', end_date_class.value);
+      if(start_date_class.value){
+        formData.append('startDateOfClasses', start_date_class.value);
+      }
+      if(transition_date_class.value){
+        formData.append('startDateOfClassesTransition', transition_date_class.value);
+      }
+      if(end_date_class.value){
+        formData.append('endDateOfClasses', end_date_class.value);
+      }
       const appendDays = (fieldName, days) => {
         days.forEach(day => formData.append(fieldName, day));
       };

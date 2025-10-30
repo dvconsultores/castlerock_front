@@ -159,6 +159,7 @@ const filteredStudents = computed(() => {
 const getStudents = async () => {
   try {
     const response = await axiosInstance.get('/students');
+
     dataStudents.value = response.data.result
       .map((student) => {
         const birthDate = dayjs(student.dateOfBirth);
@@ -171,22 +172,24 @@ const getStudents = async () => {
         } else {
           ageDisplay = `${months} M`;
         }
+
         return {
           id: student.id,
           student_img: student.image || avatarImg,
           name: student.firstName + ' ' + student.lastName,
           age: ageDisplay,
           gender: student.gender,
-          dateOfEnd: student.endDateOfClasses,
+          dateOfEndRaw: student.endDateOfClasses,
+          dateOfEnd: student.endDateOfClasses ? dayjs(student.endDateOfClasses).format('MM-DD-YYYY') : '',
           center: student.campus ? student.campus.name : '',
           classes: Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '',
           actions: ''
         };
       })
-      .filter(student => student.dateOfEnd != null)
+      .filter(student => student.dateOfEndRaw != null)
       .sort((a, b) => {
-        const dateA = dayjs(a.dateOfEnd);
-        const dateB = dayjs(b.dateOfEnd);
+        const dateA = dayjs(a.dateOfEndRaw || a.dateOfEnd);
+        const dateB = dayjs(b.dateOfEndRaw || b.dateOfEnd);
         return dateA - dateB;
       })
       .map((student, index) => ({ ...student, id_student: index + 1 }));

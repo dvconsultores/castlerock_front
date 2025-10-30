@@ -405,7 +405,7 @@
         <v-col cols="12" sm="12" class="pa-2">
           <v-menu :close-on-content-click="false">
             <template v-slot:activator="{ props }">
-              <v-text-field v-model="formattedStartDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+              <v-text-field v-model="formattedStartDate" autocomplete="off" class="login-textfield" placeholder="MM-DD-YYYY" variant="solo"
                 flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
                 @click:append-inner="props.onClick"></v-text-field>
             </template>
@@ -437,7 +437,7 @@
         <v-col cols="12" sm="12" class="pa-2">
           <v-menu :close-on-content-click="false">
             <template v-slot:activator="{ props }">
-              <v-text-field v-model="formattedTransitionDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+              <v-text-field v-model="formattedTransitionDate" autocomplete="off" class="login-textfield" placeholder="MM-DD-YYYY" variant="solo"
                 flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
                 @click:append-inner="props.onClick"></v-text-field>
             </template>
@@ -703,7 +703,7 @@
       <v-col cols="12" sm="12" class="pa-2">
         <v-menu :close-on-content-click="false">
           <template v-slot:activator="{ props }">
-            <v-text-field v-model="formattedEndDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+            <v-text-field v-model="formattedEndDate" autocomplete="off" class="login-textfield" placeholder="MM-DD-YYYY" variant="solo"
               flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props" bg-color="#F0F0F0"
               @click:append-inner="props.onClick"></v-text-field>
           </template>
@@ -792,7 +792,7 @@ const onDateInputChange = () => {
     return;
   }
   // Try to parse the input using dayjs
-  const parsed = dayjs(formattedDate.value, ['MM-DD-YYYY', 'YYYY-MM-DD'], true);
+  const parsed = dayjs(formattedDate.value, ['MM-DD-YYYY', 'MM-DD-YYYY'], true);
   if (parsed.isValid()) {
     dateOfBirth.value = parsed.toDate();
   } else {
@@ -806,7 +806,7 @@ const onDateInputChangeStartDate = () => {
     return;
   }
   // Try to parse the input using dayjs
-  const parsed = dayjs(formattedStartDate.value, ['MM-DD-YYYY', 'YYYY-MM-DD'], true);
+  const parsed = dayjs(formattedStartDate.value, ['MM-DD-YYYY', 'MM-DD-YYYY'], true);
   if (parsed.isValid()) {
     start_date_class.value = parsed.toDate();
   } else {
@@ -838,7 +838,7 @@ const formatTransitionDate = (date) => {
     formattedTransitionDate.value = '';
     return;
   }
-  formattedTransitionDate.value = dayjs(jsDate).format('YYYY-MM-DD');
+  formattedTransitionDate.value = dayjs(jsDate).format('MM-DD-YYYY');
 };
 
 const formatEndDate = (date) => {
@@ -851,7 +851,7 @@ const formatEndDate = (date) => {
     formattedEndDate.value = '';
     return;
   }
-  formattedEndDate.value = dayjs(jsDate).format('YYYY-MM-DD');
+  formattedEndDate.value = dayjs(jsDate).format('MM-DD-YYYY');
 };
 
 const dialogConfirmationStudent = ref(false);
@@ -1158,7 +1158,7 @@ const createStudent = async () => {
       if (friday_enrolled_transition.value) selectedDaysEnrolledTransition.push("Friday");
       if (saturday_enrolled_transition.value) selectedDaysEnrolledTransition.push("Saturday");
       if (sunday_enrolled_transition.value) selectedDaysEnrolledTransition.push("Sunday");
-      formData.append('daysEnrolledTransition', selectedDaysEnrolledTransition.join(','));
+      appendDays('daysEnrolledTransition', selectedDaysEnrolledTransition);
 
       const selectedDaysBeforeTransition = [];
       if (monday_before_transition.value) selectedDaysBeforeTransition.push("Monday");
@@ -1168,7 +1168,7 @@ const createStudent = async () => {
       if (friday_before_transition.value) selectedDaysBeforeTransition.push("Friday");
       if (saturday_before_transition.value) selectedDaysBeforeTransition.push("Saturday");
       if (sunday_before_transition.value) selectedDaysBeforeTransition.push("Sunday");
-      formData.append('beforeSchoolDaysTransition', selectedDaysBeforeTransition.join(','));
+      appendDays('beforeSchoolDaysTransition', selectedDaysBeforeTransition);
 
       const selectedDaysAfterTransition = [];
       if (monday_after_transition.value) selectedDaysAfterTransition.push("Monday");
@@ -1178,7 +1178,7 @@ const createStudent = async () => {
       if (friday_after_transition.value) selectedDaysAfterTransition.push("Friday");
       if (saturday_after_transition.value) selectedDaysAfterTransition.push("Saturday");
       if (sunday_after_transition.value) selectedDaysAfterTransition.push("Sunday");
-      formData.append('afterSchoolDaysTransition', selectedDaysAfterTransition.join(','));
+      appendDays('afterSchoolDaysTransition', selectedDaysAfterTransition);
 
       dataIdsProgram.value =  dataForProgram.value.map(item => item.selected_program?.id).filter(id => id);
       const programData = [];

@@ -436,7 +436,7 @@
           v-model="transition_date" 
           autocomplete="off" 
           class="login-textfield" 
-          placeholder="YYYY-DD-MM" 
+          placeholder="MM-DD-YYYY" 
           variant="solo"
           flat readonly hide-details append-inner-icon="mdi-calendar"
           ></v-text-field>
@@ -637,7 +637,7 @@
         </v-col>
 
         <v-col cols="12" sm="12" class="pa-2">
-           <v-text-field v-model="end_date_class" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+           <v-text-field v-model="end_date_class" autocomplete="off" class="login-textfield" placeholder="MM-DD-YYYY" variant="solo"
             flat readonly hide-details append-inner-icon="mdi-calendar"
             ></v-text-field>
         </v-col>

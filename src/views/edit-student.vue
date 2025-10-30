@@ -36,7 +36,7 @@
           <v-col cols="12" sm="4" class="pa-2">
             <v-menu :close-on-content-click="false">
               <template v-slot:activator="{ props }">
-                <v-text-field v-model="formattedDate" autocomplete="off"class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+                <v-text-field v-model="formattedDate" autocomplete="off"class="login-textfield" placeholder="MM-DD-YYYY" variant="solo"
                   flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
                   @click:append-inner="props.onClick"></v-text-field>
               </template>
@@ -225,7 +225,7 @@
         <v-col cols="12" sm="12" class="pa-2">
           <v-menu :close-on-content-click="false">
             <template v-slot:activator="{ props }">
-              <v-text-field v-model="formattedStartDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+              <v-text-field v-model="formattedStartDate" autocomplete="off" class="login-textfield" placeholder="MM-DD-YYYY" variant="solo"
                 flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
                 @click:append-inner="props.onClick"></v-text-field>
             </template>
@@ -257,7 +257,7 @@
         <v-col cols="12" sm="12" class="pa-2">
           <v-menu :close-on-content-click="false">
             <template v-slot:activator="{ props }">
-              <v-text-field v-model="formattedTransitionDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
+              <v-text-field v-model="formattedTransitionDate" autocomplete="off" class="login-textfield" placeholder="MM-DD-YYYY" variant="solo"
                 flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
                 @click:append-inner="props.onClick"></v-text-field>
             </template>
@@ -504,8 +504,8 @@
       <v-col cols="12" sm="12" class="pa-2">
         <v-menu :close-on-content-click="false">
           <template v-slot:activator="{ props }">
-            <v-text-field v-model="formattedEndDate" autocomplete="off" class="login-textfield" placeholder="YYYY-DD-MM" variant="solo"
-              flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
+            <v-text-field v-model="formattedEndDate" autocomplete="off" class="login-textfield" placeholder="MM-DD-YYYY" variant="solo"
+              flat readonly bg-color="#F0F0F0" hide-details append-inner-icon="mdi-calendar" v-bind="props"
               @click:append-inner="props.onClick"></v-text-field>
           </template>
 
@@ -575,7 +575,7 @@ const formatDate = (date) => {
     formattedDate.value = '';
     return;
   }
-  formattedDate.value = dayjs(jsDate).format('YYYY-MM-DD');
+  formattedDate.value = dayjs(jsDate).format('MM-DD-YYYY');
 };
 
 const formatStartDate = (date) => {
@@ -588,7 +588,7 @@ const formatStartDate = (date) => {
     formattedStartDate.value = '';
     return;
   }
-  formattedStartDate.value = dayjs(jsDate).format('YYYY-MM-DD');
+  formattedStartDate.value = dayjs(jsDate).format('MM-DD-YYYY');
 };
 
 const formatTransitionDate = (date) => {
@@ -601,7 +601,7 @@ const formatTransitionDate = (date) => {
     formattedTransitionDate.value = '';
     return;
   }
-  formattedTransitionDate.value = dayjs(jsDate).format('YYYY-MM-DD');
+  formattedTransitionDate.value = dayjs(jsDate).format('MM-DD-YYYY');
 };
 
 const formatEndDate = (date) => {
@@ -614,7 +614,7 @@ const formatEndDate = (date) => {
     formattedEndDate.value = '';
     return;
   }
-  formattedEndDate.value = dayjs(jsDate).format('YYYY-MM-DD');
+  formattedEndDate.value = dayjs(jsDate).format('MM-DD-YYYY');
 };
 
 const dialogConfirmationStudent = ref(false);

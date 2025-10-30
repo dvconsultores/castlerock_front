@@ -972,12 +972,20 @@ const updateStudent = async () => {
       const formData = new FormData();
       formData.append('firstName', firstName.value.toString());
       formData.append('lastName', lastName.value.toString());
-      formData.append('dateOfBirth', dateOfBirth.value);
+      if (dateOfBirth.value) {
+        formData.append('dateOfBirth', dateOfBirth.value);
+      }
       formData.append('gender', gender.value);
       formData.append('notes', notes.value);
-      formData.append('startDateOfClasses', start_date_class.value);
-      formData.append('startDateOfClassesTransition', transition_date_class.value);
-      formData.append('endDateOfClasses', end_date_class.value);
+      if (start_date_class.value) {
+        formData.append('startDateOfClasses', start_date_class.value);
+      }
+      if (transition_date_class.value) {
+        formData.append('startDateOfClassesTransition', transition_date_class.value);
+      }
+      if (end_date_class.value) {
+        formData.append('endDateOfClasses', end_date_class.value);
+      }
 
       const selectedDaysEnrolled = [];
       if (monday_enrolled.value) selectedDaysEnrolled.push("Monday");

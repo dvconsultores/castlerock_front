@@ -40,6 +40,10 @@
         <div class="center" v-html="item.classes"></div>
       </template>
 
+      <template v-slot:item.nextClasses="{ item }">
+        <div class="center" v-html="item.nextClasses"></div>
+      </template>
+
       <template v-slot:item.actions="{ item }">
         <div class="flex center gap2">
           <v-icon color="#474649" size="24" class="pointer" @click="$router.push(`/home/student-profile/${item.id}`)">mdi-eye-outline</v-icon>
@@ -48,10 +52,11 @@
         </div>
       </template>
     </v-data-table>
-
+    <!-- 
     <v-btn flat class="btn-floating" @click="$router.push('/home/student-registration')">
       <img src="@/assets/sources/icons/plus.svg" alt="Btn">
     </v-btn>
+    -->
 
     <v-dialog v-model="dialogDelete" content-class="dialogDelete" persistent>
       <v-card class="card-delete">
@@ -160,6 +165,7 @@ const filteredStudents = computed(() => {
 const getStudents = async () => {
   try {
     const response = await axiosInstance.get('/students');
+
     dataStudents.value = response.data.result
       .map((student) => {
         const birthDate = dayjs(student.dateOfBirth);
@@ -172,23 +178,25 @@ const getStudents = async () => {
         } else {
           ageDisplay = `${months} M`;
         }
+
         return {
           id: student.id,
           student_img: student.image || avatarImg,
           name: student.firstName + ' ' + student.lastName,
           age: ageDisplay,
           gender: student.gender,
-          dateOfTransition: student.startDateOfClassesTransition,
+          dateOfTransitionRaw: student.startDateOfClassesTransition,
+          dateOfTransition: student.startDateOfClassesTransition ? dayjs(student.startDateOfClassesTransition).format('MM-DD-YYYY') : '',
           center: student.campus ? student.campus.name : '',
           classes: Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '',
           nextClasses: Array.isArray(student.classesTransition) ? student.classesTransition.map(c => c.name).join('<br>') : '',
           actions: ''
         };
       })
-      .filter(student => student.dateOfTransition != null && student.nextClasses != null && student.nextClasses !== '')
+      .filter(student => student.dateOfTransitionRaw != null && student.nextClasses != null && student.nextClasses !== '')
       .sort((a, b) => {
-        const dateA = dayjs(a.dateOfTransition);
-        const dateB = dayjs(b.dateOfTransition);
+        const dateA = dayjs(a.dateOfTransitionRaw || a.dateOfTransition);
+        const dateB = dayjs(b.dateOfTransitionRaw || b.dateOfTransition);
         return dateA - dateB;
       })
       .map((student, index) => ({ ...student, id_student: index + 1 }));

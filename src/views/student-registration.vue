@@ -742,6 +742,8 @@
 import { ref, inject, onMounted, computed, watch } from 'vue'
 import axiosInstance from '@/plugins/axios';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 
 const enrolled_btn = ref(true);
@@ -1113,17 +1115,19 @@ const createStudent = async () => {
       const formData = new FormData();
       formData.append('firstName', firstName.value.toString());
       formData.append('lastName', lastName.value.toString());
-      formData.append('dateOfBirth', dateOfBirth.value);
+      if (dateOfBirth.value) {
+        formData.append('dateOfBirth', dayjs(dateOfBirth.value).utc().format('YYYY-MM-DD'));
+      }
       formData.append('gender', gender.value);
       formData.append('notes', notes.value);
-      if(start_date_class.value){
-        formData.append('startDateOfClasses', start_date_class.value);
+      if (start_date_class.value) {
+        formData.append('startDateOfClasses', dayjs(start_date_class.value).utc().format('YYYY-MM-DD'));
       }
-      if(transition_date_class.value){
-        formData.append('startDateOfClassesTransition', transition_date_class.value);
+      if (transition_date_class.value) {
+        formData.append('startDateOfClassesTransition', dayjs(transition_date_class.value).utc().format('YYYY-MM-DD'));
       }
-      if(end_date_class.value){
-        formData.append('endDateOfClasses', end_date_class.value);
+      if (end_date_class.value) {
+        formData.append('endDateOfClasses', dayjs(end_date_class.value).utc().format('YYYY-MM-DD'));
       }
       const appendDays = (fieldName, days) => {
         days.forEach(day => formData.append(fieldName, day));

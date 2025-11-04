@@ -193,10 +193,10 @@ const editUser = async () => {
     formData.append('lastName', last_name.value.toString());
     formData.append('email', email.value.toString());
     formData.append('phone', phone.value.toString());
-    formData.append('password', password.value.toString());
+    //formData.append('password', password.value.toString());
     formData.append('role', select_role.value.toString());
-    
-    if (selectedImgUser.value) {4
+
+    if (selectedImgUser.value) {
       formData.append('image', selectedImgUser.value);
     }
     const response = await axiosInstance.patch(`/users/${idUsers.value}`, formData, {

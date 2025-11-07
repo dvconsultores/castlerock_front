@@ -49,9 +49,9 @@
       </template>
     </v-data-table>
 
-    <v-btn flat class="btn-floating" @click="$router.push('/home/student-registration')">
+    <!-- <v-btn flat class="btn-floating" @click="$router.push('/home/student-registration')">
       <img src="@/assets/sources/icons/plus.svg" alt="Btn">
-    </v-btn>
+    </v-btn> -->
 
     <v-dialog v-model="dialogDelete" content-class="dialogDelete" persistent>
       <v-card class="card-delete">

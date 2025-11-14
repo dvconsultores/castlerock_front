@@ -93,10 +93,12 @@ import axiosInstance from '@/plugins/axios';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import utc from 'dayjs/plugin/utc';
 import avatarImg from '@/assets/sources/images/avatar.svg';
 
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
+dayjs.extend(utc);
 
 const dialogDelete = ref(false);
 const dialogConfirmation = ref(false);
@@ -169,7 +171,7 @@ const getStudents = async () => {
     dataStudents.value = response.data.result
       .map((student) => {
         const birthDate = dayjs(student.dateOfBirth);
-        const now = dayjs();
+        const now = dayjs().utc().startOf('day');
         const years = now.diff(birthDate, 'year');
         const months = now.diff(birthDate, 'month') % 12;
         let ageDisplay = '';
@@ -179,14 +181,14 @@ const getStudents = async () => {
           ageDisplay = `${months} M`;
         }
 
-        const start = student.startDateOfClasses ? dayjs(student.startDateOfClasses) : null;
-        const transition = student.startDateOfClassesTransition ? dayjs(student.startDateOfClassesTransition) : null;
+        const start = student.startDateOfClasses ? dayjs(student.startDateOfClasses).utc().startOf('day') : null;
+        const transition = student.startDateOfClassesTransition ? dayjs(student.startDateOfClassesTransition).utc().startOf('day') : null;
 
         const candidates = [];
-        if (start && !start.isBefore(now, 'day')) {
+        if (start && !start.isBefore(now)) {
           candidates.push({ type: 'start', date: start });
         }
-        if (transition && !transition.isBefore(now, 'day')) {
+        if (transition && !transition.isBefore(now)) {
           candidates.push({ type: 'transition', date: transition });
         }
 

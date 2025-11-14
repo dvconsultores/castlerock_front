@@ -93,10 +93,12 @@ import axiosInstance from '@/plugins/axios';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import utc from 'dayjs/plugin/utc';
 import avatarImg from '@/assets/sources/images/avatar.svg';
 
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
+dayjs.extend(utc);
 
 const dialogDelete = ref(false);
 const dialogConfirmation = ref(false);
@@ -169,7 +171,7 @@ const getStudents = async () => {
     dataStudents.value = response.data.result
       .map((student) => {
         const birthDate = dayjs(student.dateOfBirth);
-        const now = dayjs();
+        const now = dayjs().utc().startOf('day');
         const years = now.diff(birthDate, 'year');
         const months = now.diff(birthDate, 'month') % 12;
         let ageDisplay = '';
@@ -179,24 +181,48 @@ const getStudents = async () => {
           ageDisplay = `${months} M`;
         }
 
+        const start = student.startDateOfClasses ? dayjs(student.startDateOfClasses).utc().startOf('day') : null;
+        const transition = student.startDateOfClassesTransition ? dayjs(student.startDateOfClassesTransition).utc().startOf('day') : null;
+
+        const candidates = [];
+        if (start && !start.isBefore(now)) {
+          candidates.push({ type: 'start', date: start });
+        }
+        if (transition && !transition.isBefore(now)) {
+          candidates.push({ type: 'transition', date: transition });
+        }
+
+        if (candidates.length === 0) return null;
+
+        candidates.sort((a, b) => a.date - b.date);
+        const chosen = candidates[0];
+
+        const classesForChosen = chosen.type === 'start'
+          ? (Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '')
+          : (Array.isArray(student.classesTransition) ? student.classesTransition.map(c => c.name).join('<br>') : '');
+
+        const otherClasses = chosen.type === 'start'
+          ? (Array.isArray(student.classesTransition) ? student.classesTransition.map(c => c.name).join('<br>') : '')
+          : (Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '');
+
         return {
           id: student.id,
           student_img: student.image || avatarImg,
           name: student.firstName + ' ' + student.lastName,
           age: ageDisplay,
           gender: student.gender,
-          dateOfTransitionRaw: student.startDateOfClassesTransition,
-          dateOfTransition: student.startDateOfClassesTransition ? dayjs(student.startDateOfClassesTransition).format('MM-DD-YYYY') : '',
+          dateOfTransitionRaw: chosen.date.format('YYYY-MM-DD'),
+          dateOfTransition: chosen.date.format('MM-DD-YYYY'),
           center: student.campus ? student.campus.name : '',
-          classes: Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '',
-          nextClasses: Array.isArray(student.classesTransition) ? student.classesTransition.map(c => c.name).join('<br>') : '',
+          classes: classesForChosen,
+          nextClasses: otherClasses,
           actions: ''
         };
       })
-      .filter(student => student.dateOfTransitionRaw != null && student.nextClasses != null && student.nextClasses !== '')
+      .filter(student => student !== null)
       .sort((a, b) => {
-        const dateA = dayjs(a.dateOfTransitionRaw || a.dateOfTransition);
-        const dateB = dayjs(b.dateOfTransitionRaw || b.dateOfTransition);
+        const dateA = dayjs(a.dateOfTransitionRaw);
+        const dateB = dayjs(b.dateOfTransitionRaw);
         return dateA - dateB;
       })
       .map((student, index) => ({ ...student, id_student: index + 1 }));

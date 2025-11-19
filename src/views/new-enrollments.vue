@@ -197,13 +197,26 @@ const getStudents = async () => {
         candidates.sort((a, b) => a.date - b.date);
         const chosen = candidates[0];
 
-        const classesForChosen = chosen.type === 'start'
-          ? (Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '')
-          : (Array.isArray(student.classesTransition) ? student.classesTransition.map(c => c.name).join('<br>') : '');
+        // LÓGICA CORREGIDA:
+        let classesForChosen = '';  // New/Assigned Class
+        let otherClasses = '';       // Transition Classes
 
-        const otherClasses = chosen.type === 'start'
-          ? (Array.isArray(student.classesTransition) ? student.classesTransition.map(c => c.name).join('<br>') : '')
-          : (Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '');
+        if (chosen.type === 'start') {
+          // Para fecha de inicio: mostrar classes en New/Assigned Class
+          classesForChosen = Array.isArray(student.classes) 
+            ? student.classes.map(c => c.name).join('<br>') 
+            : '';
+          // Transition Classes queda vacío para nuevos ingresos
+          otherClasses = '';
+        } else {
+          // Para transición: mostrar classesTransition en New/Assigned Class y classes en Transition Classes
+          otherClasses = Array.isArray(student.classesTransition) 
+            ? student.classesTransition.map(c => c.name).join('<br>') 
+            : '';
+          classesForChosen = Array.isArray(student.classes) 
+            ? student.classes.map(c => c.name).join('<br>') 
+            : '';
+        }
 
         return {
           id: student.id,
@@ -214,8 +227,8 @@ const getStudents = async () => {
           dateOfTransitionRaw: chosen.date.format('YYYY-MM-DD'),
           dateOfTransition: chosen.date.format('MM-DD-YYYY'),
           center: student.campus ? student.campus.name : '',
-          classes: classesForChosen,
-          nextClasses: otherClasses,
+          classes: classesForChosen,        // New/Assigned Class
+          nextClasses: otherClasses,        // Transition Classes
           actions: ''
         };
       })

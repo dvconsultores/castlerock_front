@@ -190,7 +190,11 @@
                 </span>
               </div>
 
-              <div v-if="day.maxStudents" class="attendance-div">
+              <div v-if="day.maxStudents" class="attendance-div" style="margin-top: -20px;">
+                <span class="f9">Enrolled</span>
+                <v-sheet class="mb-2">
+                  <span class="f12" style="color: #4E444B;">{{day.dataEnrolled}}</span>
+                </v-sheet>
                 <span class="f9">Availability</span>
                 <v-sheet>
                   <span class="f12" style="color: #4E444B;">{{day.dataAvailable}}</span>
@@ -588,6 +592,7 @@ const transformResponseToMonthlySchedule = (response) => {
         imgStudent5: null,
         realStudent: '',
         dataAvailable: '',
+        dataEnrolled: '',
         time: '',
         place: '',
         icon_pencil: '',
@@ -616,6 +621,7 @@ const transformResponseToMonthlySchedule = (response) => {
         dayData.realStudent = dayData.students.length || '0';
         dayData.maxStudents = planning.class?.maxCapacity?.toString() || '0';
         dayData.dataAvailable = planning.class?.maxCapacity - dayData.students.length;
+        dayData.dataEnrolled = dayData.students.length.toString();
         dayData.teacherType = 'Teacher';
         dayData.time = '9:00 - 12:00';
         dayData.dailyScheduleId = daySchedule.id;

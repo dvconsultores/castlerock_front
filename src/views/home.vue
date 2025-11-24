@@ -63,9 +63,12 @@
               </span>
             </div>
 
-            <div class="attendance-div">
+            <div class="attendance-div" style="margin-top: -25px;">
+              <span class="f8 tend" style="color: #4E444B;">Enrolled</span>
+              <v-sheet>
+                <span class="f12" style="color: #4E444B;">{{item.dataEnrolled}}</span>
+              </v-sheet>
               <span class="f8 tend" style="color: #4E444B;">Availability</span>
-
               <v-sheet>
                 <span class="f12" style="color: #4E444B;">{{item.dataAvailability}}</span>
               </v-sheet>
@@ -128,9 +131,12 @@
               </span>
             </div>
 
-            <div class="attendance-div">
+            <div class="attendance-div" style="margin-top: -25px;">
+              <span class="f8 tend" style="color: #4E444B;">Enrolled</span>
+              <v-sheet>
+                <span class="f12" style="color: #4E444B;">{{item.dataEnrolled}}</span>
+              </v-sheet>
               <span class="f8 tend" style="color: #4E444B;">Availability</span>
-
               <v-sheet>
                 <span class="f12" style="color: #4E444B;">{{item.dataAvailability}}</span>
               </v-sheet>
@@ -432,6 +438,7 @@ const loadDaily = async () => {
       realAttendance: item.students?.length || 0,
       estimatedAttendance: item.planning?.class?.maxCapacity,
       dataAvailability: item.planning?.class?.maxCapacity - item.students?.length,
+      dataEnrolled: item.students?.length || 0,
       place: item.planning?.class?.name,
       campus_name: item.planning?.campus?.name,
       time: '9:00 am - 12:15pm',
@@ -464,6 +471,7 @@ const loadDailyBefore = async () => {
       realAttendance: item.students?.length || 0,
       estimatedAttendance: item.planning?.class?.maxCapacity,
       dataAvailability: item.planning?.class?.maxCapacity - item.students?.length,
+      dataEnrolled: item.students?.length || 0,
       place: item.planning?.class?.name,
       campus_name: item.planning?.campus?.name,
       time: '9:00 am - 12:15pm',

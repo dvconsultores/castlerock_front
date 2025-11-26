@@ -495,10 +495,11 @@
     </v-row>
 
     <v-row class="fullw mt-10 big-checkboxes-container">
-      <v-col cols="12" align="left" class="pa-2">
+      <v-col cols="12" align="left" class="pa-2 jspace">
         <span class="font2 f24 tleft" style="color: #262262;">
           Withdrawal
         </span>
+        <v-btn class="btn" style="text-transform: none;" @click="clearEndDate">Clear Date</v-btn>
       </v-col>
 
       <v-col cols="12" sm="12" class="pa-2">
@@ -958,6 +959,11 @@ const getDataStudent = async () => {
   }
 }
 
+const clearEndDate = () => {
+  end_date_class.value = null;
+  formattedEndDate.value = '';
+};
+
 const updateStudent = async () => {
   savingStudent.value = true;
   if (!firstName.value ||
@@ -987,6 +993,8 @@ const updateStudent = async () => {
       }
       if (end_date_class.value) {
         formData.append('endDateOfClasses', dayjs(end_date_class.value).utc().format('YYYY-MM-DD'));
+      } else if (end_date_class.value === null) {
+        formData.append('endDateOfClasses', '');
       }
 
       const selectedDaysEnrolled = [];

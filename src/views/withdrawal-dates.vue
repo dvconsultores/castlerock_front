@@ -156,21 +156,23 @@ const filteredStudents = computed(() => {
   );
 });
 
+
 const getStudents = async () => {
   try {
     const response = await axiosInstance.get('/students');
-
+    
+    const now = dayjs();
+    
     dataStudents.value = response.data.result
       .map((student) => {
         const birthDate = dayjs(student.dateOfBirth);
-        const now = dayjs();
-        const years = now.diff(birthDate, 'year');
-        const months = now.diff(birthDate, 'month') % 12;
+        const ageYears = now.diff(birthDate, 'year');
+        const ageMonths = now.diff(birthDate, 'month') % 12;
         let ageDisplay = '';
-        if (years > 0) {
-          ageDisplay = `${years} Y ${months} M`;
+        if (ageYears > 0) {
+          ageDisplay = `${ageYears} Y ${ageMonths} M`;
         } else {
-          ageDisplay = `${months} M`;
+          ageDisplay = `${ageMonths} M`;
         }
 
         return {
@@ -186,10 +188,15 @@ const getStudents = async () => {
           actions: ''
         };
       })
-      .filter(student => student.dateOfEndRaw != null)
+      .filter(student => {
+        if (!student.dateOfEndRaw) return false;
+        
+        const endDate = dayjs(student.dateOfEndRaw);
+        return endDate.isSame(now, 'day') || endDate.isAfter(now);
+      })
       .sort((a, b) => {
-        const dateA = dayjs(a.dateOfEndRaw || a.dateOfEnd);
-        const dateB = dayjs(b.dateOfEndRaw || b.dateOfEnd);
+        const dateA = dayjs(a.dateOfEndRaw);
+        const dateB = dayjs(b.dateOfEndRaw);
         return dateA - dateB;
       })
       .map((student, index) => ({ ...student, id_student: index + 1 }));

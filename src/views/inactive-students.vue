@@ -125,10 +125,8 @@ const openConfirmation = async () => {
 const headers = ref([
     { title: 'Id.', key: 'id_student', align:'center', sortable: false },
     { title: 'Student Name', key: 'name', align:'center', sortable: false },
-    // { title: 'Age', key: 'age', align: 'center', sortable: false  },
-    // { title: 'Gender', key: 'gender', align: 'center', sortable: false  },
     { title: 'Center', key: 'center', align: 'center', sortable: false  },
-    { title: 'Current Classes', key: 'classes', align: 'center', sortable: false  },
+    { title: 'Last Classes', key: 'classes', align: 'center', sortable: false  },
     { title: 'Withdrawal Date', key: 'dateOfEnd', align: 'center', sortable: false  },
     { title: 'Actions', key: 'actions', align: 'center', sortable: false  },
 ]);
@@ -192,9 +190,9 @@ const getStudents = async () => {
         if (!student.dateOfEndRaw) return false;
         
         const endDate = dayjs(student.dateOfEndRaw);
-        return endDate.isSame(now, 'day') || endDate.isAfter(now);
+        return endDate.isBefore(now);
       })
-      .sort((a, b) => {
+      .sort((b, a) => {
         const dateA = dayjs(a.dateOfEndRaw);
         const dateB = dayjs(b.dateOfEndRaw);
         return dateA - dateB;

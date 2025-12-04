@@ -74,6 +74,12 @@ const router = createRouter({
           meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
+          path: 'inactive-students',
+          name: 'inactive-students',
+          component: () => import('@/views/inactive-students.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+        },
+        {
           path: 'programs',
           name: 'programs',
           component: () => import('@/views/programs.vue'),

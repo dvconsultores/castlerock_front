@@ -405,12 +405,12 @@ const dataSheets = ref([
     subTitleSheet: 'Check Withdrawal Dates',
     route: '/home/withdrawal-dates',
   },
-  // {
-  //   imgIcon: centers,
-  //   titleSheet: 'New Center',
-  //   subTitleSheet: 'Register a Center',
-  //   route: '/home/new-center'
-  // }
+  {
+    imgIcon: centers,
+    titleSheet: 'Inactive Students',
+    subTitleSheet: 'Check Inactive Students',
+    route: '/home/inactive-students'
+  }
 ]);
 
 const scheduleData = ref([]);

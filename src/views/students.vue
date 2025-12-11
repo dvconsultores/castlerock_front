@@ -88,10 +88,12 @@ import axiosInstance from '@/plugins/axios';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import utc from 'dayjs/plugin/utc';
 import avatarImg from '@/assets/sources/images/avatar.svg';
 
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
+dayjs.extend(utc);
 
 const dialogDelete = ref(false);
 const dialogConfirmation = ref(false);
@@ -158,33 +160,40 @@ const filteredStudents = computed(() => {
 const getStudents = async () => {
   try {
     const response = await axiosInstance.get('/students');
-    dataStudents.value = response.data.result.map((student, index) => {
-      ('Students:', response.data.result);
-      const birthDate = dayjs(student.dateOfBirth);
-      const now = dayjs();
-      
-      const years = now.diff(birthDate, 'year');
-      const months = now.diff(birthDate, 'month') % 12;
-      
-      let ageDisplay = '';
-      if (years > 0) {
-        ageDisplay = `${years} Y ${months} M`;
-      } else {
-        ageDisplay = `${months} M`;
-      }
+    const now = dayjs().utc().startOf('day');
+    dataStudents.value = response.data.result
+      .map((student) => {
+        const birthDate = dayjs(student.dateOfBirth);
+        const years = now.diff(birthDate, 'year');
+        const months = now.diff(birthDate, 'month') % 12;
 
-      return {
-        id: student.id,
-        id_student: index + 1,
-        student_img: student.image || avatarImg,
-        name: student.firstName + ' ' + student.lastName,
-        age: ageDisplay,
-        gender: student.gender,
-        center: student.campus ? student.campus.name : '',
-        classes: Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '',
-        actions: ''
-      };
-    });
+        let ageDisplay = '';
+        if (years > 0) {
+          ageDisplay = `${years} Y ${months} M`;
+        } else {
+          ageDisplay = `${months} M`;
+        }
+
+        const endRaw = student.endDateOfClasses ? dayjs(student.endDateOfClasses) : null;
+        const end = endRaw ? endRaw.utc().startOf('day') : null;
+
+        if (end && end.isBefore(now)) return null;
+
+        return {
+          id: student.id,
+          student_img: student.image || avatarImg,
+          name: student.firstName + ' ' + student.lastName,
+          age: ageDisplay,
+          gender: student.gender,
+          dateOfEndRaw: endRaw ? endRaw.format('YYYY-MM-DD') : null,
+          dateOfEnd: endRaw ? endRaw.format('MM-DD-YYYY') : '',
+          center: student.campus ? student.campus.name : '',
+          classes: Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '',
+          actions: ''
+        };
+      })
+      .filter(s => s !== null)
+      .map((student, index) => ({ ...student, id_student: index + 1 }));
   } catch (error) {
     console.error('Failed to load students', error);
   }

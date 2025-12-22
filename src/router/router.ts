@@ -65,19 +65,19 @@ const router = createRouter({
           path: 'new-enrollments',
           name: 'new-enrollments',
           component: () => import('@/views/new-enrollments.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
         },
         {
           path: 'withdrawal-dates',
           name: 'withdrawal-dates',
           component: () => import('@/views/withdrawal-dates.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
         },
         {
           path: 'inactive-students',
           name: 'inactive-students',
           component: () => import('@/views/inactive-students.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER'] }
         },
         {
           path: 'programs',

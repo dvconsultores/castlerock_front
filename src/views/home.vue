@@ -11,7 +11,8 @@
       </div>
     </div>
 
-    <div v-if="!isTeacher" class="sheet-menu-div mt-10">
+    <!-- <div v-if="!isTeacher" class="sheet-menu-div mt-10"> -->
+    <div class="sheet-menu-div mt-10">
       <v-sheet v-for="(item, index) in dataSheets" :key="index" class="sheet-menu pointer" @click="item.onClick ? item.onClick() : $router.push(item.route)">
         <div class="flexstart flexcol">
           <img :src="item.imgIcon" alt="Calendar">

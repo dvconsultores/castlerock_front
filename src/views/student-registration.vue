@@ -393,6 +393,9 @@
             <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
               Transition Schedule
             </v-btn>
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeBilling" :class="{'active-toggle': billing_btn}"> 
+              Billing
+            </v-btn>
           </div>
         </v-col>
 
@@ -425,6 +428,9 @@
             <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
               Transition Schedule
             </v-btn>
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeBilling" :class="{'active-toggle': billing_btn}"> 
+              Billing
+            </v-btn>
           </div>
         </v-col>
 
@@ -445,6 +451,28 @@
             <v-date-picker v-model="transition_date_class" @update:model-value="formatTransitionDate" :max-date="new Date()"
               :close-on-click="false" :close-on-content-click="false"></v-date-picker>
           </v-menu>
+        </v-col>
+      </template>
+
+      <template v-if="billing_btn">
+        <v-col cols="12" align="left">
+          <div class="custom-toggle">
+            <v-btn value="teachers" flat class="toggle-btn" @click="activeEnrolled" :class="{ 'active-toggle': enrolled_btn }"> 
+              Schedule 
+            </v-btn>
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
+              Transition Schedule
+            </v-btn>
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeBilling" :class="{'active-toggle': billing_btn}"> 
+              Billing
+            </v-btn>
+          </div>
+        </v-col>
+
+        <v-col cols="12" align="left" class="pa-2">
+          <h3 class="font2 tleft" style="color: #262B63;">
+            Amount Invoiced
+          </h3>
         </v-col>
       </template>
     </v-row>
@@ -651,6 +679,32 @@
       </v-row>
     </template>
 
+    <template v-if="billing_btn">
+      <v-row class="container-checkboxes mb-3 mt-0">
+        <v-col cols="12" align="left" class="pb-1 pl-0">
+          <span class="font2 f24 tleft" style="color: #262262;">Amount Invoice Weekly</span>
+        </v-col>
+
+        <v-col cols="12" class="jspace pl-0">
+          <v-text-field v-model="weeklyAmount" class="login-textfield" type="number" hide-spin-buttons placeholder="Billing Amount" variant="solo"
+            flat bg-color="#F0F0F0" hide-details append-inner-icon="mdi-currency-usd"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+
+      <v-row class="container-checkboxes mb-0 mt-3">
+        <v-col cols="12" align="left" class="pb-1 pl-0">
+          <span class="font2 f24 tleft" style="color: #262262;">Amount Invoice Monthly</span>
+        </v-col>
+
+        <v-col cols="12" class="jspace pl-0">
+          <v-text-field v-model="monthlyAmount" type="number" class="login-textfield" hide-spin-buttons placeholder="Billing Amount" variant="solo"
+            flat bg-color="#F0F0F0" hide-details append-inner-icon="mdi-currency-usd"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </template>
+
     <v-row class="fullw mt-10 big-checkboxes-container">
       <v-col cols="12" align="left">
         <span class="font2 f24 tleft" style="color: #262262;">Additional Programs</span>
@@ -748,18 +802,29 @@ dayjs.extend(utc);
 
 const enrolled_btn = ref(true);
 const transition_btn = ref(false);
+const billing_btn = ref(false);
 
 
 const activeEnrolled = () =>{
   enrolled_btn.value = true;
   transition_btn.value = false;
+  billing_btn.value = false;
 };
 
 const activeTransition = () =>{
   transition_btn.value = true;
   enrolled_btn.value = false;
+  billing_btn.value = false;
 };
 
+const activeBilling = () =>{
+  billing_btn.value = true;
+  enrolled_btn.value = false;
+  transition_btn.value = false;
+};
+
+const weeklyAmount = ref(null);
+const monthlyAmount = ref(null);
 const firstNameError = ref('');
 const lastNameError = ref('');
 const dateOfBirthError = ref('');
@@ -1249,6 +1314,9 @@ const createStudent = async () => {
       if (selectedImgFather.value) {
         formData.append('imageContactSecondary', selectedImgFather.value);
       }
+      formData.append('weeklyAmount', Number(weeklyAmount.value));
+      formData.append('monthlyAmount', Number(monthlyAmount.value));
+      
       const response = await axiosInstance.post('/students', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',

@@ -312,6 +312,131 @@
       }
     }
   }
+
+    .v-data-table{
+    .v-input{
+      background-color: #F0F0F0 ;
+    }
+    .login-textfield{    
+      i{
+        color: #3C3C434D;
+        opacity: .6;
+      }
+
+      .v-field{
+        border-radius: 16px;
+        transition: all .5s ease-in-out;
+        ::placeholder{
+          color: #3C3C434D;
+          opacity: .6;
+        }
+      }
+
+      .v-field--active{
+        border: 1px solid #7583D9;
+
+        i{
+          color: #46464C;
+        }
+      }
+      .v-input{
+        max-width: 100%;
+        width: 100%;
+      }
+      .v-input__control{
+        height: 56px;
+        max-width: 100%;
+        width: 100%;
+      }
+  
+      .v-field__input{
+        max-width: 100%;
+        width: 100%;
+        padding-block: 5px;
+        height: 56px!important;
+        min-height: 1px!important;
+      }
+    }
+
+    .v-table__wrapper {
+      table {
+        border-collapse: separate;
+        border-spacing: 0px;
+        background-color: #F0F0F0 ;
+      }
+    }
+
+    tr th{
+      background-color: #F0F0F0 ;
+      color: #262262;
+      font-size: 16px;
+      font-weight: 700!important;
+      border: none!important;
+      padding-block: 40px 12px;
+    }
+    
+    tr:nth-child(odd){
+      background: #FFFFFF!important;
+      
+      .color-font-center{
+        color: #262262;
+      }
+    }
+    
+    tr:nth-child(even){
+      background: #F0F0F0 !important;
+
+      .color-font-center{
+        color: #262262;
+      }
+    }
+    
+    
+    tr td{
+      border: none!important;
+      color: #474649;
+      font-weight: 700!important;
+      font-size: 16px;
+      height: 82px;
+    }
+
+    td:first-child {
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+    }
+
+    td:last-child {
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+  }
+
+  .v-data-table-footer{
+    background-color: #F0F0F0;
+    border-top: 0px solid #E0E0E0!important;
+    .v-data-table-footer__items-per-page{
+      display: none;      
+    }
+  }
+
+  .card-title{
+    height: 100px;
+    padding: 20px 10px;
+    border-radius: 12px;
+    border: 1px solid #7583D9;
+
+    .first-span{
+      color: #262262;
+      font-size: 18px;
+      font-weight: 700!important;
+    }
+
+    span{
+      color: #6BBDAE;
+      font-size: 24px;
+      font-weight: 700!important;
+    }
+  }
 }
 
 .rounded-menu {

@@ -36,7 +36,7 @@
           <v-col cols="12" sm="4" class="pa-2">
             <v-menu :close-on-content-click="false">
               <template v-slot:activator="{ props }">
-                <v-text-field v-model="formattedDate" autocomplete="off"class="login-textfield" placeholder="MM-DD-YYYY" variant="solo"
+                <v-text-field v-model="formattedDate" autocomplete="off" class="login-textfield" placeholder="MM-DD-YYYY" variant="solo"
                   flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
                   @click:append-inner="props.onClick"></v-text-field>
               </template>
@@ -213,6 +213,9 @@
             <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
               Transition Schedule
             </v-btn>
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeBilling" :class="{'active-toggle': billing_btn}"> 
+              Billing
+            </v-btn>
           </div>
         </v-col>
 
@@ -245,13 +248,17 @@
             <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
               Transition Schedule
             </v-btn>
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeBilling" :class="{'active-toggle': billing_btn}"> 
+              Billing
+            </v-btn>
           </div>
         </v-col>
 
-        <v-col cols="12" align="left" class="pa-2">
+        <v-col cols="12" align="left" class="pa-2 jspace">
           <h3 class="font2 tleft" style="color: #262B63;">
             Transition
           </h3>
+          <v-btn class="btn" style="text-transform: none;" @click="clearTransitionDate">Clear Date</v-btn>
         </v-col>
 
         <v-col cols="12" sm="12" class="pa-2">
@@ -267,7 +274,29 @@
           </v-menu>
         </v-col>
       </template>
-    </v-row>
+
+      <template v-if="billing_btn">
+        <v-col cols="12" align="left">
+          <div class="custom-toggle">
+            <v-btn value="teachers" flat class="toggle-btn" @click="activeEnrolled" :class="{ 'active-toggle': enrolled_btn }"> 
+              Schedule 
+            </v-btn>
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
+              Transition Schedule
+            </v-btn>
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeBilling" :class="{'active-toggle': billing_btn}"> 
+              Billing
+            </v-btn>
+          </div>
+        </v-col>
+
+        <v-col cols="12" align="left" class="pa-2">
+          <h3 class="font2 tleft" style="color: #262B63;">
+            Amount Invoiced
+          </h3>
+        </v-col>
+      </template>
+    </v-row>    
 
     <template v-if="enrolled_btn">
       <v-row class="container-checkboxes mb-3">
@@ -471,6 +500,32 @@
       </v-row>
     </template>
 
+    <template v-if="billing_btn">
+      <v-row class="container-checkboxes mb-3 mt-0">
+        <v-col cols="12" align="left" class="pb-1 pl-0">
+          <span class="font2 f24 tleft" style="color: #262262;">Amount Invoice Weekly</span>
+        </v-col>
+
+        <v-col cols="12" class="jspace pl-0">
+          <v-text-field v-model="weeklyAmount" class="login-textfield" type="number" hide-spin-buttons placeholder="Billing Amount" variant="solo"
+            flat bg-color="#F0F0F0" hide-details append-inner-icon="mdi-currency-usd"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+
+      <v-row class="container-checkboxes mb-0 mt-3">
+        <v-col cols="12" align="left" class="pb-1 pl-0">
+          <span class="font2 f24 tleft" style="color: #262262;">Amount Invoice Monthly</span>
+        </v-col>
+
+        <v-col cols="12" class="jspace pl-0">
+          <v-text-field v-model="monthlyAmount" type="number" class="login-textfield" hide-spin-buttons placeholder="Billing Amount" variant="solo"
+            flat bg-color="#F0F0F0" hide-details append-inner-icon="mdi-currency-usd"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </template>
+
     <v-row class="fullw mt-10 big-checkboxes-container">
       <v-col cols="12" align="left">
         <span class="font2 f24 tleft" style="color: #262262;">Additional Programs</span>
@@ -552,16 +607,25 @@ dayjs.extend(utc);
 
 const enrolled_btn = ref(true);
 const transition_btn = ref(false);
+const billing_btn = ref(false);
 
 
 const activeEnrolled = () =>{
   enrolled_btn.value = true;
   transition_btn.value = false;
+  billing_btn.value = false;
 };
 
 const activeTransition = () =>{
   transition_btn.value = true;
   enrolled_btn.value = false;
+  billing_btn.value = false;
+};
+
+const activeBilling = () =>{
+  billing_btn.value = true;
+  enrolled_btn.value = false;
+  transition_btn.value = false;
 };
 
 const id = ref(null);
@@ -671,6 +735,8 @@ const dataClasses = ref([]);
 const select_class = ref(null);
 const select_class_transition = ref(null);
 const dataIdsClass = ref(null);
+const weeklyAmount = ref(null);
+const monthlyAmount = ref(null);
 
 const monday_enrolled = ref(false);
 const tuesday_enrolled = ref(false);
@@ -867,6 +933,8 @@ const getDataStudent = async () => {
     selectedImgStudent.value = student.image;
     imagePreviewStudent.value = student.image;
     notes.value = student.notes;
+    weeklyAmount.value = student.weeklyAmount;
+    monthlyAmount.value = student.monthlyAmount;
     start_date_class.value = student.startDateOfClasses ? dayjs(student.startDateOfClasses).toDate() : null;
     transition_date_class.value = student.startDateOfClassesTransition ? dayjs(student.startDateOfClassesTransition).toDate() : null;
     end_date_class.value = student.endDateOfClasses ? dayjs(student.endDateOfClasses).toDate() : null;
@@ -964,6 +1032,11 @@ const clearEndDate = () => {
   formattedEndDate.value = '';
 };
 
+const clearTransitionDate = () => {
+  transition_date_class.value = null;
+  formattedTransitionDate.value = '';
+};
+
 const updateStudent = async () => {
   savingStudent.value = true;
   if (!firstName.value ||
@@ -990,6 +1063,8 @@ const updateStudent = async () => {
       }
       if (transition_date_class.value) {
         formData.append('startDateOfClassesTransition', dayjs(transition_date_class.value).utc().format('YYYY-MM-DD'));
+      } else if (transition_date_class.value === null) {
+        formData.append('startDateOfClassesTransition', '');
       }
       if (end_date_class.value) {
         formData.append('endDateOfClasses', dayjs(end_date_class.value).utc().format('YYYY-MM-DD'));
@@ -1133,7 +1208,9 @@ const updateStudent = async () => {
         formDataObject[key] = value;
       });
 
-      // console.log('Form data being sent:', formDataObject);
+      formData.append('weeklyAmount', Number(weeklyAmount.value));
+      formData.append('monthlyAmount', Number(monthlyAmount.value));
+
       const response = await axiosInstance.patch(`/students/${studentId.value}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',

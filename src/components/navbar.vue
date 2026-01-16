@@ -138,6 +138,8 @@ const pageTitles = {
   '/home/new-enrollments': 'Future Enrollments',
   '/home/daily-roster': 'Daily Roster',
   '/home/inactive-students': 'Inactive Students',
+  '/home/weekly-roster': 'Weekly Roster',
+  '/home/report': 'Reports Section',
 };
 
 const currentTitle = computed(() => {

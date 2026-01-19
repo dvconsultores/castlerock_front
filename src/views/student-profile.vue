@@ -388,6 +388,9 @@
             <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
               Transition Schedule
             </v-btn>
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeBilling" :class="{'active-toggle': billing_btn}"> 
+              Billing
+            </v-btn>
           </div>
         </v-col>
 
@@ -422,6 +425,9 @@
             <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
               Transition Schedule
             </v-btn>
+            <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeBilling" :class="{'active-toggle': billing_btn}"> 
+              Billing
+            </v-btn>
           </div>
         </v-col>
 
@@ -442,6 +448,28 @@
           ></v-text-field>
         </v-col>
       </template>
+
+        <template v-if="billing_btn">
+          <v-col cols="12" align="left">
+            <div class="custom-toggle">
+              <v-btn value="teachers" flat class="toggle-btn" @click="activeEnrolled" :class="{ 'active-toggle': enrolled_btn }"> 
+                Schedule 
+              </v-btn>
+              <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeTransition" :class="{'active-toggle': transition_btn}"> 
+                Transition Schedule
+              </v-btn>
+              <v-btn value="students" flat class="toggle-btn toggle-btn-large" @click="activeBilling" :class="{'active-toggle': billing_btn}"> 
+                Billing
+              </v-btn>
+            </div>
+          </v-col>
+
+          <v-col cols="12" align="left" class="pa-2">
+            <h3 class="font2 tleft" style="color: #262B63;">
+              Amount Invoiced
+            </h3>
+          </v-col>
+        </template>
       </v-row>
 
       <template v-if="enrolled_btn">
@@ -596,6 +624,32 @@
                 contentClass: 'rounded-menu',
               }"
             ></v-autocomplete>
+          </v-col>
+        </v-row>
+      </template>
+
+      <template v-if="billing_btn">
+        <v-row class="container-checkboxes mb-3 mt-0">
+          <v-col cols="12" align="left" class="pb-1 pl-0">
+            <span class="font2 f24 tleft" style="color: #262262;">Amount Invoice Weekly</span>
+          </v-col>
+
+          <v-col cols="12" class="jspace pl-0">
+            <v-text-field v-model="weeklyAmount" class="login-textfield" readonly type="number" hide-spin-buttons placeholder="Billing Amount" variant="solo"
+              flat bg-color="#F0F0F0" hide-details append-inner-icon="mdi-currency-usd"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+
+        <v-row class="container-checkboxes mb-0 mt-3">
+          <v-col cols="12" align="left" class="pb-1 pl-0">
+            <span class="font2 f24 tleft" style="color: #262262;">Amount Invoice Monthly</span>
+          </v-col>
+
+          <v-col cols="12" class="jspace pl-0">
+            <v-text-field v-model="monthlyAmount" type="number" readonly class="login-textfield" hide-spin-buttons placeholder="Billing Amount" variant="solo"
+              flat bg-color="#F0F0F0" hide-details append-inner-icon="mdi-currency-usd"
+            ></v-text-field>
           </v-col>
         </v-row>
       </template>
@@ -824,6 +878,7 @@ const monthlyAttedance = ref([]);
 
 const data_btn = ref(true);
 const attendance_btn = ref(false);
+const billing_btn = ref(false);
 
 
 const activeData = () =>{
@@ -841,12 +896,21 @@ const transition_btn = ref(false);
 const activeEnrolled = () =>{
   enrolled_btn.value = true;
   transition_btn.value = false;
+  billing_btn.value = false;
 };
 
 const activeTransition = () =>{
   transition_btn.value = true;
   enrolled_btn.value = false;
+  billing_btn.value = false;
 };
+
+const activeBilling = () =>{
+  billing_btn.value = true;
+  enrolled_btn.value = false;
+  transition_btn.value = false;
+}
+
 const id = ref(null);
 const route = useRoute();
 const studentId = ref(route.params.id);
@@ -895,6 +959,8 @@ const contact_number = ref('');
 const contact_number2 = ref('');
 const type_relationship1 = ref(null);
 const type_relationship2 = ref(null);
+const weeklyAmount = ref(null);
+const monthlyAmount = ref(null);
 
 const monday_enrolled = ref(false);
 const tuesday_enrolled = ref(false);
@@ -1036,6 +1102,8 @@ const getDataStudent = async () => {
     dateOfBirth.value = formatDate(student.dateOfBirth);
     imagePreviewStudent.value = student.image || avatarImg;
     notes.value = student.notes;
+    weeklyAmount.value = student.weeklyAmount;
+    monthlyAmount.value = student.monthlyAmount;
     start_date_class.value = formatDate(student.startDateOfClasses);
     end_date_class.value = formatDate(student.endDateOfClasses);
     transition_date.value = formatDate(student.startDateOfClassesTransition);

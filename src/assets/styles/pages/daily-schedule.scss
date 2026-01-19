@@ -491,6 +491,32 @@
   .big-div-spot{
     height: max-content;
   }
+
+  .tab-inactive{
+    background-color: #FFFFFF!important;
+    margin-inline: 2px;
+    text-transform: none;
+
+    @include media(max, 650px) {
+      display: none;
+    }
+  }
+
+  .tab-mobile{
+    display: none;
+    text-transform: none;
+
+    @include media(max, 650px) {
+      display: block;
+      width: 50px;
+      max-width: 50px;
+      min-width: 50px;
+    }
+  }
+
+  .tab-active{
+    background-color: #6EC8AC!important;
+  }
 }
 
 

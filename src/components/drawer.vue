@@ -25,6 +25,11 @@
           <span class="w600 f14" style="color: #262262;">Classrooms</span>
         </div>
 
+        <div v-if="isAdmin" class="icon-container mt-2" :class="{ 'icon-container-selected': isRouteActive('/home/report') }" @click="$router.push('/home/report')">
+          <img src="@/assets/sources/icons/report.svg" alt="Report">
+          <span class="w600 f14" style="color: #262262;">Report</span>
+        </div>
+
         <div v-if="isAdmin" class="icon-container mt-2" :class="{ 'icon-container-selected': isRouteActive('/home/teachers') || isRouteActive('home/new-teacher')}" @click="$router.push('/home/teachers')">
           <img src="@/assets/sources/icons/teachers.svg" alt="Teacher">
           <span class="w600 f14" style="color: #262262;">Teacher</span>
@@ -101,7 +106,7 @@ const logOut = () => {
   .menu{
     background-color: #6EC8AC;
     box-shadow: inset 0 8px 11px 4px rgba(0, 0, 0, 0.3);
-    height: 900px;
+    height: 1000px;
     width: 100%;
     border-top-right-radius: 88px;
     display: flex;

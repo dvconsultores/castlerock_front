@@ -395,6 +395,12 @@ const dataSheets = ref([
     route: '/home/daily-roster',
   },
   {
+    imgIcon: centers,
+    titleSheet: 'Weekly Roster Snapshot',
+    subTitleSheet: 'View Weekly Roster',
+    route: '/home/weekly-roster',
+  },
+  {
     imgIcon: classroms,
     titleSheet: 'New Student/Transitions',
     subTitleSheet: 'Future Enrollment Roster',

@@ -735,8 +735,8 @@ const dataClasses = ref([]);
 const select_class = ref(null);
 const select_class_transition = ref(null);
 const dataIdsClass = ref(null);
-const weeklyAmount = ref(null);
-const monthlyAmount = ref(null);
+const weeklyAmount = ref(0);
+const monthlyAmount = ref(0);
 
 const monday_enrolled = ref(false);
 const tuesday_enrolled = ref(false);

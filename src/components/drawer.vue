@@ -27,7 +27,7 @@
 
         <div v-if="isAdmin" class="icon-container mt-2" :class="{ 'icon-container-selected': isRouteActive('/home/report') }" @click="$router.push('/home/report')">
           <img src="@/assets/sources/icons/report.svg" alt="Report">
-          <span class="w600 f14" style="color: #262262;">Report</span>
+          <span class="w600 f14" style="color: #262262;">Reports</span>
         </div>
 
         <div v-if="isAdmin" class="icon-container mt-2" :class="{ 'icon-container-selected': isRouteActive('/home/teachers') || isRouteActive('home/new-teacher')}" @click="$router.push('/home/teachers')">

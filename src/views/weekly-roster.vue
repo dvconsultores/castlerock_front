@@ -16,17 +16,17 @@
         height="36"
         bg-color="#F0F0F0"
       >
-        <v-tab :value="1" rounded="lg" selected-class="tab-active" class="tab-inactive ml-0" @click="getDailyScheduleDiferent">Monday</v-tab>
-        <v-tab :value="2" rounded="lg" selected-class="tab-active" class="tab-inactive" @click="getDailyScheduleDiferent">Tuesday</v-tab>
-        <v-tab :value="3" rounded="lg" selected-class="tab-active" class="tab-inactive" @click="getDailyScheduleDiferent">Wednesday</v-tab>
-        <v-tab :value="4" rounded="lg" selected-class="tab-active" class="tab-inactive" @click="getDailyScheduleDiferent">Thursday</v-tab>
-        <v-tab :value="5" rounded="lg" selected-class="tab-active" class="tab-inactive" @click="getDailyScheduleDiferent">Friday</v-tab>
+        <v-tab :value="1" rounded="lg" selected-class="tab-active" class="tab-inactive ml-0">Monday</v-tab>
+        <v-tab :value="2" rounded="lg" selected-class="tab-active" class="tab-inactive">Tuesday</v-tab>
+        <v-tab :value="3" rounded="lg" selected-class="tab-active" class="tab-inactive">Wednesday</v-tab>
+        <v-tab :value="4" rounded="lg" selected-class="tab-active" class="tab-inactive">Thursday</v-tab>
+        <v-tab :value="5" rounded="lg" selected-class="tab-active" class="tab-inactive">Friday</v-tab>
 
-        <v-tab :value="1" rounded="lg" selected-class="tab-active" class="tab-inactive tab-mobile ml-0" @click="getDailyScheduleDiferent">Mon</v-tab>
-        <v-tab :value="2" rounded="lg" selected-class="tab-active" class="tab-inactive tab-mobile" @click="getDailyScheduleDiferent">Tue</v-tab>
-        <v-tab :value="3" rounded="lg" selected-class="tab-active" class="tab-inactive tab-mobile" @click="getDailyScheduleDiferent">Wed</v-tab>
-        <v-tab :value="4" rounded="lg" selected-class="tab-active" class="tab-inactive tab-mobile" @click="getDailyScheduleDiferent">Thu</v-tab>
-        <v-tab :value="5" rounded="lg" selected-class="tab-active" class="tab-inactive tab-mobile" @click="getDailyScheduleDiferent">Fri</v-tab>
+        <v-tab :value="1" rounded="lg" selected-class="tab-active" class="tab-inactive tab-mobile ml-0">Mon</v-tab>
+        <v-tab :value="2" rounded="lg" selected-class="tab-active" class="tab-inactive tab-mobile">Tue</v-tab>
+        <v-tab :value="3" rounded="lg" selected-class="tab-active" class="tab-inactive tab-mobile">Wed</v-tab>
+        <v-tab :value="4" rounded="lg" selected-class="tab-active" class="tab-inactive tab-mobile">Thu</v-tab>
+        <v-tab :value="5" rounded="lg" selected-class="tab-active" class="tab-inactive tab-mobile">Fri</v-tab>
       </v-tabs>
     </div>
 
@@ -158,118 +158,16 @@ const activeDay = computed(() => {
   return daysMap[tab_weekday.value] || '';
 });
 
-const getDailyScheduleToday = async () => {
-  try {
-    const todayDateString = dayjs().format('YYYY-MM-DD'); 
-
-    const response = await axiosInstance.get(`/daily-schedules/`);
-    const scheduleData = response.data.result; 
-
-    const filteredSchedule = scheduleData.filter(schedule => {
-      return schedule.date === todayDateString;
-    });
-
-    const processedData = filteredSchedule.reduce((accumulator, schedule) => {
-      
-      const campusName = schedule.planning.campus.name;
-      const maxCapacity = schedule.planning.class.maxCapacity;
-
-      const studentsWithCampus = schedule.students.map(student => ({
-        firstName: student.firstName,
-        lastName: student.lastName,
-        image: student.image,
-        campusName: campusName, 
-        className: schedule.planning.class.name
-      }));
-
-      accumulator.allStudents.push(...studentsWithCampus);
-
-      accumulator.totalStudents += schedule.students.length;
-      accumulator.totalMaxCapacity += maxCapacity;
-
-      return accumulator;
-    }, { 
-        allStudents: [], 
-        totalStudents: 0, 
-        totalMaxCapacity: 0 
-    });
-
-    console.log('Datos Procesados del Día:', processedData);
-
-    dataStudents.value = processedData.allStudents.map(student => ({
-      student_img: student.image || imgAvatar,
-      student_name: `${student.firstName} ${student.lastName}`,
-      student_class: student.className || '',
-    }));
-
-    const classMap = new Map();
-    filteredSchedule.forEach(schedule => {
-      const classId = schedule.planning.class.id;
-      const className = schedule.planning.class.name;
-      const classImage = schedule.planning.class.image || null;
-      const classMax = schedule.planning.class.maxCapacity || 0;
-      const classType = schedule.planning.class.classType || '';
-      const studentsCount = schedule.students ? schedule.students.length : 0;
-
-      if (!classMap.has(classId)) {
-        classMap.set(classId, {
-          classId,
-          className,
-          studentsCount,
-          maxCapacity: classMax,
-          image: classImage,
-          classType
-        });
-      } else {
-        const existing = classMap.get(classId);
-        existing.studentsCount += studentsCount;
-        existing.maxCapacity += classMax; 
-        existing.classType = existing.classType || classType;
-        classMap.set(classId, existing);
-      }
-    });
-
-    classesSummary.value = Array.from(classMap.values());
-
-    const priority = { 'ENROLLED': 0, 'AFTER_SCHOOL': 1, 'BEFORE_SCHOOL': 2 };
-    classesSummary.value.sort((a, b) => {
-      const pa = priority[a.classType] ?? 3;
-      const pb = priority[b.classType] ?? 3;
-      if (pa !== pb) return pa - pb;
-      return (a.className || '').localeCompare(b.className || '');
-    });
-
-    maxCapacity.value = processedData.totalMaxCapacity || dataStudents.value.length;
-
-    return processedData;
-    
-  } catch (error) {
-    showAlert(error.response?.data?.message || 'Failed to load schedule', 'error');
-  }
-};
-
 const getDailyScheduleDiferent = async () => {
   try {
     dialogLoader.value = true;
 
-    let dateString;
-    if (tab_weekday.value === 1) {
-      dateString = dayjs().startOf('isoWeek').format('YYYY-MM-DD'); 
-    } else if (tab_weekday.value === 2) {
-      dateString = dayjs().startOf('isoWeek').add(1, 'day').format('YYYY-MM-DD'); 
-    } else if (tab_weekday.value === 3) {
-      dateString = dayjs().startOf('isoWeek').add(2, 'day').format('YYYY-MM-DD'); 
-    } else if (tab_weekday.value === 4) {
-      dateString = dayjs().startOf('isoWeek').add(3, 'day').format('YYYY-MM-DD'); 
-    } else if (tab_weekday.value === 5) {
-      dateString = dayjs().startOf('isoWeek').add(4, 'day').format('YYYY-MM-DD'); 
-    }
-    const response = await axiosInstance.get(`/daily-schedules/`);
-    const scheduleData = response.data.result; 
-    
-    const filteredSchedule = scheduleData.filter(schedule => {
-      return schedule.date === dateString;
-    });
+    const today = dayjs();
+    const offsetToMonday = (today.day() + 6) % 7;
+    const monday = today.subtract(offsetToMonday, 'day');
+    const dateString = monday.add(tab_weekday.value - 1, 'day').format('YYYY-MM-DD');
+    const response = await axiosInstance.get(`/daily-schedules?date=${dateString}`);
+    const filteredSchedule = response.data?.result || [];
 
     const processedData = filteredSchedule.reduce((accumulator, schedule) => {
       
@@ -347,7 +245,7 @@ const getDailyScheduleDiferent = async () => {
 
     setTimeout(() => {
       dialogLoader.value = false;
-    }, 5000);
+    }, 300);
     
     return processedData;
     

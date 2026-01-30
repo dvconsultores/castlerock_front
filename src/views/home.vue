@@ -426,9 +426,9 @@ const dataClassesBefore = ref([]);
 
 const loadDaily = async () => {
   try {
-    const response = await axiosInstance.get(`/daily-schedules/`);
     const today = currentDate.value.format('YYYY-MM-DD');
-    const todayClasses = response.data.result.filter(item => item.date === today);
+    const response = await axiosInstance.get(`/daily-schedules?date=${today}`);
+    const todayClasses = response.data?.result || [];
     console.log('Today Classes:', todayClasses);
     scheduleData.value = todayClasses;
     dataClasses.value = todayClasses.map(item => ({
@@ -459,14 +459,19 @@ const loadDaily = async () => {
 
 const loadDailyBefore = async () => {
   try {
-    const response = await axiosInstance.get(`/daily-schedules/`);
-    const tomorrow = currentDate.value.add(1, 'day').format('YYYY-MM-DD');
-    const tomorrowClasses = response.data.result.filter(item => item.date === tomorrow);
-    
+    let targetDate = currentDate.value.add(1, 'day');
+    const dayOfWeek = targetDate.day();
+    if (dayOfWeek === 6) targetDate = targetDate.add(2, 'day');
+    else if (dayOfWeek === 0) targetDate = targetDate.add(1, 'day'); 
+
+    const targetStr = targetDate.format('YYYY-MM-DD');
+    const response = await axiosInstance.get(`/daily-schedules?date=${targetStr}`);
+    const tomorrowClasses = response.data?.result || [];
+
     scheduleData.value = tomorrowClasses;
     dataClassesBefore.value = tomorrowClasses.map(item => ({
       id: item.id,
-      date: `${item.day}, ${currentDate.value.add(1, 'day').format('D')}`,
+      date: `${item.day}, ${targetDate.format('D')}`,
       imgUser: item.teacher?.user.image || null,
       teacherName: item.teacher?.user.firstName + ' ' + item.teacher?.user.lastName || 'Teacher',
       teacherType: 'Teacher',

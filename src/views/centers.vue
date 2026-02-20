@@ -27,12 +27,11 @@
         </div>
       </template>
 
-
       <template v-slot:item.actions="{ item }">
         <div class="flex center gap2">
           <v-icon color="#474649" size="24" class="pointer" @click="() => $router.push(`/home/view-center/${item.id}`)">mdi-eye-outline</v-icon>
           <v-icon color="#474649" size="24" class="pointer" @click="() => $router.push(`/home/edit-center/${item.id}`)">mdi-pencil-outline</v-icon>
-          <v-icon color="#474649" size="24" class="pointer" @click="() => openDelete(item)">mdi-trash-can-outline</v-icon>
+          <v-icon v-if="isAdmin" color="#474649" size="24" class="pointer" @click="() => openDelete(item)">mdi-trash-can-outline</v-icon>
         </div>
       </template>
     </v-data-table>
@@ -83,6 +82,9 @@ const loadingDelete = ref(false);
 const showAlert = inject('showAlert');
 const dataCenters = ref([]);
 const searchQuery = ref('');
+const isAdmin = localStorage.getItem('userRole') === 'ADMIN';
+const isTeacher = localStorage.getItem('userRole') === 'TEACHER';
+const isOwner = localStorage.getItem('userRole') === 'OWNER';
 
 const closeDelete = () => {
   dialogDeleteCenter.value = false;
@@ -113,9 +115,11 @@ const openConfirmation = async () => {
 
 const headers = ref([
     { title: '', key: 'center_img', align:'center', sortable: false },
-    { title: 'Id', key: 'id_center', align:'center', sortable: false },
+    // { title: 'Id', key: 'id_center', align:'center', sortable: false },
     { title: 'Name', key: 'name', align:'center', sortable: false },
     { title: 'Address', key: 'address', align: 'center', sortable: false },
+    { title: 'Next Billing Date', key: 'next_billing_date', align: 'center', sortable: false },
+    { title: 'Suscription Status', key: 'subscription_status', align: 'center', sortable: false },
     { title: 'Actions', key: 'actions', align: 'center', sortable: false },
 ]);
 
@@ -130,17 +134,37 @@ const filteredCenters = computed(() => {
   );
 });
 
+const formatDate = (iso) => {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d)) return null;
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  return `${mm}-${dd}-${yyyy}`;
+};
+
+const capitalizeFirst = (value) => {
+  if (value === null || value === undefined) return null;
+  const s = String(value);
+  if (!s) return null;
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
 const getCenters = async () => {
   try {
     const response = await axiosInstance.get('/campus');
     
     dataCenters.value = response.data.result.map((center, index) => {
+      const sub = Array.isArray(center.subscriptions) && center.subscriptions.length > 0 ? center.subscriptions[0] : null;
       return {
         id: center.id,
         id_center: index + 1,
         center_img: center.image,
         name: center.name,
         address: center.address,
+        next_billing_date: sub ? formatDate(sub.nextBillingDate) : null,
+        subscription_status: sub ? capitalizeFirst(sub.status) : null,
         actions: '',
       }
     });

@@ -67,8 +67,8 @@
           <v-card flat class="card-img-upload flexcol center gap1">
             <template v-if="!imagePreview && !currentImage">
               <img src="@/assets/sources/icons/cloud_upload.svg" alt="Cloud">
-              <span class="mb-0 font2 f22 tcenter">Upload Image</span>
-              <span class="f16 w400 mb-4">Drag and drop the image</span>
+              <span class="mb-0 font2 f22 tcenter">No Image Uploaded</span>
+              <!-- <span class="f16 w400 mb-4">Drag and drop the image</span> -->
             </template>
             
             <div class="img-preview-container" v-if="imagePreview || currentImage">

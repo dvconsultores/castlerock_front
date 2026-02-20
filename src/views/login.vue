@@ -44,9 +44,13 @@
         <span class="f12 pointer w500" style="color: #262262;" @click="$router.push('/forgot-password')">Forgot your password?</span>
       </div>
 
-      <div class="flex fullw btn-divs">
+      <div class="flexcol fullw btn-divs">
         <v-btn class="btn" @click="loginFunction" :loading="loadingLogin" :disabled="!email || !password">
           Login
+        </v-btn>
+
+        <v-btn class="btn" style="background-color: #F36029;" @click="registerFunction" :loading="loadingRegister">
+          Register
         </v-btn>
       </div>
     </section>
@@ -148,6 +152,7 @@ const loginFunction = async () => {
     localStorage.setItem('accessToken', response.data.result.accessToken);
     localStorage.setItem('userRole', response.data.result.role);
     localStorage.setItem('userImage', response.data.result.image)
+    localStorage.setItem('statusSuscription', response.data.result.subscription.status)
     loadingLogin.value = false;
     router.push('/home');
   } catch (error) {
@@ -158,6 +163,10 @@ const loginFunction = async () => {
   } else {
     showAlert('Please fill in all fields', 'error');
   }
+};
+
+const registerFunction = () => {
+  router.push('/register');
 };
 </script>
 

@@ -41,7 +41,7 @@
       flat
       autocomplete="off"
       prepend-inner-icon="mdi-email-outline" 
-      placeholder="Enter your email recovery"
+      placeholder="Enter your email"
       hide-details
       maxlength="150"
       :class="{'textfield-error': emailError, 'login-textfield': true }"
@@ -160,7 +160,50 @@
       </div>
     </section>
 
-    <v-dialog v-model="dialogRegister" content-class="dialog-home">
+    <v-dialog v-model="dialogRegister" fullscreen content-class="dialog-home" max-width="900">
+      <v-card class="card-dialog">
+        <v-btn class="btn-close" @click="dialogRegister = false" flat>
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+        <h2 class="tcenter">App Strutis</h2>
+        <p class="subtitle tcenter">Choose the plan that's right for you</p>
+
+        <div class="div-cards">
+          <v-card
+            v-for="(item, index) in dataPlans"
+            :key="index"
+            flat
+            :class="['plan-card', item.billingCycle]"
+            @click="selectPlan(item)"
+          >
+            <div class="card-content">
+              <h3 class="plan-name">{{ item.name }}</h3>
+              <div class="plan-price">
+                <span class="amount">{{ item.price }} {{ item.currency }}</span>
+                <span class="cycle">/ {{ item.billingCycle }}</span>
+              </div>
+
+              <v-list density="compact" class="bg-transparent">
+                <v-list-item v-for="feat in 4" :key="feat" prepend-icon="mdi-check-circle-outline">
+                  <v-list-item-title class="feat-text">Feature detail</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </div>
+
+            <v-btn
+              block
+              flat
+              class="btn-plan"
+              :color="getBtnColor(item.billingCycle)"
+            >
+              {{ item.billingCycle === 'trial' ? 'Try Free' : 'Choose Plan' }}
+            </v-btn>
+          </v-card>
+        </div>
+      </v-card>
+    </v-dialog>
+
+    <!-- <v-dialog v-model="dialogRegister" content-class="dialog-home">
       <v-card class="card-dialog">
         <h2 class="tcenter">App Strutis</h2>
         <span class="tcenter">Choose the plan that's right for you</span>
@@ -179,10 +222,25 @@
             <span class="f16 w400 tcenter" style="text-transform: capitalize;">
               {{ item.price }} {{ item.currency }} / {{ item.billingCycle }}
             </span>
+
+            <ul>
+              <li>
+                New Students
+              </li>
+              <li>
+                New Teachers
+              </li>
+              <li>
+                New Admins
+              </li>
+              <li>
+                Montly Support
+              </li>
+            </ul>
           </v-card>
         </div>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
@@ -190,6 +248,15 @@
 import { ref, inject, computed, onMounted } from 'vue';
 import axiosInstance from '@/plugins/axios';
 import { useRouter } from 'vue-router';
+
+const getBtnColor = (cycle) => {
+  switch (cycle) {
+    case 'trial': return '#BDBDBD';
+    case 'monthly': return '#6BBDAE';
+    case 'yearly': return '#81C784';
+    default: return 'primary';
+  }
+}
 
 const plan_id = ref(null);
 const dialogRegister = ref(false);

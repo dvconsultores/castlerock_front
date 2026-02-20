@@ -185,107 +185,277 @@
 
 ////////////////// Dialog ///////////////////
 
-.v-dialog{
-  .card-dialog{
+// .v-dialog{
+//   .card-dialog{
+//     display: flex;
+//     flex-direction: column;
+//     padding: 36px 16px 36px 16px;
+//     border-radius: 24px!important;
+//     justify-content: center;
+//     align-items: center;
+//     width: 85%;
+//     margin-inline: auto;
+
+//     @include media (max, 895px){
+//       width: 90%;
+//     }
+
+//     h2{
+//       font-family: var(--font-2);
+//       font-size: 2.2em;
+//       color: #474649;
+
+//       @include media(max, 895px){
+//         font-size: 24px!important;
+//         margin-bottom: 4px;
+//       }
+//     }
+
+//     span{
+//       font-size: 16px;
+//       color: #474649;
+
+//       @include media(max, 895px){
+//         font-size: 14px!important;
+//       }
+//     }
+
+//     hr{
+//       width: 100%;
+//       color: #474649;
+//       margin-block: 24px 36px;
+
+//       @include media(max, 895px){
+//         margin-block: 16px;
+//       }
+//     }
+
+//     .div-cards{
+//       display: flex;
+//       flex-direction: row;
+//       justify-content: center;
+//       align-items: center;
+//       gap: 24px;
+//       flex-wrap: wrap;
+
+//       .v-card{
+//         border: 2px solid transparent; 
+//         background-color: #F0F0F0 ;
+//         border-radius: 16px!important;
+//         padding: 16px;
+//         width: 230px;
+//         height: 200px;
+//         display: flex;
+//         flex-direction: column;
+//         justify-content: center;
+//         align-items: center;
+//         transition: all 0.3s ease-in-out;
+
+//         span{
+//           @include media(max, 895px){
+//             font-size: 12px!important;
+//           }
+//         }
+
+//         h3{
+//           text-align: center;
+//           font-family: var(--font-2);
+//           color: var(--font-color);
+//           font-size: 18px;
+
+//           @include media(max, 895px) {
+//             font-size: 18px;
+//             margin-top: 0px!important;
+//           }
+//         }
+
+//         @include media(max, 895px) {
+//           height: 100px;
+//           width: 260px;
+//           justify-content: center;
+//           align-items: center;
+
+
+//           img{
+//             display: none;
+//           }
+//         }
+//       }
+
+//       .v-card:hover{
+//         border-color: #6BBDAE;
+//         box-shadow: 0px 0px 15px 3px rgba(#000000, .1);
+//       }
+//     }
+//   }
+// }
+
+.dialog-home {
+  height: 100vh;
+  min-width: 100vw;
+  .card-dialog {
+    background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 50%, #e8f5e9 100%) !important;
+    padding: 48px 24px;
+    border-radius: 0px !important;
     display: flex;
-    flex-direction: column;
-    padding: 36px 16px 36px 16px;
-    border-radius: 24px!important;
-    justify-content: center;
-    align-items: center;
-    width: 65%;
-    margin-inline: auto;
+    height: 100vh;
+    min-width: 100vw;
+    position: relative;
 
-    @include media (max, 895px){
-      width: 90%;
-    }
-
-    h2{
-      font-family: var(--font-2);
-      font-size: 2.2em;
-      color: #474649;
-
-      @include media(max, 895px){
-        font-size: 24px!important;
-        margin-bottom: 4px;
-      }
-    }
-
-    span{
-      font-size: 16px;
-      color: #474649;
-
-      @include media(max, 895px){
-        font-size: 14px!important;
-      }
-    }
-
-    hr{
-      width: 100%;
-      color: #474649;
-      margin-block: 24px 36px;
-
-      @include media(max, 895px){
-        margin-block: 16px;
-      }
-    }
-
-    .div-cards{
+    .btn-close{
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 0!important;
+      min-height: 30px!important;
+      height: 30px!important;
+      min-width: 30px!important;
+      width: 30px!important;
+      border-radius: 50%;
       display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 24px;
-      flex-wrap: wrap;
+      background-color: #6bbdae;
+      
+      .v-icon{
+        color: #fff;
+        font-size: 18px;
+      }
+    }
+    
+    
+    h2 {
+      font-weight: 700;
+      font-size: 2.5rem;
+      color: #333;
+      margin-bottom: 8px;
+    }
 
-      .v-card{
-        border: 2px solid transparent; 
-        background-color: #F0F0F0 ;
-        border-radius: 16px!important;
-        padding: 16px;
-        width: 230px;
-        height: 100px;
+    .subtitle {
+      color: #666;
+      font-size: 1.1rem;
+      margin-bottom: 40px;
+    }
+
+    .div-cards {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      width: 100%;
+
+      .plan-card {
+        background: rgba(255, 255, 255, 0.8) !important;
+        backdrop-filter: blur(10px);
+        border: 2px solid #eee !important;
+        border-radius: 20px !important;
+        width: 260px;
+        min-height: 380px;
+        height: 380px;
+        padding: 24px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        transition: all 0.3s ease-in-out;
+        transition: transform 0.3s ease, border-color 0.3s ease;
 
-        span{
-          @include media(max, 895px){
-            font-size: 12px!important;
-          }
+        &:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
         }
 
-        h3{
-          text-align: center;
-          font-family: var(--font-2);
-          color: var(--font-color);
-          font-size: 18px;
+        // Colores específicos por tipo (Igual que tu imagen)
+        &.trial:hover { border-color: #bdbdbd !important; }
+        &.monthly:hover { border-color: #6bbdae !important; }
+        &.yearly:hover { border-color: #81c784 !important; }
 
-          @include media(max, 895px) {
+        .plan-name {
+          font-size: 1.4rem;
+          font-weight: 600;
+          color: #444;
+          margin-bottom: 8px;
+        }
+
+        .plan-price {
+          margin-bottom: 24px;
+          .amount { font-size: 1.5rem; font-weight: 800; color: #222; }
+          .cycle { font-size: 0.9rem; color: #888; text-transform: capitalize; }
+        }
+
+        .v-list{
+          border: none!important;
+        }
+
+        .v-list-item {
+          padding: 0!important;
+          height: 30px;
+          max-height: 30px;
+          :deep(.v-icon) {
+            color: #6bbdae; // Color del check
             font-size: 18px;
-            margin-top: 0px!important;
           }
+          .feat-text { font-size: 0.9rem; color: #555; }
         }
 
-        @include media(max, 895px) {
-          height: 100px;
-          width: 260px;
-          justify-content: center;
-          align-items: center;
+        .btn-plan {
+          margin-top: auto;
+          border-radius: 12px;
+          text-transform: none;
+          font-weight: 600;
+          letter-spacing: 0;
+          height: 36px;
+          max-height: 36px;
 
-
-          img{
-            display: none;
+          .v-btn__content {
+            font-size: 0.95rem;
+            color: #fff;
           }
         }
-      }
-
-      .v-card:hover{
-        border-color: #6BBDAE;
-        box-shadow: 0px 0px 15px 3px rgba(#000000, .1);
       }
     }
+  }
+}
+
+.dialog-home {
+  .card-dialog{
+    padding: 28px 20px;
+    // max-width: 1000px;
+    // width: calc(100% - 40px);
+
+    h2{ font-size: 20px; }
+    span{ font-size: 14px; }
+
+    .div-cards{
+      gap: 18px;
+      align-items: stretch;
+
+      .v-card{
+        width: 260px;
+        min-height: 220px;
+        padding: 14px;
+
+        h3{ font-size: 16px; margin-top: 6px; }
+        .price{ font-size: 14px; font-weight:700; margin-top:6px }
+        .features{ font-size: 13px; margin-top: 8px; max-height: 120px; overflow:auto; padding-left: 14px }
+
+        .plan-cta { width: 100%; margin-top: 10px }
+      }
+    }
+
+    @include media(max, 895px){
+      padding: 18px 14px;
+      .div-cards{ .v-card{ width: 100%; min-height: 160px; } }
+      h2{ font-size: 18px }
+      span{ font-size: 13px }
+      .div-cards .v-card .features{ max-height: 90px }
+    }
+  }
+}
+
+@media (max-width: 895px) {
+  h2{
+    margin-top: 200px;
+  }
+  .div-cards {
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 30px;
+    .plan-card { width: 100% !important; min-height: 300px !important; max-height: 300px!important;}
   }
 }

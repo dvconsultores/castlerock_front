@@ -284,6 +284,15 @@ router.beforeEach((to, from, next) => {
     return next({ name: 'LoginPage' })
   }
 
+  // Validar estado de suscripción para rutas que requieren auth
+  const isAuthLayoutRoute = to.matched.some(record => (record.components && record.components.default === AuthLayout))
+  if (!isAuthLayoutRoute) {
+    const status = (localStorage.getItem('statusSuscription') || '').toLowerCase()
+    if (status !== 'active') {
+      return next({ name: 'LoginPage', query: { showPay: '1' } })
+    }
+  }
+
   // Verificar roles si la ruta los requiere
   if (to.meta.allowedRoles && (!userRole || !to.meta.allowedRoles.includes(userRole))) {
     // Redirigir a home si no tiene permiso

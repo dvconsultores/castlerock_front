@@ -58,6 +58,57 @@
         </v-col>
       </v-row>
 
+      <v-row class="mt-6">
+        <v-col cols="12" align="left" class="pb-0">
+          <h3 class="font2 tleft" style="color: #262262;">Next Billing Date</h3>
+        </v-col>
+        <v-col cols="8" class="pb-0 pt-0 mb-4">
+          <v-text-field
+            v-model="next_billing_date"
+            class="textfield-registration"
+            autocomplete="off"
+            maxlength="150"
+            readonly
+            placeholder="Next Billing Date"
+            variant="solo" 
+            flat
+            hide-details
+          ></v-text-field>
+        </v-col>
+
+        <v-col cols="4" class="pb-0 pt-0 mb-4">
+          <v-text-field
+            v-model="subscription_status"
+            class="textfield-registration"
+            autocomplete="off"
+            maxlength="150"
+            readonly
+            placeholder="Subscription Status"
+            variant="solo" 
+            flat
+            hide-details
+          ></v-text-field>
+        </v-col>
+      </v-row>
+
+      <!-- <v-row class="mt-0">
+        <v-col cols="12" align="left" class="pb-0">
+          <h3 class="font2 tleft" style="color: #262262;">Subscription Status</h3>
+        </v-col>
+        <v-col cols="12" class="pb-0 pt-0 mb-4">
+          <v-text-field
+            v-model="subscription_status"
+            class="textfield-registration"
+            autocomplete="off"
+            maxlength="150"
+            placeholder="Subscription Status"
+            variant="solo" 
+            flat
+            hide-details
+          ></v-text-field>
+        </v-col>
+      </v-row> -->
+
       <v-row>
         <v-col cols="12" align="left">
           <h3 class="font2 tleft" style="color: #262262;">Image</h3>
@@ -141,6 +192,8 @@ const center_name = ref('');
 const phone_center = ref(''); 
 const nickname_center = ref('');
 const address = ref('');
+const next_billing_date = ref('');
+const subscription_status = ref('');
 const loadingCenter = ref(false);
 const dialogUpdateCenter = ref(false);
 const dialogConfirmationCenter = ref(false);
@@ -166,6 +219,23 @@ const openSaveCenter = () => {
   }
 };
 
+const formatDate = (iso) => {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d)) return null;
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  return `${mm}-${dd}-${yyyy}`;
+};
+
+const capitalizeFirst = (value) => {
+  if (value === null || value === undefined) return null;
+  const s = String(value);
+  if (!s) return null;
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
 const closeUpdateCenter = () => {
   dialogUpdateCenter.value = false;
 };
@@ -180,6 +250,10 @@ const loadCenterData = async () => {
     nickname_center.value = center.nickname;
     address.value = center.address;
     currentImage.value = center.image;
+
+    const sub = Array.isArray(center.subscriptions) && center.subscriptions.length > 0 ? center.subscriptions[0] : null;
+    next_billing_date.value = sub ? formatDate(sub.nextBillingDate) : null;
+    subscription_status.value = sub ? capitalizeFirst(sub.status) : null;
   } catch (error) {
     console.error('Failed to load center data', error);
   }

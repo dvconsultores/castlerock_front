@@ -19,6 +19,10 @@
         </v-icon>
       </v-btn>
 
+      <v-icon v-if="isOwner" @click="$router.push('/home/payment-renewal')" class="payment">
+        mdi-cash-sync
+      </v-icon>
+
       <v-menu
         transition="scale-transition"
       >
@@ -65,6 +69,9 @@ import { useRoute } from 'vue-router';
 import { toggleDrawer } from '@/store/drawerState.js';
 import axiosInstance from '@/plugins/axios';
 
+const isAdmin = localStorage.getItem('userRole') === 'ADMIN';
+const isTeacher = localStorage.getItem('userRole') === 'TEACHER';
+const isOwner = localStorage.getItem('userRole') === 'OWNER';
 const dataNotes = ref([]);
 const hasUnreadNotes = computed(() => {
   return dataNotes.value.some(note => note.status === 'unread');
@@ -185,8 +192,9 @@ const currentTitle = computed(() => {
     return 'Edit daily schedule';
   }else if (route.path.startsWith('/home/view-daily-spot')) {
     return 'Daily Spot';
-  }
-  return pageTitles[route.path] || 'Dashboard';
+  }else if (route.path.startsWith('/home/payment-renewal')) {
+    return 'Payment Renewal';
+  } return pageTitles[route.path] || 'Dashboard';
 });
 
 const subTitle = {
@@ -285,6 +293,12 @@ onMounted(() => {
      .v-icon{
        color: #7583D9;
      }
+    }
+
+    .payment{
+      color: #7583D9;
+      font-size: 24px;
+      cursor: pointer;
     }
 
     @media screen and (min-width: 1000px) {

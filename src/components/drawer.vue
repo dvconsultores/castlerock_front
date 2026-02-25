@@ -71,6 +71,11 @@ const logOut = () => {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('idUser');
   localStorage.removeItem('userRole');
+  localStorage.removeItem('userImage');
+  localStorage.removeItem('statusSuscription');
+  localStorage.removeItem('campusId');
+  localStorage.removeItem('billingCycle');
+  localStorage.removeItem('planId');
   window.location.href = '/';
 };
 </script>

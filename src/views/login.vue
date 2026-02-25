@@ -153,6 +153,12 @@ const loginFunction = async () => {
     localStorage.setItem('userRole', response.data.result.role);
     localStorage.setItem('userImage', response.data.result.image)
     localStorage.setItem('statusSuscription', response.data.result.subscription.status)
+    const role = (response.data.result.role || '').toString().toLowerCase();
+    if (role !== 'admin') {
+      localStorage.setItem('campusId', response.data.result.campus.id)
+      localStorage.setItem('billingCycle', response.data.result.subscription?.plan?.billingCycle)
+      localStorage.setItem('planId', response.data.result.subscription?.plan?.id)
+    }
     loadingLogin.value = false;
     router.push('/home');
   } catch (error) {

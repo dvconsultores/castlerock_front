@@ -566,6 +566,15 @@ const createRegister = async (): Promise<void> => {
       planId: plan_id.value,
       paymentMethodId, // Será null para planes trial
     });
+
+    // localStorage.setItem('idUser', response.data.result.id);
+    // localStorage.setItem('accessToken', response.data.result.accessToken);
+    // localStorage.setItem('userRole', response.data.result.role);
+    // localStorage.setItem('userImage', response.data.result.image)
+    // localStorage.setItem('statusSuscription', response.data.result.subscription.status)
+    // localStorage.setItem('campusId', response.data.result.campus.id)
+    // localStorage.setItem('billingCycle', response.data.result.subscription.plan.billingCycle)
+    // localStorage.setItem('planId', response.data.result.subscription.plan.id)
     
     loadingReset.value = false;
     
@@ -580,7 +589,7 @@ const createRegister = async (): Promise<void> => {
     
     // Redirigir al home después de 2 segundos
     setTimeout(() => {
-      router.push('/home');
+      router.push('/');
     }, 2000);
     
   } catch (error: any) {
@@ -662,8 +671,6 @@ watch(stripeFullyReady, (ready) => {
 
 onMounted((): void => {
   getPlans();
-  console.log('Component mounted');
-  console.log('VITE_STRIPE_PUBLISHABLE_KEY exists:', !!stripePublishableKey);
 });
 </script>
 

@@ -264,6 +264,12 @@ const router = createRouter({
           component: () => import('@/views/edit-daily-attendance.vue'),
           meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER', 'OWNER'] }
         },
+        {
+          path: 'payment-renewal',
+          name: 'payment-renewal',
+          component: () => import('@/views/payment-renewal.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+        },
       ]
     }
   ]

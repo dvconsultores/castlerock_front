@@ -294,6 +294,14 @@
         </div>
       </v-card>
     </v-dialog>
+
+    <!-- Pay alert dialog -->
+    <Pay
+      v-model="showPayDialog"
+      :expired="!isSubscriptionActive"
+      @renew="onPayRenew"
+      @close="onPayClose"
+    />
   </div>
 </template>
 
@@ -303,6 +311,7 @@ import { useRoute, useRouter } from 'vue-router';
 import axiosInstance from '@/plugins/axios';
 import { VueStripeProvider, VueStripeElements } from '@vue-stripe/vue-stripe';
 import StripePaymentForm from '@/components/StripePaymentForm.vue';
+import Pay from '@/components/pay.vue';
 import type { StripeCardChangeEvent, StripeCardOptions } from '@/plugins/stripe';
 
 // Interfaces
@@ -358,6 +367,7 @@ const statusSubscription = ref<string | null>(localStorage.getItem('statusSuscri
 const dataPlans = ref<Plan[]>([]);
 const allPlans = ref<Plan[]>([]);
 const dialogSelectPlan = ref<boolean>(false);
+const showPayDialog = ref<boolean>(false);
 const membershipName = ref<string>('No Plan Selected');
 const membershipPrice = ref<string>('0.00');
 const membershipCurrency = ref<string>('USD');
@@ -719,6 +729,22 @@ const goToHome = (): void => {
   router.push('/home');
 };
 
+// pay.vue handlers
+const onPayRenew = (): void => {
+  showPayDialog.value = false;
+  // open plan selection or payment section depending on user type
+  if (isTrialUser.value) {
+    dialogSelectPlan.value = true;
+  } else {
+    // maybe show payment section immediately
+    // for non-trial just keep form visible
+  }
+};
+
+const onPayClose = (): void => {
+  showPayDialog.value = false;
+};
+
 // Watchers
 watch(selectedPlanId, (newVal: number | null) => {
   if (!newVal) {
@@ -727,10 +753,27 @@ watch(selectedPlanId, (newVal: number | null) => {
   }
 });
 
+// watch subscription status to reopen pay dialog if becomes invalid
+watch(statusSubscription, (val) => {
+  if (val?.toLowerCase() !== 'active') {
+    showPayDialog.value = true;
+  }
+});
+
 onMounted((): void => {
   loadCenterData();
   getPlans();
   
+  // si abrimos la ruta y el estatus local no es active, mostrar el diálogo de pago
+  if (statusSubscription.value?.toLowerCase() !== 'active') {
+    showPayDialog.value = true;
+  }
+
+  // Si venimos con query desde el guard y necesitamos seleccionar plan
+  if (route.query.openDialog === '1') {
+    dialogSelectPlan.value = true;
+  }
+
   // Log para debug
   console.log('User context:', {
     billingCycle: planBillingCycle.value,

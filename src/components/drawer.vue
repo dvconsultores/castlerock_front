@@ -76,6 +76,7 @@ const logOut = () => {
   localStorage.removeItem('campusId');
   localStorage.removeItem('billingCycle');
   localStorage.removeItem('planId');
+  localStorage.removeItem('campusIdForAdmin');
   window.location.href = '/';
 };
 </script>

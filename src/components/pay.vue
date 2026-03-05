@@ -54,7 +54,6 @@ function onClose() {
 }
 
 function onRenew() {
-  emit('renew')
   isVisible.value = false
 }
 </script>

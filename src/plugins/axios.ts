@@ -39,6 +39,16 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // Añadir campus-id cuando el usuario es ADMIN y existe campusIdForAdmin
+    try {
+      const userRole = localStorage.getItem('userRole');
+      const campusId = localStorage.getItem('campusIdForAdmin');
+      if (userRole === 'ADMIN' && campusId) {
+        config.headers['campus-id'] = campusId;
+      }
+    } catch (e) {
+      // ignore localStorage errors
+    }
     return config;
   },
   (error) => {

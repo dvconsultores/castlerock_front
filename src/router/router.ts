@@ -295,7 +295,12 @@ router.beforeEach((to, from, next) => {
   if (!isAuthLayoutRoute) {
     const status = (localStorage.getItem('statusSuscription') || '').toLowerCase()
     if (status !== 'active') {
-      return next({ name: 'LoginPage', query: { showPay: '1' } })
+      // Si ya estamos en payment-renewal, permitir navegación (evita bucle infinito)
+      if (to.name === 'payment-renewal') {
+        return next()
+      }
+      // Redirigir únicamente a la vista de renovación de pago
+      return next({ name: 'payment-renewal' })
     }
   }
 

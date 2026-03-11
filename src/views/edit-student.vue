@@ -537,7 +537,7 @@
 
       <v-col v-for="(item, index) in dataForProgram" :key="index" cols="12" sm="12" class="pa-2 flex center gap4">
         <v-autocomplete v-model.number="item.selected_program" autocomplete="off" placeholder="Select Program" flat bg-color="#F0F0F0 "
-          class="autocomplete-register" hide-details menu-icon="mdi-chevron-up" :items="selectProgramItem"
+          class="autocomplete-register" hide-details menu-icon="mdi-chevron-up" :items="selectProgramItem" style="text-transform: capitalize;"
           item-value="id" item-title="name" return-object @update:modelValue="val => selected_program = val?.id"
           variant="solo" :menu-props="{
             contentClass: 'rounded-menu',
@@ -802,12 +802,13 @@ watch(fathers_role, (newVal) => {
   }
 });
 
+
 const dataForProgram = ref([
-  { selected_program: 'Select Program' },
+  { selected_program: null },
 ])
 
 const addProgram = () => {
-  dataForProgram.value.push({ placeholder: 'Select Program' });
+  dataForProgram.value.push({ selected_program: null });
 };
 
 const deleteProgram = (index) => {
@@ -1013,9 +1014,11 @@ const getDataStudent = async () => {
     contact_name2.value = student.contacts.find(contact => contact.role === 'EMERGENCY_2')?.fullName || '';
     contact_number2.value = student.contacts.find(contact => contact.role === 'EMERGENCY_2')?.phone || '';
     type_relationship2.value = student.contacts.find(contact => contact.role === 'EMERGENCY_2')?.relation || '';
-    dataForProgram.value = student.additionalPrograms.map(program => ({
-      selected_program: program.id,
-    }));
+    dataForProgram.value = student.additionalPrograms && student.additionalPrograms.length > 0
+      ? student.additionalPrograms.map(program => ({
+          selected_program: program.id || program,
+        }))
+      : [{ selected_program: null }];
     dataForClass.value = student.classes.map(classe => ({
       select_class: classe.id,
     }));
@@ -1132,7 +1135,9 @@ const updateStudent = async () => {
       if (sunday_after_transition.value) selectedDaysAfterTransition.push("Sunday");
       formData.append('afterSchoolDaysTransition', selectedDaysAfterTransition.join(','));
 
-      const currentProgramIds = dataForProgram.value.map(item => item.selected_program?.id).filter(id => id);
+      const currentProgramIds = dataForProgram.value
+        .map(item => typeof item.selected_program === 'object' ? item.selected_program.id : item.selected_program)
+        .filter(id => id);
       if (currentProgramIds.length > 0) {
         formData.append('additionalProgramIds', currentProgramIds);
       }

@@ -390,9 +390,9 @@ const dataSheets = ref([
   },
   {
     imgIcon: students,
-    titleSheet: 'Daily Roster Snapshot',
-    subTitleSheet: 'View Daily Roster',
-    route: '/home/daily-roster',
+    titleSheet: 'Weekly Programs Snapshot',
+    subTitleSheet: 'View Weekly Programs Roster',
+    route: '/home/weekly-programs-roster',
   },
   {
     imgIcon: centers,

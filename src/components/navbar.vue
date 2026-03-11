@@ -259,6 +259,7 @@ const pageTitles = {
   '/home/daily-roster': 'Daily Roster',
   '/home/inactive-students': 'Inactive Students',
   '/home/weekly-roster': 'Weekly Roster',
+  '/home/weekly-programs-roster': 'Weekly Programs Roster',
   '/home/report': 'Reports Section',
 };
 

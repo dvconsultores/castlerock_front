@@ -169,6 +169,12 @@ const router = createRouter({
           meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER', 'OWNER'] }
         },
         {
+          path: 'weekly-programs-roster',
+          name: 'weekly-programs-roster',
+          component: () => import('@/views/weekly-programs-roster.vue'),
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'TEACHER', 'OWNER'] }
+        },
+        {
           path: 'view-daily-spot/:id',
           name: 'view-daily-spot',
           component: () => import('@/views/view-daily-spot.vue'),

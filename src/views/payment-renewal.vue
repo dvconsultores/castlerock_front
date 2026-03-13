@@ -149,7 +149,7 @@
 
                 <!-- Botón de activar suscripción con pago -->
                 <v-btn 
-                  class="mt-4" 
+                  class="mt-4 btn-renewal" 
                   flat 
                   block
                   color="#6BBDAE"
@@ -157,14 +157,14 @@
                   :loading="loadingReactivation"
                   :disabled="!canActivate"
                 >
-                  Activate Subscription & Pay
+                  Activate Subscription
                 </v-btn>
               </div>
 
               <!-- Botón para seleccionar plan (cuando no hay plan seleccionado) -->
               <v-btn 
                 v-if="!selectedPlanId"
-                class="mt-4" 
+                class="mt-4 btn-renewal" 
                 flat 
                 @click="dialogSelectPlan = true"
                 color="#6BBDAE"
@@ -225,7 +225,7 @@
 
             <!-- Botón de actualizar membresía (solo para trial activo) -->
             <v-btn 
-              class="mt-4" 
+              class="mt-4 btn-renewal" 
               flat 
               v-if="isTrialUser && !isSubscriptionActive" 
               @click="dialogSelectPlan = true"
@@ -511,7 +511,7 @@ const activateSubscription = async (): Promise<void> => {
     const paymentMethodId = await createPaymentMethod();
 
     // Llamar al endpoint de reactivación/activación
-    const response = await axiosInstance.post('/api/v1/subscription/reactivate', {
+    const response = await axiosInstance.post('/subscription/reactivate', {
       paymentMethodId: paymentMethodId,
       planId: selectedPlanId.value
     });
@@ -574,7 +574,7 @@ const renewSubscription = async (): Promise<void> => {
     const paymentMethodId = await createPaymentMethod();
 
     // Llamar al endpoint de reactivación con el planId del localStorage
-    const response = await axiosInstance.post('/api/v1/subscription/reactivate', {
+    const response = await axiosInstance.post('/subscription/reactivate', {
       paymentMethodId: paymentMethodId,
       planId: parseInt(planId.value)
     });
@@ -827,5 +827,10 @@ onMounted((): void => {
       }
     }
   }
+}
+
+.btn-renewal{
+  width: 200px;
+  min-width: 200px;
 }
 </style>

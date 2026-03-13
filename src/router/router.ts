@@ -202,7 +202,7 @@ const router = createRouter({
           path: 'new-center',
           name: 'new-center',
           component: () => import('@/views/new-center.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN'] }
         },
         {
           path: 'edit-center/:id',

@@ -36,7 +36,7 @@
       </template>
     </v-data-table>
 
-    <v-btn flat class="btn-floating" @click="$router.push('/home/new-center')">
+    <v-btn v-if="isAdmin" flat class="btn-floating" @click="$router.push('/home/new-center')">
       <img src="@/assets/sources/icons/plus.svg" alt="Btn">
     </v-btn>
 

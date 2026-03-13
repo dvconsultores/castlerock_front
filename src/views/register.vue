@@ -5,6 +5,9 @@
     <img src="@/assets/sources/images/bottom-right-corner.svg" alt="Up" class="img-right-bottom">
 
     <section class="section1-forgot-password">
+      <v-btn flat class="btn btn-register" @click="router.push('/')">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
       <h2 class="font2 tcenter mb-0" style="color: #4E444B;">Register your center</h2>
       <span class="f16 tcenter" style="color: #4E444B;">Enter details to register your center.</span>
 

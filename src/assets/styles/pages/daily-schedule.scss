@@ -492,6 +492,41 @@
     height: max-content;
   }
 
+  .tabs-divs-programs{
+    padding-inline: 0px 20px;
+    padding-bottom: 8px;
+    width: 100%;
+    // overflow-y: hidden;
+    // overflow-x: scroll;
+
+    // &::-webkit-scrollbar {
+    //   height: 10px;
+    //   background: #e0e0e0;
+    //   border-radius: 8px;
+    // }
+    // &::-webkit-scrollbar-thumb {
+    //   background: #7583D9;
+    //   border-radius: 8px;
+    //   border: 2px solid #e0e0e0;
+    //   transition: background 0.3s;
+    // }
+    // &::-webkit-scrollbar-thumb:hover {
+    //   background: #4E444B; 
+    // }
+    // &::-webkit-scrollbar-track {
+    //   background: #f5f5f5;
+    //   border-radius: 8px;
+    // }
+    // scrollbar-width: thin;
+    // scrollbar-color: #7583D9 #e0e0e0;
+  }
+
+  .tab-inactive-program{
+    background-color: #FFFFFF!important;
+    margin-inline: 2px;
+    text-transform: capitalize;
+  }
+
   .tab-inactive{
     background-color: #FFFFFF!important;
     margin-inline: 2px;

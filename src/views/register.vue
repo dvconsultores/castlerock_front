@@ -83,7 +83,6 @@
 
       <v-text-field 
         v-model="phone"
-        type="number"
         variant="solo" 
         flat
         autocomplete="off"
@@ -92,8 +91,9 @@
         hide-details
         hide-spin-buttons
         style="margin-top: -25px;"
-        maxlength="150"
+        maxlength="10"
         :class="{'textfield-error': phoneError, 'login-textfield': true }"
+        @input="onNumberInput('phone')"
         @keyup.enter="createRegister"
       ></v-text-field>
 
@@ -127,7 +127,6 @@
 
       <v-text-field 
         v-model="school_phone"
-        type="number"
         variant="solo" 
         flat
         autocomplete="off"
@@ -135,8 +134,9 @@
         placeholder="Enter your school phone number"
         hide-details
         hide-spin-buttons
-        maxlength="150"
+        maxlength="10"
         :class="{'textfield-error': schoolPhoneError, 'login-textfield': true }"
+        @input="onNumberInput('school_phone')"
         @keyup.enter="createRegister"
       ></v-text-field>
 
@@ -200,8 +200,8 @@
         <v-btn class="btn-close" @click="dialogRegister = false" flat>
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <h2 class="tcenter">App Strutis</h2>
-        <p class="subtitle tcenter">Choose the plan that's right for you</p>
+        <h2 class="tcenter">Enrollment Intelligence</h2>
+        <p class="subtitle tcenter">Designed to help programs predict and manage enrollment before changes occur.</p>
 
         <div class="div-cards">
           <v-card
@@ -219,9 +219,9 @@
               </div>
 
               <v-list density="compact" class="bg-transparent">
-                <v-list-item v-for="feat in 4" :key="feat" prepend-icon="mdi-check-circle-outline">
-                  <v-list-item-title class="feat-text">Feature detail</v-list-item-title>
-                </v-list-item>
+                  <v-list-item v-for="(feat, idx) in featureList" :key="idx" prepend-icon="mdi-check-circle-outline" class="mb-4 list-container">
+                    <v-list-item-title class="feat-text">{{ feat }}</v-list-item-title>
+                  </v-list-item>
               </v-list>
             </div>
 
@@ -241,12 +241,30 @@
 </template>
 
 <script setup lang="ts">
+// Features for membership plans
+const featureList = [
+  'Forecast upcoming classroom openings.',
+  'Create monthly roster reports with that support financial forecasting.',
+  'Track future withdrawals.',
+  'Monitor upcoming transitions between classrooms.',
+  'View availability weeks or months in advance.',
+  'Identify enrollment opportunities before spots open.',
+];
 import { ref, inject, computed, onMounted, watch } from 'vue';
 import { VueStripeProvider, VueStripeElements } from '@vue-stripe/vue-stripe';
 import StripePaymentForm from '@/components/StripePaymentForm.vue';
 import type { StripeCardChangeEvent, StripeCardOptions } from '@/plugins/stripe';
 import axiosInstance from '@/plugins/axios';
 import { useRouter } from 'vue-router';
+
+// Permitir solo números en los inputs de teléfono
+function onNumberInput(field: 'phone' | 'school_phone') {
+  if (field === 'phone') {
+    phone.value = phone.value.replace(/[^0-9]/g, '').slice(0, 10);
+  } else {
+    school_phone.value = school_phone.value.replace(/[^0-9]/g, '').slice(0, 10);
+  }
+}
 
 // Tipos para los datos
 interface Plan {

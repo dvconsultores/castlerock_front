@@ -33,7 +33,7 @@
           ></v-text-field>
         </v-col>
 
-        <v-col cols="12" class="pb-0">
+        <!-- <v-col cols="12" class="pb-0">
           <v-text-field
             v-model="nickname_center"
             readonly
@@ -45,7 +45,7 @@
             flat
             hide-details
           ></v-text-field>
-        </v-col>
+        </v-col> -->
 
         <v-col cols="12" class="pb-0">
           <v-text-field

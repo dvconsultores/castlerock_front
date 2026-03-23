@@ -322,7 +322,7 @@ const subTitle = {
   '/home/new-weekly-schedule': 'Organize your class efficiently',
   '/home/daily-schedule': 'Organize Your Day',
   '/home/student-profile': 'Profile',
-  '/home/centers': 'Centers',
+  '/home/centers': '',
   '/home/new-center': 'Add a new center',
   '/home/edit-center': '',
   '/home/teachers': 'Teachers',

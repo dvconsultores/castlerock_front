@@ -23,15 +23,15 @@
             placeholder="Phone of the center"
             variant="solo"
             autocomplete="off" 
-            maxlength="150"
+            maxlength="10"
             flat
             hide-details
-            type="number"
             hide-spin-buttons
+            @input="onNumberInputCenter"
           ></v-text-field>
         </v-col>
 
-        <v-col cols="12" class="pb-0">
+        <!-- <v-col cols="12" class="pb-0">
           <v-text-field
             v-model="nickname_center"
             class="textfield-registration"
@@ -42,7 +42,7 @@
             flat
             hide-details
           ></v-text-field>
-        </v-col>
+        </v-col> -->
 
         <v-col cols="12" class="pb-0">
           <v-text-field
@@ -198,6 +198,10 @@ const loadingCenter = ref(false);
 const dialogUpdateCenter = ref(false);
 const dialogConfirmationCenter = ref(false);
 
+function onNumberInputCenter() {
+  phone_center.value = phone_center.value.replace(/[^0-9]/g, '').slice(0, 10);
+}
+
 const handleFileChange = (file) => {
   if (file) {
     imagePreview.value = URL.createObjectURL(file);
@@ -211,7 +215,7 @@ const triggerFileInput = () => {
 };
 
 const openSaveCenter = () => {
-  if (center_name.value?.trim() && phone_center.value?.trim() && nickname_center.value?.trim() && address.value?.trim() && imagePreview.value || currentImage.value) {
+  if (center_name.value?.trim() && phone_center.value?.trim() && address.value?.trim()) {
     dialogUpdateCenter.value = true;
   }else {
     showAlert('Please fill in all fields', 'error');

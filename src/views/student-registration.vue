@@ -206,11 +206,11 @@
           variant="solo" 
           flat
           autocomplete="off"
-          maxlength="150"
-          type="number"
+          maxlength="10"
           hide-spin-buttons
           append-inner-icon="mdi-phone-outline"
           hide-details
+          @input="onNumberInputCenter"
         ></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" class="pa-2">
@@ -220,13 +220,13 @@
           bg-color="#F0F0F0 "
           placeholder="Father's contact number"
           variant="solo" 
-          type="number"
           autocomplete="off"
-          maxlength="150"
+          maxlength="10"
           hide-spin-buttons
           flat
           hide-details
           append-inner-icon="mdi-phone-outline"
+          @input="onNumberInputCenter"
         ></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" class="pa-2">
@@ -339,13 +339,14 @@
           v-model="contact_number"
           class="login-textfield"
           bg-color="#F0F0F0"
-          maxlength="150"
+          maxlength="10"
           autocomplete="off"
           placeholder="Contact Number 1"
           variant="solo" 
           append-inner-icon="mdi-phone-outline"
           flat
           hide-details
+          @input="onNumberInputCenter"
         ></v-text-field>
       </v-col>
 
@@ -353,7 +354,7 @@
         <v-text-field
           v-model="contact_number2"
           class="login-textfield"
-          maxlength="150"
+          maxlength="10"
           autocomplete="off"
           bg-color="#F0F0F0 "
           placeholder="Contact Number 2"
@@ -361,6 +362,7 @@
           append-inner-icon="mdi-phone-outline"
           flat
           hide-details
+          @input="onNumberInputCenter"
         ></v-text-field>
       </v-col>
     </v-row>
@@ -409,7 +411,7 @@
           <v-menu :close-on-content-click="false">
             <template v-slot:activator="{ props }">
               <v-text-field v-model="formattedStartDate" autocomplete="off" class="login-textfield" placeholder="MM-DD-YYYY" variant="solo"
-                flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props"
+                flat readonly hide-details append-inner-icon="mdi-calendar" v-bind="props" :class="{'textfield-error': startDateError, 'login-textfield': true}"
                 @click:append-inner="props.onClick"></v-text-field>
             </template>
 
@@ -478,7 +480,7 @@
     </v-row>
 
     <template v-if="enrolled_btn">
-      <v-row class="container-checkboxes mb-3">
+      <v-row class="container-checkboxes mb-3" :class="{'card-error': daysEnrolledError, 'container-checkboxes': true}">
         <v-col cols="12" align="left">
           <span class="font2 f24 tleft" style="color: #262262;">Days Enrolled</span>
         </v-col>
@@ -544,7 +546,7 @@
         </v-col>
       </v-row>
 
-      <v-row class="fullw mt-10 big-checkboxes-container">
+      <v-row class="fullw mt-10 big-checkboxes-container" :class="{'card-error': classIdError, 'big-checkboxes-container': true}">
         <v-col cols="12" align="left">
           <span class="font2 f24 tleft" style="color: #262262;">Class</span>
         </v-col>
@@ -804,6 +806,12 @@ const enrolled_btn = ref(true);
 const transition_btn = ref(false);
 const billing_btn = ref(false);
 
+function onNumberInputCenter() {
+  fathers_number.value = fathers_number.value.replace(/[^0-9]/g, '').slice(0, 10);
+  mothers_number.value = mothers_number.value.replace(/[^0-9]/g, '').slice(0, 10);
+  contact_number.value = contact_number.value.replace(/[^0-9]/g, '').slice(0, 10);
+  contact_number2.value = contact_number2.value.replace(/[^0-9]/g, '').slice(0, 10);
+}
 
 const activeEnrolled = () =>{
   enrolled_btn.value = true;

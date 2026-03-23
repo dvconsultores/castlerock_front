@@ -73,14 +73,14 @@
         <v-card class="card-title" flat>
           <span class="first-span">Total Montly Amount</span>
           <br>
-          <span>{{ totalMonthlyAmount }}$</span>
+          <span>${{ totalMonthlyAmount }}</span>
         </v-card>
       </v-col>
       <v-col cols="12" sm="4" class="pr-2">
         <v-card class="card-title" flat>
           <span class="first-span">Total Weekly Amount</span>
           <br>
-          <span>{{ totalWeeklyAmount }}$</span>
+          <span>${{ totalWeeklyAmount }}</span>
         </v-card>
       </v-col>
 
@@ -118,13 +118,13 @@
 
       <template v-slot:item.weeklyAmount="{ item }">
         <div>
-          <span>{{ item.weeklyAmount }}$</span>
+          <span>${{ item.weeklyAmount }}</span>
         </div>
       </template>
 
       <template v-slot:item.monthlyAmount="{ item }">
         <div>
-          <span>{{ item.monthlyAmount }}$</span>
+          <span>${{ item.monthlyAmount }}</span>
         </div>
       </template>
 

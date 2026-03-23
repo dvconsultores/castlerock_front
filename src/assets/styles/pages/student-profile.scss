@@ -201,9 +201,13 @@
     padding: 12px 32px 18px 32px;
 
     .checkboxes-error{
-      border: 2px solid red;
+      border: 1px solid red;
     }
   }
+
+  .card-error{
+    border: 2px solid red;
+  } 
 
   .big-checkboxes-container{
     padding: 12px 32px 18px 32px;

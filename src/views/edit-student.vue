@@ -122,14 +122,14 @@
           placeholder="Father's Name" variant="solo" flat hide-details></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" class="pa-2">
-        <v-text-field v-model="mothers_number" autocomplete="off" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
-          placeholder="Mother's contact number" variant="solo" flat type="number" hide-spin-buttons
-          append-inner-icon="mdi-phone-outline" hide-details></v-text-field>
+        <v-text-field v-model="mothers_number" autocomplete="off" class="login-textfield" maxLength="10" bg-color="#F0F0F0 "
+          placeholder="Mother's contact number" variant="solo" flat hide-spin-buttons
+          append-inner-icon="mdi-phone-outline" hide-details @input="onNumberInputCenter"></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" class="pa-2">
-        <v-text-field v-model="fathers_number" autocomplete="off" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
-          placeholder="Father's contact number" variant="solo" type="number" hide-spin-buttons flat hide-details
-          append-inner-icon="mdi-phone-outline"></v-text-field>
+        <v-text-field v-model="fathers_number" autocomplete="off" class="login-textfield" maxLength="10" bg-color="#F0F0F0 "
+          placeholder="Father's contact number" variant="solo" hide-spin-buttons flat hide-details
+          append-inner-icon="mdi-phone-outline" @input="onNumberInputCenter"></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" class="pa-2">
         <v-autocomplete v-model="mothers_role" autocomplete="off" placeholder="Role" maxLength="150" flat bg-color="#F0F0F0"
@@ -180,14 +180,14 @@
       </v-col>
 
       <v-col cols="12" sm="6" class="pa-2">
-        <v-text-field v-model="contact_number" autocomplete="off" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
-          placeholder="Contact Number 1" variant="solo" append-inner-icon="mdi-phone-outline" flat
+        <v-text-field v-model="contact_number" autocomplete="off" class="login-textfield" maxLength="10" bg-color="#F0F0F0 "
+          placeholder="Contact Number 1" variant="solo" append-inner-icon="mdi-phone-outline" flat @input="onNumberInputCenter"
           hide-details></v-text-field>
       </v-col>
 
       <v-col cols="12" sm="6" class="pa-2">
-        <v-text-field v-model="contact_number2" autocomplete="off" class="login-textfield" maxLength="150" bg-color="#F0F0F0 "
-          placeholder="Contact Number 2" variant="solo" append-inner-icon="mdi-phone-outline" flat
+        <v-text-field v-model="contact_number2" autocomplete="off" class="login-textfield" maxLength="10" bg-color="#F0F0F0 "
+          placeholder="Contact Number 2" variant="solo" append-inner-icon="mdi-phone-outline" flat @input="onNumberInputCenter"
           hide-details></v-text-field>
       </v-col>
     </v-row>
@@ -609,6 +609,12 @@ const enrolled_btn = ref(true);
 const transition_btn = ref(false);
 const billing_btn = ref(false);
 
+function onNumberInputCenter() {
+  fathers_number.value = fathers_number.value.replace(/[^0-9]/g, '').slice(0, 10);
+  mothers_number.value = mothers_number.value.replace(/[^0-9]/g, '').slice(0, 10);
+  contact_number.value = contact_number.value.replace(/[^0-9]/g, '').slice(0, 10);
+  contact_number2.value = contact_number2.value.replace(/[^0-9]/g, '').slice(0, 10);
+}
 
 const activeEnrolled = () =>{
   enrolled_btn.value = true;

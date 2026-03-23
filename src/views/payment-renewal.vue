@@ -232,6 +232,8 @@
             >
               Update Membership
             </v-btn>
+
+            <v-btn v-if="!isSubscriptionInactive" @click="dialogConfirmationCancelation = true">Cancel Subscription</v-btn>
           </v-card>
         </v-col>
       </v-row>
@@ -243,8 +245,8 @@
         <v-btn class="btn-close" @click="dialogSelectPlan = false" flat>
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <h2 class="tcenter">App Strutis</h2>
-        <p class="subtitle tcenter">Choose the plan that's right for you</p>
+        <h2 class="tcenter">Enrollment Intelligence</h2>
+        <p class="subtitle tcenter">Designed to help programs predict and manage enrollment before changes occur.</p>
 
         <div class="div-cards">
           <v-card
@@ -261,10 +263,10 @@
                 <span class="cycle">/ {{ item.billingCycle }}</span>
               </div>
 
-              <v-list density="compact" class="bg-transparent">
-                <v-list-item v-for="feat in 4" :key="feat" prepend-icon="mdi-check-circle-outline">
-                  <v-list-item-title class="feat-text">Feature detail</v-list-item-title>
-                </v-list-item>
+               <v-list density="compact" class="bg-transparent">
+                  <v-list-item v-for="(feat, idx) in featureList" :key="idx" prepend-icon="mdi-check-circle-outline" class="mb-4 list-container">
+                    <v-list-item-title class="feat-text">{{ feat }}</v-list-item-title>
+                  </v-list-item>
               </v-list>
             </div>
 
@@ -295,6 +297,31 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="dialogCancellationSuccess" content-class="dialogConfirmationCenter" persistent max-width="500">
+      <v-card class="card-confirmation-program">
+        <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Subscription Canceled!</span>
+        <hr class="mt-2 mb-5">
+        <span class="f16 w400 tcenter">Your subscription has been successfully canceled.</span>
+        <div class="btn-divs mt-8">
+          <v-btn flat class="btn2" @click="dialogCancellationSuccess = false">Close</v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="dialogConfirmationCancelation" content-class="dialogConfirmationCenter" persistent max-width="500">
+      <v-card class="card-confirmation-program">
+        <img src="@/assets/sources/icons/absent.svg" alt="cancelation">
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Cancel your subscription?</span>
+        <hr class="mt-2 mb-5">
+        <span class="f16 w400 tcenter">You will lose access to all premium features immediately.</span>
+        <div class="btn-divs mt-8">
+          <v-btn flat class="btn2" @click="cancelSubscription" :loading="loadingCancelation">Yes, cancel</v-btn>
+          <v-btn flat class="btn1" @click="dialogConfirmationCancelation = false">No</v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
+
     <!-- Pay alert dialog -->
     <Pay
       v-model="showPayDialog"
@@ -313,6 +340,16 @@ import { VueStripeProvider, VueStripeElements } from '@vue-stripe/vue-stripe';
 import StripePaymentForm from '@/components/StripePaymentForm.vue';
 import Pay from '@/components/pay.vue';
 import type { StripeCardChangeEvent, StripeCardOptions } from '@/plugins/stripe';
+
+// Features for membership plans
+const featureList = [
+  'Forecast upcoming classroom openings.',
+  'Create monthly roster reports with that support financial forecasting.',
+  'Track future withdrawals.',
+  'Monitor upcoming transitions between classrooms.',
+  'View availability weeks or months in advance.',
+  'Identify enrollment opportunities before spots open.',
+];
 
 // Interfaces
 interface Plan {
@@ -357,6 +394,9 @@ const nickname_center = ref<string>('');
 const address = ref<string>('');
 const next_billing_date = ref<string | null>('');
 const subscription_status = ref<string | null>('');
+const loadingCancelation = ref<boolean>(false);
+const dialogCancellationSuccess = ref<boolean>(false);
+const dialogConfirmationCancelation = ref<boolean>(false);
 
 // Datos de planes desde localStorage
 const planBillingCycle = ref<string | null>(localStorage.getItem('billingCycle'));
@@ -418,6 +458,10 @@ const isTrialUser = computed<boolean>(() => {
 
 const isSubscriptionActive = computed<boolean>(() => {
   return statusSubscription.value?.toLowerCase() === 'active';
+});
+
+const isSubscriptionInactive = computed<boolean>(() => {
+  return statusSubscription.value?.toLowerCase() !== 'active';
 });
 
 const showPaymentSection = computed<boolean>(() => {
@@ -486,6 +530,30 @@ const createPaymentMethod = async (): Promise<string> => {
   }
 };
 
+
+const cancelSubscription = async (): Promise<void> => {
+  loadingCancelation.value = true;
+  try {
+    const response = await axiosInstance.post('/subscription/cancel', {
+    });
+    dialogCancellationSuccess.value = true;
+    dialogConfirmationCancelation.value = false;
+    window.location.reload();
+
+    showAlert('Subscription canceled successfully!', 'success');
+
+  } catch (error: any) {
+    console.error('Error canceling subscription:', error);
+    const errorMessage = error.response?.data?.message || 
+                        error.response?.data?.error || 
+                        error.message || 
+                        'Failed to cancel subscription';
+    showAlert(errorMessage, 'error');
+  } finally {
+    loadingCancelation.value = false;
+    dialogConfirmationCancelation.value = false;
+  }
+};
 // ESCENARIO 1: Activar suscripción (usuario trial selecciona un plan)
 const activateSubscription = async (): Promise<void> => {
   if (!selectedPlanId.value) {

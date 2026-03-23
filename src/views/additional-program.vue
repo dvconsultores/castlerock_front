@@ -121,7 +121,7 @@
     <v-dialog v-model="dialogConfirmationProgram" content-class="dialogConfirmationProgram" persistent>
       <v-card class="card-confirmation-program">
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
-        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully deleted!</span>
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully created!</span>
         <hr class="mt-2 mb-5">
         <span class="f16 w400 tcenter">The new additional program <span class="w600" style="color: #7583D9;">({{ name }})</span> has been successfully saved</span>
         <div class="btn-divs mt-8">
@@ -201,7 +201,7 @@ const openSaveProgram = () => {
   nameError.value = '';
   selectCenterError.value = '';
   daysError.value = '';
-  imageError.value = '';
+  // imageError.value = '';
 
   if (!name.value) {
     nameError.value = 'Please enter the activity name';
@@ -220,12 +220,12 @@ const openSaveProgram = () => {
     daysError.value = false;
   }
 
-  if (!imagePreview.value) {
-    imageError.value = 'Please upload an image';
-    showAlert(imageError.value, 'error');
-  }
+  // if (!imagePreview.value) {
+  //   imageError.value = 'Please upload an image';
+  //   showAlert(imageError.value, 'error');
+  // }
 
-  if (name.value?.trim() && select_center.value && imagePreview.value && stateValue()) {
+  if (name.value?.trim() && select_center.value && stateValue()) {
     dialogAddProgram.value = true;
   }else {
     showAlert('Please fill in all fields', 'error');

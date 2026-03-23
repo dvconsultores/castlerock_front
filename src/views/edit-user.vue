@@ -47,13 +47,13 @@
             v-model="phone"
             class="textfield-registration"
             placeholder="Phone"
-            type="text"
             autocomplete="off"
-            maxlength="150"
+            maxlength="10"
             variant="solo" 
             hide-spin-buttons
             flat
             hide-details
+            @input="onNumberInputCenter"
           ></v-text-field>
         </v-col>
 
@@ -163,6 +163,9 @@ const email = ref('');
 const phone = ref('');
 const password = ref('');
 
+function onNumberInputCenter() {
+  phone.value = phone.value.replace(/[^0-9]/g, '').slice(0, 10);
+}
 
 const handleFileChange = (file) => {
   if (file) {
@@ -177,7 +180,7 @@ const triggerFileInput = () => {
 };
 
 const openSaveProgram = () => {
-  if (first_name.value?.trim() && last_name.value?.trim() && imagePreview.value && email.value?.trim() && phone.value?.trim()) {
+  if (first_name.value?.trim() && last_name.value?.trim() && email.value?.trim() && phone.value?.trim()) {
     dialogAddProgram.value = true;
   }else {
     showAlert('Please fill in all fields', 'error');

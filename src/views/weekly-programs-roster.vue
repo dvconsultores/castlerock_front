@@ -51,6 +51,13 @@
         <div class="big-div big-div-spot">
           <h5 class="font2 f24 tleft mb-0" style="color: #262262; text-transform: capitalize;">Program Roster - {{ selectedProgram ? selectedProgram.name : '' }}</h5>
           <hr>
+          <!-- Mostrar los días del programa seleccionado -->
+          <div v-if="selectedProgram && selectedProgram.days && selectedProgram.days.length" class="mb-2">
+            <!-- <span class="f16 font2 tleft" style="color: #262262;">Days: </span> -->
+            <span class="f16 font2 tleft" style="color: #262262;">
+              {{ selectedProgram.days.join(', ') }}
+            </span>
+          </div>
 
           <!-- <v-sheet v-for="(item, index) in sheetTeacherSelected" :key="index" class="sheet-teacher">
             <div class="absences-info-div"> 

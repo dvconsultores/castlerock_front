@@ -357,8 +357,8 @@
         border: 2px solid #eee !important;
         border-radius: 20px !important;
         width: 260px;
-        min-height: 380px;
-        height: 380px;
+        min-height: 480px;
+        height: 480px;
         padding: 24px;
         display: flex;
         flex-direction: column;
@@ -435,7 +435,7 @@
       align-items: stretch;
 
       .v-card{
-        width: 260px;
+        width: 360px;
         min-height: 220px;
         padding: 14px;
 
@@ -444,6 +444,34 @@
         .features{ font-size: 13px; margin-top: 8px; max-height: 120px; overflow:auto; padding-left: 14px }
 
         .plan-cta { width: 100%; margin-top: 10px }
+
+        .plan-price{
+          @include media(max, 895px){
+            margin-bottom: 4px!important;
+          }
+        }
+        .list-container{
+          @include media(max, 895px){
+            margin-bottom: 4px!important;
+            min-height: 20px!important;
+            height: 20px!important;
+          }
+        }
+        .feat-text {
+          white-space: normal;     
+          word-break: break-word;  
+          line-height: 16px;
+          @include media(max, 895px){
+            font-size: 12px!important;
+          }
+        }
+        .btn-plan{
+          @include media(max, 895px){
+            height: 30px!important;
+            max-height: 30px!important;
+          
+          }
+        }
       }
     }
 

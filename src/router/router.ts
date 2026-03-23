@@ -296,6 +296,25 @@ router.beforeEach((to, from, next) => {
     return next({ name: 'LoginPage' })
   }
 
+  // Validar expiración del token JWT
+  try {
+    // JWT formato: header.payload.signature
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    if (payload.exp && Date.now() / 1000 > payload.exp) {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('userRole')
+      localStorage.removeItem('statusSuscription')
+      // Puedes limpiar otros datos si es necesario
+      return next({ name: 'LoginPage' })
+    }
+  } catch (e) {
+    // Si el token no es válido, forzar logout
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('userRole')
+    localStorage.removeItem('statusSuscription')
+    return next({ name: 'LoginPage' })
+  }
+
   // Validar estado de suscripción para rutas que requieren auth
   const isAuthLayoutRoute = to.matched.some(record => (record.components && record.components.default === AuthLayout))
   if (!isAuthLayoutRoute) {

@@ -47,13 +47,13 @@
             v-model="phone"
             :class="{'textfield-error': phoneError, 'textfield-registration': true}"
             placeholder="Phone"
-            type="text"
             autocomplete="off"
-            maxlength="150"
+            maxlength="10"
             variant="solo" 
             hide-spin-buttons
             flat
             hide-details
+            @input="onNumberInputCenter"
           ></v-text-field>
         </v-col>
 
@@ -180,6 +180,11 @@ const passwordError = ref('');
 const selectRoleError = ref('');
 const imageError = ref('');
 
+function onNumberInputCenter() {
+  phone.value = phone.value.replace(/[^0-9]/g, '').slice(0, 10);
+}
+
+
 const handleFileChange = (file) => {
   if (file) {
     imagePreview.value = URL.createObjectURL(file);
@@ -212,7 +217,7 @@ const openSaveProgram = () => {
   phoneError.value = '';
   passwordError.value = '';
   selectRoleError.value = '';
-  imageError.value = '';
+  // imageError.value = '';
 
   const validations = [
     {
@@ -250,11 +255,11 @@ const openSaveProgram = () => {
       message: 'Password is required',
       trim: true
     },
-    {
-      field: imagePreview,
-      errorRef: imageError,
-      message: 'Image is required'
-    }
+    // {
+    //   field: imagePreview,
+    //   errorRef: imageError,
+    //   message: 'Image is required'
+    // }
   ];
 
   const errors = [];

@@ -47,6 +47,21 @@
         hide-details
         maxlength="150"
         :class="{'textfield-error': emailError, 'login-textfield': true }"
+        :error-messages="emailError ? [emailError] : []"
+        @keyup.enter="createRegister"
+      ></v-text-field>
+
+      <v-text-field 
+        v-model="email_confirmation"
+        variant="solo" 
+        flat
+        autocomplete="off"
+        prepend-inner-icon="mdi-email-outline" 
+        placeholder="Confirm your email"
+        maxlength="150"
+        style="margin-bottom: -24px;"
+        :class="{'textfield-error': emailError, 'login-textfield': true }"
+        :error-messages="emailError ? [emailError] : []"
         @keyup.enter="createRegister"
       ></v-text-field>
 
@@ -141,7 +156,7 @@
       ></v-text-field>
 
       <v-card flat class="card-planning flex-column">
-        <v-sheet>Select your Membership</v-sheet>
+        <v-sheet>Protect your revenue</v-sheet>
         <div class="fullw jspace">
           <h5 class="mb-0">{{ membershipName }}</h5>
           <span class="mb-0" style="text-transform: capitalize;">{{ membershipTime }}</span>
@@ -151,7 +166,7 @@
           <span>{{ membershipPrice }} {{ membershipCurrency }}</span>
         </div>
 
-        <v-btn class="btn" style="align-self: flex-end;" @click="dialogRegister = true">Choose your membership</v-btn>
+        <v-btn class="btn" style="align-self: flex-end;" @click="dialogRegister = true">Choose your membership plan now!</v-btn>
       </v-card>
 
       <!-- Stripe Card Element -->
@@ -289,11 +304,12 @@ const getBtnColor = (cycle: string): string => {
 const plan_id = ref<string | null>(null);
 const dialogRegister = ref<boolean>(false);
 const dataPlans = ref<Plan[]>([]);
-const membershipName = ref<string>('No Plan Selected');
+const membershipName = ref<string>('Optimize your roster');
 const membershipTime = ref<string>('None');
 const membershipPrice = ref<string>('0.00');
 const membershipCurrency = ref<string>('USD');
 const email = ref<string>('');
+const email_confirmation = ref<string>('');
 const password = ref<string>('');
 const passwordConfirmation = ref<string>('');
 const first_name = ref<string>('');
@@ -328,6 +344,10 @@ const phoneError = ref<string>('');
 const schoolNameError = ref<string>('');
 const schoolAddressError = ref<string>('');
 const schoolPhoneError = ref<string>('');
+// Regla computada para validar que los emails coincidan
+const emailMatchRule = computed(() => [
+  (v: string) => v === email.value || 'Emails must match',
+]);
 
 // Opciones para el Card Element (con tipo)
 const cardOptions: StripeCardOptions = {
@@ -461,6 +481,18 @@ watch(cardComplete, (complete) => {
   console.log('💳 cardComplete changed:', complete);
 });
 
+// Limpiar error de email automáticamente cuando los emails coincidan y sean válidos
+watch([email, email_confirmation], ([newEmail, newEmailConf]) => {
+  if (
+    newEmail &&
+    newEmailConf &&
+    newEmail === newEmailConf &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)
+  ) {
+    emailError.value = '';
+  }
+});
+
 // Función para crear PaymentMethod (simplificada)
 const createPaymentMethod = async (): Promise<string> => {
   try {
@@ -508,6 +540,7 @@ const createRegister = async (): Promise<void> => {
   schoolAddressError.value = '';
   schoolPhoneError.value = '';
 
+
   let isValid = true;
 
   if (!email.value?.trim()) {
@@ -515,6 +548,19 @@ const createRegister = async (): Promise<void> => {
     isValid = false;
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
     emailError.value = 'Please enter a valid email format (e.g. user@example.com)';
+    isValid = false;
+  } else if (email.value !== email_confirmation.value) {
+    emailError.value = 'Emails must match';
+    isValid = false;
+  }
+
+  if (!email_confirmation.value?.trim()) {
+    emailError.value = 'Please confirm your email';
+          const matchResult = emailMatchRule.value[0](email_confirmation.value);
+          if (matchResult !== true) {
+            emailError.value = matchResult as string;
+            isValid = false;
+          }
     isValid = false;
   }
 

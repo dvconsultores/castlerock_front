@@ -63,16 +63,16 @@
 
     .login-textfield{    
       i{
-        color: #3C3C434D;
-        opacity: .6;
+        color: #000000;
+        opacity: .5;
       }
 
       .v-field{
         border-radius: 16px;
         transition: all .5s ease-in-out;
         ::placeholder{
-          color: #3C3C434D;
-          opacity: .6;
+          color: #000000;
+          opacity: .5;
         }
       }
 

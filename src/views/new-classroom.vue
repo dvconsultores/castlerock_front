@@ -217,7 +217,7 @@ const openSaveClassroom = () => {
   maxCapacityError.value = '';
   programError.value = '';
   selectCenterError.value = '';
-  imgError.value = '';
+  // imgError.value = '';
   selectClassTypeError.value = '';
 
   const errors = [];
@@ -250,10 +250,10 @@ const openSaveClassroom = () => {
     errors.push(selectClassTypeError.value);
   }
 
-  if (!imagePreview.value) {
-    imgError.value = 'Please enter a valid image';
-    errors.push(imgError.value);
-  }
+  // if (!imagePreview.value) {
+  //   imgError.value = 'Please enter a valid image';
+  //   errors.push(imgError.value);
+  // }
 
   if (errors.length > 0) {
     showAlert(errors.join('\n'), 'error');

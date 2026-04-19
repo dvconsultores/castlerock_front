@@ -197,7 +197,7 @@ const triggerFileInput = () => {
 };
 
 const openSaveClassroom = () => {
-  if (!name.value || !maxCapacity.value || !program.value || !select_center.value || imagePreview.value === null) {
+  if (!name.value || !maxCapacity.value || !program.value || !select_center.value) {
     showAlert('Please fill all required fields', 'error');
     return;
   }

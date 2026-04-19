@@ -8,9 +8,10 @@
             v-model="center_name"
             class="textfield-registration"
             placeholder="Center Name"
-            variant="solo" 
+            maxlength="150"
             autocomplete="off"
             readonly
+            variant="solo" 
             flat
             hide-details
           ></v-text-field>
@@ -21,42 +22,96 @@
             v-model="phone_center"
             class="textfield-registration"
             placeholder="Phone of the center"
-            variant="solo" 
-            flat
-            autocomplete="off"
+            variant="solo"
             readonly
+            autocomplete="off" 
+            maxlength="150"
+            flat
             hide-details
             type="number"
             hide-spin-buttons
           ></v-text-field>
         </v-col>
 
-        <v-col cols="12" class="pb-0">
+        <!-- <v-col cols="12" class="pb-0">
           <v-text-field
             v-model="nickname_center"
+            readonly
             class="textfield-registration"
+            autocomplete="off"
+            maxlength="150"
             placeholder="Nickname of the center"
             variant="solo" 
             flat
-            autocomplete="off"
-            readonly
             hide-details
           ></v-text-field>
-        </v-col>
+        </v-col> -->
 
         <v-col cols="12" class="pb-0">
           <v-text-field
             v-model="address"
+            readonly
             class="textfield-registration"
+            autocomplete="off"
+            maxlength="150"
             placeholder="Location"
             variant="solo" 
-            autocomplete="off"
-            readonly
             flat
             hide-details
           ></v-text-field>
         </v-col>
       </v-row>
+
+      <v-row class="mt-6">
+        <v-col cols="12" align="left" class="pb-0">
+          <h3 class="font2 tleft" style="color: #262262;">Next Billing Date</h3>
+        </v-col>
+        <v-col cols="8" class="pb-0 pt-0 mb-4">
+          <v-text-field
+            v-model="next_billing_date"
+            class="textfield-registration"
+            autocomplete="off"
+            maxlength="150"
+            readonly
+            placeholder="Next Billing Date"
+            variant="solo" 
+            flat
+            hide-details
+          ></v-text-field>
+        </v-col>
+
+        <v-col cols="4" class="pb-0 pt-0 mb-4">
+          <v-text-field
+            v-model="subscription_status"
+            class="textfield-registration"
+            autocomplete="off"
+            maxlength="150"
+            readonly
+            placeholder="Subscription Status"
+            variant="solo" 
+            flat
+            hide-details
+          ></v-text-field>
+        </v-col>
+      </v-row>
+
+      <!-- <v-row class="mt-0">
+        <v-col cols="12" align="left" class="pb-0">
+          <h3 class="font2 tleft" style="color: #262262;">Subscription Status</h3>
+        </v-col>
+        <v-col cols="12" class="pb-0 pt-0 mb-4">
+          <v-text-field
+            v-model="subscription_status"
+            class="textfield-registration"
+            autocomplete="off"
+            maxlength="150"
+            placeholder="Subscription Status"
+            variant="solo" 
+            flat
+            hide-details
+          ></v-text-field>
+        </v-col>
+      </v-row> -->
 
       <v-row>
         <v-col cols="12" align="left">
@@ -82,6 +137,33 @@
         </v-col>
       </v-row>
     </v-form>
+
+    <v-dialog v-model="dialogUpdateCenter" content-class="dialogAdd" persistent>
+      <v-card class="card-add-program">
+        <img src="@/assets/sources/icons/save.svg" alt="Save">
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to update this center?</span>
+        <hr class="mt-2 mb-5">
+        <span class="w500" style="color: #7583D9;">{{ center_name }}</span>
+        <div class="btn-divs mt-8">
+          <v-btn flat class="btn1" @click="updateCenter" :loading="loadingCenter">Yes, update</v-btn>
+          <v-btn flat class="btn2" @click="closeUpdateCenter">No, cancel</v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="dialogConfirmationCenter" content-class="dialogConfirmationCenter" persistent>
+      <v-card class="card-confirmation-program">
+        <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Successfully updated!</span>
+        <hr class="mt-2 mb-5">
+        <span class="f16 w400 tcenter">The center <span class="w600" style="color: #7583D9;">{{ center_name }}</span> has been successfully updated</span>
+        <div class="btn-divs mt-8">
+          <v-btn flat class="btn1" @click="$router.push('/home/centers')">Centers</v-btn>
+          <v-btn flat class="btn2" @click="dialogConfirmationCenter = false">Edit Center</v-btn>
+        </div>
+        <span class="underline f14 w500 mt-4 pointer" @click="$router.push('/home')">Go home</span>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -101,6 +183,11 @@ const center_name = ref('');
 const phone_center = ref(''); 
 const nickname_center = ref('');
 const address = ref('');
+const next_billing_date = ref('');
+const subscription_status = ref('');
+const loadingCenter = ref(false);
+const dialogUpdateCenter = ref(false);
+const dialogConfirmationCenter = ref(false);
 
 const handleFileChange = (file) => {
   if (file) {
@@ -108,6 +195,40 @@ const handleFileChange = (file) => {
   } else {
     imagePreview.value = null;
   }
+};
+
+const triggerFileInput = () => {
+  fileInput.value.$el.querySelector('input[type="file"]').click();
+};
+
+const openSaveCenter = () => {
+  if (center_name.value?.trim() && phone_center.value?.trim() && nickname_center.value?.trim() && address.value?.trim() && imagePreview.value || currentImage.value) {
+    dialogUpdateCenter.value = true;
+  }else {
+    showAlert('Please fill in all fields', 'error');
+    return;
+  }
+};
+
+const formatDate = (iso) => {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d)) return null;
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  return `${mm}-${dd}-${yyyy}`;
+};
+
+const capitalizeFirst = (value) => {
+  if (value === null || value === undefined) return null;
+  const s = String(value);
+  if (!s) return null;
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
+const closeUpdateCenter = () => {
+  dialogUpdateCenter.value = false;
 };
 
 const loadCenterData = async () => {
@@ -120,8 +241,39 @@ const loadCenterData = async () => {
     nickname_center.value = center.nickname;
     address.value = center.address;
     currentImage.value = center.image;
+
+    const sub = Array.isArray(center.subscriptions) && center.subscriptions.length > 0 ? center.subscriptions[0] : null;
+    next_billing_date.value = sub ? formatDate(sub.nextBillingDate) : null;
+    subscription_status.value = sub ? capitalizeFirst(sub.status) : null;
   } catch (error) {
-    showAlert('Failed to load center data', 'error');
+    console.error('Failed to load center data', error);
+  }
+};
+
+const updateCenter = async () => {
+  loadingCenter.value = true;
+  try {
+    const formData = new FormData();
+    formData.append('name', center_name.value.toString());
+    formData.append('phone', phone_center.value.toString());
+    formData.append('nickname', nickname_center.value.toString());
+    formData.append('address', address.value.toString());
+    
+    if (selectedImgCenter.value) {4
+      formData.append('image', selectedImgCenter.value);
+    }
+    const response = await axiosInstance.patch(`/campus/${centerId.value}`, formData,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    loadingCenter.value = false;
+    dialogUpdateCenter.value = false;
+    dialogConfirmationCenter.value = true;
+  } catch (error) {
+    showAlert('Failed to update center', 'error');
+    loadingCenter.value = false;
   }
 };
 

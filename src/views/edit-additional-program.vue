@@ -181,7 +181,7 @@ const stateValue = () =>{
 }
 
 const openSaveProgram = () => {
-  if (name.value?.trim() && select_center.value && imagePreview.value && stateValue()) {
+  if (name.value?.trim() && select_center.value && stateValue()) {
     dialogAddProgram.value = true;
   }else {
     showAlert('Please fill in all fields', 'error');

@@ -26,6 +26,7 @@ jobs:
         run: |
           echo "VITE_BASE_URL=/" > .env
           echo "VITE_BASE_URL_API=${{ secrets.VITE_BASE_URL_API_PROD }}" >> .env
+          echo "VITE_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }}" >> .env
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2

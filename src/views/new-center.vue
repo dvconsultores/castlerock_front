@@ -24,10 +24,10 @@
             variant="solo" 
             flat
             autocomplete="off"
-            maxlength="150"
+            maxlength="10"
             hide-details
-            type="number"
             hide-spin-buttons
+            @input="onNumberInputCenter"
           ></v-text-field>
         </v-col>
 
@@ -146,6 +146,10 @@ const phoneError = ref('');
 const nicknameError = ref('');
 const addressError = ref('');
 const imgError = ref('');
+
+function onNumberInputCenter() {
+  phone_center.value = phone_center.value.replace(/[^0-9]/g, '').slice(0, 10);
+}
 
 const handleFileChange = (file) => {
   if (file) {

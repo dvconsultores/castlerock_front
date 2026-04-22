@@ -258,7 +258,7 @@
           <h3 class="font2 tleft" style="color: #262B63;">
             Transition
           </h3>
-          <v-btn class="btn" style="text-transform: none;" @click="clearTransitionDate">Clear Date</v-btn>
+          <v-btn class="btn" style="text-transform: none;" @click="clearTransitionDate">Clear Transition</v-btn>
         </v-col>
 
         <v-col cols="12" sm="12" class="pa-2">
@@ -1044,6 +1044,38 @@ const clearEndDate = () => {
 const clearTransitionDate = () => {
   transition_date_class.value = null;
   formattedTransitionDate.value = '';
+
+  // Limpiar días de transición
+  monday_enrolled_transition.value = false;
+  tuesday_enrolled_transition.value = false;
+  wednesday_enrolled_transition.value = false;
+  thursday_enrolled_transition.value = false;
+  friday_enrolled_transition.value = false;
+  saturday_enrolled_transition.value = false;
+  sunday_enrolled_transition.value = false;
+
+  // Limpiar before school transición
+  monday_before_transition.value = false;
+  tuesday_before_transition.value = false;
+  wednesday_before_transition.value = false;
+  thursday_before_transition.value = false;
+  friday_before_transition.value = false;
+  saturday_before_transition.value = false;
+  sunday_before_transition.value = false;
+
+  // Limpiar after school transición
+  monday_after_transition.value = false;
+  tuesday_after_transition.value = false;
+  wednesday_after_transition.value = false;
+  thursday_after_transition.value = false;
+  friday_after_transition.value = false;
+  saturday_after_transition.value = false;
+  sunday_after_transition.value = false;
+
+  // Limpiar clases de transición
+  dataForClassTransition.value = [
+    { select_class_transition: 'Select Class' },
+  ];
 };
 
 const updateStudent = async () => {

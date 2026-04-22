@@ -1142,27 +1142,52 @@ const updateStudent = async () => {
       formData.append('afterSchoolDaysTransition', selectedDaysAfterTransition.join(','));
 
       const currentProgramIds = dataForProgram.value
-        .map(item => typeof item.selected_program === 'object' ? item.selected_program.id : item.selected_program)
-        .filter(id => id);
+        .map(item => {
+          if (item.selected_program && typeof item.selected_program === 'object') {
+            return item.selected_program.id ?? null;
+          }
+          return item.selected_program ?? null;
+        })
+        .filter(id => id !== null && id !== undefined && id !== '');
       if (currentProgramIds.length > 0) {
         formData.append('additionalProgramIds', currentProgramIds);
       }
 
       const currentClassIds = dataForClass.value
-        .map(item => typeof item.select_class === 'object' ? item.select_class.id : item.select_class)
-        .filter(id => id);
+        .map(item => {
+          if (item.select_class && typeof item.select_class === 'object') {
+            return item.select_class.id ?? null;
+          }
+          return item.select_class ?? null;
+        })
+        .filter(id => id !== null && id !== undefined && id !== '');
       if (currentClassIds.length > 0) {
         formData.append('classIds', currentClassIds);
       }
 
       const currentClassTransitionIds = dataForClassTransition.value
-        .map(item => typeof item.select_class_transition === 'object' ? item.select_class_transition.id : item.select_class_transition)
-        .filter(id => id);
+        .map(item => {
+          if (item.select_class_transition && typeof item.select_class_transition === 'object') {
+            return item.select_class_transition.id ?? null;
+          }
+          return item.select_class_transition ?? null;
+        })
+        .filter(id => id !== null && id !== undefined && id !== '');
       if (currentClassTransitionIds.length > 0) {
         formData.append('classIdsTransition', currentClassTransitionIds);
       }
 
-      formData.append('campus', select_center.value.toString());
+      // select_center puede ser objeto o id directo
+      let campusId = select_center.value;
+      if (select_center.value && typeof select_center.value === 'object' && 'id' in select_center.value) {
+        campusId = select_center.value.id;
+      }
+      if (!campusId) {
+        showAlert('Please select a valid center', 'error');
+        savingStudent.value = false;
+        return;
+      }
+      formData.append('campus', campusId.toString());
       const contactsData = [];
       if (mothers_name.value) {
         contactsData.push({
@@ -1231,7 +1256,7 @@ const updateStudent = async () => {
       dialogConfirmationStudent.value = true;
     } catch (error) {
       savingStudent.value = false;
-      showAlert('Error creating student', 'error');
+      showAlert(error?.response?.data?.message || error.message || 'Error creating student', 'error');
     }
   }
 };

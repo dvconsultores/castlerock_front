@@ -59,9 +59,9 @@
 
     <v-dialog v-model="dialogSelectCampus" persistent fullscreen id="dialog-navbar">
       <v-card class="card-dialog">
-        <v-btn class="btn-close" @click="dialogSelectCampus = false" flat>
+        <!-- <v-btn class="btn-close" @click="dialogSelectCampus = false" flat>
           <v-icon>mdi-close</v-icon>
-        </v-btn>
+        </v-btn> -->
         <h2 class="tcenter">App Strutis</h2>
         <p class="subtitle tcenter">Choose a center to see more information</p>
 
@@ -153,8 +153,9 @@ const selectCenter = async (item) => {
     if (!item || !item.id) return;
     localStorage.setItem('campusIdForAdmin', String(item.id));
     dialogSelectCampus.value = false;
-    router.push('/home');
-    window.location.reload();
+    window.location.href = '/home';
+    
+    
   } catch (error) {
     console.error('Error selecting center:', error);
     showAlert && showAlert('Error selecting center', 'error');
@@ -343,6 +344,12 @@ const currentSubTitle = computed(() => {
 onMounted(() => {
   getNotes();
   getImg();
+  // Si el usuario es ADMIN y no tiene campusIdForAdmin, abrir el diálogo de selección de campus
+  const userRole = localStorage.getItem('userRole');
+  const campusIdForAdmin = localStorage.getItem('campusIdForAdmin');
+  if (userRole === 'ADMIN' && (!campusIdForAdmin || campusIdForAdmin === 'null' || campusIdForAdmin === 'undefined')) {
+    openDialogCampus();
+  }
 });
 </script>
 

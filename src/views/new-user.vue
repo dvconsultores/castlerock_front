@@ -163,7 +163,7 @@ const selectedImgUser = ref(null);
 const imagePreview = ref(null);
 const loadingUser = ref(false);
 const showAlert = inject('showAlert');
-const itemsRole = ref(['ADMIN', 'TEACHER', 'OWNER']);
+const itemsRole = ref(['TEACHER', 'OWNER']);
 const dialogAddProgram = ref(false);
 const dialogConfirmationProgram = ref(false);
 const select_role = ref(null);
@@ -315,7 +315,7 @@ const createUser = async () => {
     dialogAddProgram.value = false;
     dialogConfirmationProgram.value = true;
   } catch (error) {
-    showAlert('Error creating classroom', 'error');
+    showAlert('Error creating user', 'error');
     loadingUser.value = false;
   }
 };

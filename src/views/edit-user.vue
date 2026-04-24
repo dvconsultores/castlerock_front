@@ -153,7 +153,13 @@ const selectedImgUser = ref(null);
 const imagePreview = ref(null);
 const loadingUser = ref(false);
 const showAlert = inject('showAlert');
-const itemsRole = ref(['TEACHER', 'OWNER']);
+let itemsRole = ref(['TEACHER', 'OWNER']);
+const userRole = localStorage.getItem('userRole');
+if (userRole === 'ADMIN') {
+  itemsRole.value = ['TEACHER', 'OWNER', 'ADMIN'];
+} else {
+  itemsRole.value = ['TEACHER', 'OWNER'];
+}
 const dialogAddProgram = ref(false);
 const dialogConfirmationProgram = ref(false);
 const select_role = ref(null);

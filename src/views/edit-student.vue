@@ -1173,6 +1173,7 @@ const updateStudent = async () => {
       if (sunday_after_transition.value) selectedDaysAfterTransition.push("Sunday");
       formData.append('afterSchoolDaysTransition', selectedDaysAfterTransition.join(','));
 
+      // Filtrar solo ids válidos (números o strings numéricos) y descartar placeholders
       const currentProgramIds = dataForProgram.value
         .map(item => {
           if (item.selected_program && typeof item.selected_program === 'object') {
@@ -1180,10 +1181,8 @@ const updateStudent = async () => {
           }
           return item.selected_program ?? null;
         })
-        .filter(id => id !== null && id !== undefined && id !== '');
-      if (currentProgramIds.length > 0) {
-        formData.append('additionalProgramIds', currentProgramIds);
-      }
+        .filter(id => id !== null && id !== undefined && id !== '' && id !== 'Select Program' && !isNaN(Number(id)));
+      formData.append('additionalProgramIds', currentProgramIds);
 
       const currentClassIds = dataForClass.value
         .map(item => {
@@ -1192,10 +1191,8 @@ const updateStudent = async () => {
           }
           return item.select_class ?? null;
         })
-        .filter(id => id !== null && id !== undefined && id !== '');
-      if (currentClassIds.length > 0) {
-        formData.append('classIds', currentClassIds);
-      }
+        .filter(id => id !== null && id !== undefined && id !== '' && id !== 'Select Class' && !isNaN(Number(id)));
+      formData.append('classIds', currentClassIds);
 
       const currentClassTransitionIds = dataForClassTransition.value
         .map(item => {
@@ -1204,10 +1201,8 @@ const updateStudent = async () => {
           }
           return item.select_class_transition ?? null;
         })
-        .filter(id => id !== null && id !== undefined && id !== '');
-      if (currentClassTransitionIds.length > 0) {
-        formData.append('classIdsTransition', currentClassTransitionIds);
-      }
+        .filter(id => id !== null && id !== undefined && id !== '' && id !== 'Select Class' && !isNaN(Number(id)));
+      formData.append('classIdsTransition', currentClassTransitionIds);
 
       // select_center puede ser objeto o id directo
       let campusId = select_center.value;

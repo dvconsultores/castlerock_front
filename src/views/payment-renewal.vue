@@ -409,9 +409,9 @@ const allPlans = ref<Plan[]>([]);
 const dialogSelectPlan = ref<boolean>(false);
 const showPayDialog = ref<boolean>(false);
 const membershipName = ref<string>('No Plan Selected');
-const membershipPrice = ref<string>('0.00');
-const membershipCurrency = ref<string>('USD');
-const membershipTime = ref<string>('None');
+const membershipPrice = ref<string>('');
+const membershipCurrency = ref<string>('');
+const membershipTime = ref<string>('');
 
 // Plan seleccionado para activar (solo para escenario 1)
 const selectedPlanId = ref<number | null>(null);
@@ -723,9 +723,9 @@ const setMembershipFromCurrentPlan = (): void => {
   
   // Valores por defecto
   membershipName.value = 'No Plan Selected';
-  membershipTime.value = 'None';
-  membershipPrice.value = '0.00';
-  membershipCurrency.value = 'USD';
+  membershipTime.value = '';
+  membershipPrice.value = '';
+  membershipCurrency.value = '';
 };
 
 const getBtnColor = (cycle: string): string => {

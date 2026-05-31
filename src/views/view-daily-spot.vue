@@ -126,7 +126,7 @@ const getDailySchedule = async () => {
       maxCapacity.value = scheduleData.planning.class.maxCapacity;
       campus_name.value = scheduleData.planning.campus.name;
       class_name.value = scheduleData.planning.class.name;
-      program.value = scheduleData.planning.class.program;
+      program.value = scheduleData.planning.class.program === 'PRIMARY' ? 'PRESCHOOL' : scheduleData.planning.class.program;
       program_id.value = scheduleData.planning.id;
       notes.value = scheduleData.notes || '';
       day.value = scheduleData.day;

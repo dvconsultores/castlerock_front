@@ -527,7 +527,7 @@ const fetchPlanningData = async () => {
     dataPlanning.value = response.data.result;
     id_planning.value = dataPlanning.value.id;
     class_name.value = dataPlanning.value.class.name;
-    program.value = dataPlanning.value.class.program;
+    program.value = dataPlanning.value.class.program === 'PRIMARY' ? 'PRESCHOOL' : dataPlanning.value.class.program;
     campus_name.value = dataPlanning.value.campus.name;
     maxCapacity.value = dataPlanning.value.class.maxCapacity
     year.value = dataPlanning.value.year;

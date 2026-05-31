@@ -39,7 +39,9 @@
             autocomplete="off"
             class="autocomplete-register"
             menu-icon="mdi-chevron-up"
-            :items="['PRIMARY', 'TODDLER']"
+            :items="programItems"
+            item-title="label"
+            item-value="value"
             variant="solo"
             hide-details
             :menu-props="{
@@ -168,6 +170,11 @@ const dataCenters = ref([]);
 const name = ref('');
 const maxCapacity = ref('');
 const program = ref(null);
+const programItems = [
+  { label: 'PRESCHOOL', value: 'PRIMARY' },
+  { label: 'TODDLER', value: 'TODDLER' },
+  { label: 'INFANTS', value: 'INFANTS' },
+];
 const select_center = ref(null);
 const loadingClass = ref(false);
 const showAlert = inject('showAlert');

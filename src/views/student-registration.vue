@@ -436,9 +436,44 @@
           </div>
         </v-col>
 
+        <v-col cols="12" sm="12" class="mt-2">
+          <v-row class="container-checkboxes mb-3" :class="{'container-checkboxes': true}">
+            <v-col cols="12" align="left">
+              <span class="font2 f24 tleft" style="color: #262262;">Upcoming Transitions</span>
+            </v-col>
+
+            <div v-for="(item, index) in dataForNewTransitions" :key="index" class="mb-2">
+              <v-card class="pa-3" outlined>
+                <div>
+                  <strong>Transition Date:</strong>
+                  <span>{{ item.startDate }}</span>
+                </div>
+                <div>
+                  <strong>Enrolled Days:</strong>
+                  <span>{{ item.daysEnrolled && item.daysEnrolled.length ? item.daysEnrolled.join(', ') : 'N/A' }}</span>
+                </div>
+                <div>
+                  <strong>Before School Days:</strong>
+                  <span>{{ item.beforeSchoolDays && item.beforeSchoolDays.length ? item.beforeSchoolDays.join(', ') : 'N/A' }}</span>
+                </div>
+                <div>
+                  <strong>After School Days:</strong>
+                  <span>{{ item.afterSchoolDays && item.afterSchoolDays.length ? item.afterSchoolDays.join(', ') : 'N/A' }}</span>
+                </div>
+                <div>
+                  <strong>Classes:</strong>
+                  <span>
+                    {{ item.classes && item.classes.length ? item.classes[0].name : 'N/A' }}
+                  </span>
+                </div>
+              </v-card>
+            </div>
+          </v-row>
+        </v-col>
+
         <v-col cols="12" align="left" class="pa-2">
           <h3 class="font2 tleft" style="color: #262B63;">
-            Transition
+            Create New Transition
           </h3>
         </v-col>
 
@@ -678,6 +713,10 @@
             <v-icon>mdi-trash-can-outline</v-icon>
           </v-btn>
         </v-col>
+      </v-row>
+
+      <v-row class="fullw mt-10 justify-end">
+        <v-btn class="btn" style="text-transform: none;" @click="addNewTransitionBtn()">Add Transition</v-btn>
       </v-row>
     </template>
 
@@ -929,6 +968,11 @@ const formatEndDate = (date) => {
   formattedEndDate.value = dayjs(jsDate).format('MM-DD-YYYY');
 };
 
+const dataForNewTransitions = ref([]);
+
+const addNewTransitionBtn = () => {
+  
+};
 const dialogConfirmationStudent = ref(false);
 const savingStudent = ref(false);
 const fileInputStudent = ref(null);

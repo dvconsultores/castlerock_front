@@ -431,21 +431,39 @@
           </div>
         </v-col>
 
-        <v-col cols="12" align="left" class="pa-2">
-          <h3 class="font2 tleft" style="color: #262B63;">
-            Transition
-          </h3>
-        </v-col>
+        <v-col cols="12" sm="12" class="mt-2">
+          <v-row class="container-checkboxes mb-3" :class="{'container-checkboxes': true}" style="margin-bottom: -40px !important;">
+            <v-col cols="12" align="left">
+              <span class="font2 f24 tleft" style="color: #262262;">Upcoming Transitions</span>
+            </v-col>
 
-        <v-col cols="12" sm="12" class="pa-2">
-          <v-text-field 
-          v-model="transition_date" 
-          autocomplete="off" 
-          class="login-textfield" 
-          placeholder="MM-DD-YYYY" 
-          variant="solo"
-          flat readonly hide-details append-inner-icon="mdi-calendar"
-          ></v-text-field>
+            <div v-for="(item, index) in dataForNewTransitions" :key="index" class="mb-2 div-container-transitions-card">
+              <v-card class="pa-3 card-new-transitions" flat outlined>
+                <div>
+                  <strong>Transition Date:</strong>
+                  <span>{{ item.startDate }}</span>
+                </div>
+                <div>
+                  <strong>Enrolled Days:</strong>
+                  <span>{{ item.daysEnrolled && item.daysEnrolled.length ? item.daysEnrolled.join(', ') : 'N/A' }}</span>
+                </div>
+                <div>
+                  <strong>Before School Days:</strong>
+                  <span>{{ item.beforeSchoolDays && item.beforeSchoolDays.length ? item.beforeSchoolDays.join(', ') : 'N/A' }}</span>
+                </div>
+                <div>
+                  <strong>After School Days:</strong>
+                  <span>{{ item.afterSchoolDays && item.afterSchoolDays.length ? item.afterSchoolDays.join(', ') : 'N/A' }}</span>
+                </div>
+                <div>
+                  <strong>Classes:</strong>
+                  <span>
+                    {{ item.classes && item.classes.length ? item.classes.map(cls => cls.name).join(', ') : 'N/A' }}
+                  </span>
+                </div>
+              </v-card>
+            </div>
+          </v-row>
         </v-col>
       </template>
 
@@ -529,84 +547,6 @@
           <v-col v-for="(item, index) in dataForClass" :key="index" cols="12" sm="12" class="pa-2 flex center gap4">
             <v-autocomplete
               v-model="item.selected_class"
-              :items="selectClassItem"
-              item-value="id"
-              :item-title="classItem => classItem.name + ' - ' + (classItem.campus?.name || '')"
-              return-object
-              placeholder="Select Class"
-              flat
-              autocomplete="off"
-              bg-color="#F0F0F0"
-              class="autocomplete-register"
-              hide-details
-              menu-icon=""
-              variant="solo"
-              readonly
-              :menu-props="{
-                contentClass: 'rounded-menu',
-              }"
-            ></v-autocomplete>
-          </v-col>
-        </v-row>
-      </template>
-
-      <template v-if="transition_btn">
-        <v-row class="container-checkboxes mb-3">
-          <v-col cols="12" align="left">
-            <span class="font2 f24 tleft" style="color: #262262;">Days Enrolled Transition</span>
-          </v-col>
-
-          <v-col cols="12" class="jspace">
-            <v-checkbox v-model="monday_enrolled_transition" density="compact" hide-details label="Monday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="tuesday_enrolled_transition" density="compact" hide-details label="Tuesday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="wednesday_enrolled_transition" density="compact" hide-details label="Wednesday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="thursday_enrolled_transition" density="compact" hide-details label="Thursday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="friday_enrolled_transition" density="compact" hide-details label="Friday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="saturday_enrolled_transition" density="compact" hide-details label="Saturday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="sunday_enrolled_transition" density="compact" hide-details label="Sunday" color="#3C3C434D" disabled></v-checkbox>
-          </v-col>
-        </v-row>
-
-        <v-row class="container-checkboxes mb-3">
-          <v-col cols="12" align="left">
-            <span class="font2 f24 tleft" style="color: #262262;">Before School Transition</span>
-          </v-col>
-
-          <v-col cols="12" class="jspace">
-            <v-checkbox v-model="monday_before_transition" density="compact" hide-details label="Monday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="tuesday_before_transition" density="compact" hide-details label="Tuesday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="wednesday_before_transition" density="compact" hide-details label="Wednesday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="thursday_before_transition" density="compact" hide-details label="Thursday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="friday_before_transition" density="compact" hide-details label="Friday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="saturday_before_transition" density="compact" hide-details label="Saturday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="sunday_before_transition" density="compact" hide-details label="Sunday" color="#3C3C434D" disabled></v-checkbox>
-          </v-col>
-        </v-row>
-
-        <v-row class="container-checkboxes">
-          <v-col cols="12" align="left">
-            <span class="font2 f24 tleft" style="color: #262262;">After School Transition</span>
-          </v-col>
-
-          <v-col cols="12" class="jspace">
-            <v-checkbox v-model="monday_after_transition" density="compact" hide-details label="Monday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="tuesday_after_transition" density="compact" hide-details label="Tuesday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="wednesday_after_transition" density="compact" hide-details label="Wednesday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="thursday_after_transition" density="compact" hide-details label="Thursday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="friday_after_transition" density="compact" hide-details label="Friday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="saturday_after_transition" density="compact" hide-details label="Saturday" color="#3C3C434D" disabled></v-checkbox>
-            <v-checkbox v-model="sunday_after_transition" density="compact" hide-details label="Sunday" color="#3C3C434D" disabled></v-checkbox>
-          </v-col>
-        </v-row>
-
-        <v-row class="fullw mt-10 big-checkboxes-container">
-          <v-col cols="12" align="left">
-            <span class="font2 f24 tleft" style="color: #262262;">Classes</span>
-          </v-col>
-
-          <v-col v-for="(item, index) in dataForClassTransition" :key="index" cols="12" sm="12" class="pa-2 flex center gap4">
-            <v-autocomplete
-              v-model="item.selected_class_transition"
               :items="selectClassItem"
               item-value="id"
               :item-title="classItem => classItem.name + ' - ' + (classItem.campus?.name || '')"
@@ -826,7 +766,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, computed, watch } from 'vue'
+import { ref, inject, onMounted, computed, watch, nextTick } from 'vue'
 import axiosInstance from '@/plugins/axios';
 import { useRoute } from 'vue-router';
 import present from '@/assets/sources/icons/attendance.svg';
@@ -836,6 +776,7 @@ import excused from '@/assets/sources/icons/excused.svg';
 import contract from '@/assets/sources/icons/contract.svg';
 import avatarImg from '@/assets/sources/images/avatar.svg';
 
+const dialogConfirmationDeleteTransition = ref(false);
 const stateShow = ref(false);
 const year = ref(null);
 const yearsArray = ref([
@@ -1036,7 +977,9 @@ const dataForClass = ref([
 
 const dataForClassTransition = ref([
   { selected_class_transition: 'Select Class' },
-])  
+])
+
+const dataForNewTransitions = ref([]);
 
 const getPrograms = async () => {
   try {
@@ -1106,7 +1049,6 @@ const getDataStudent = async () => {
     monthlyAmount.value = student.monthlyAmount;
     start_date_class.value = formatDate(student.startDateOfClasses);
     end_date_class.value = formatDate(student.endDateOfClasses);
-    transition_date.value = formatDate(student.startDateOfClassesTransition);
     monday_enrolled.value = student.daysEnrolled.includes('Monday');
     tuesday_enrolled.value = student.daysEnrolled.includes('Tuesday');
     wednesday_enrolled.value = student.daysEnrolled.includes('Wednesday');
@@ -1132,33 +1074,6 @@ const getDataStudent = async () => {
       saturday_after.value = student.afterSchoolDays.includes('Saturday');
       sunday_after.value = student.afterSchoolDays.includes('Sunday');
     }
-    if(student.daysEnrolledTransition != null){
-      monday_enrolled_transition.value = student.daysEnrolledTransition.includes('Monday');
-      tuesday_enrolled_transition.value = student.daysEnrolledTransition.includes('Tuesday');
-      wednesday_enrolled_transition.value = student.daysEnrolledTransition.includes('Wednesday');
-      thursday_enrolled_transition.value = student.daysEnrolledTransition.includes('Thursday');
-      friday_enrolled_transition.value = student.daysEnrolledTransition.includes('Friday');
-      saturday_enrolled_transition.value = student.daysEnrolledTransition.includes('Saturday');
-      sunday_enrolled_transition.value = student.daysEnrolledTransition.includes('Sunday');
-    }
-    if(student.beforeSchoolDaysTransition != null){
-      monday_before_transition.value = student.beforeSchoolDaysTransition.includes('Monday');
-      tuesday_before_transition.value = student.beforeSchoolDaysTransition.includes('Tuesday');
-      wednesday_before_transition.value = student.beforeSchoolDaysTransition.includes('Wednesday');
-      thursday_before_transition.value = student.beforeSchoolDaysTransition.includes('Thursday');
-      friday_before_transition.value = student.beforeSchoolDaysTransition.includes('Friday');
-      saturday_before_transition.value = student.beforeSchoolDaysTransition.includes('Saturday');
-      sunday_before_transition.value = student.beforeSchoolDaysTransition.includes('Sunday');
-    }
-    if(student.afterSchoolDaysTransition != null){
-      monday_after_transition.value = student.afterSchoolDaysTransition.includes('Monday');
-      tuesday_after_transition.value = student.afterSchoolDaysTransition.includes('Tuesday');
-      wednesday_after_transition.value = student.afterSchoolDaysTransition.includes('Wednesday');
-      thursday_after_transition.value = student.afterSchoolDaysTransition.includes('Thursday');
-      friday_after_transition.value = student.afterSchoolDaysTransition.includes('Friday');
-      saturday_after_transition.value = student.afterSchoolDaysTransition.includes('Saturday');
-      sunday_after_transition.value = student.afterSchoolDaysTransition.includes('Sunday');
-    }
     select_center.value = student.campus.id;
     mothers_name.value = student.contacts.find(contact => contact.relation === 'Mother')?.fullName || '';
     mothers_number.value = student.contacts.find(contact => contact.relation === 'Mother')?.phone || '';
@@ -1182,8 +1097,12 @@ const getDataStudent = async () => {
     dataForClass.value = student.classes.map(classe => ({
       selected_class: classe,
     }));
-    dataForClassTransition.value = student.classesTransition.map(classe => ({
-      selected_class_transition: classe,
+    dataForNewTransitions.value = student.transitions.map(transition => ({
+      startDate: formatDate(transition.startDate),
+      daysEnrolled: transition.daysEnrolled || [],
+      beforeSchoolDays: transition.beforeSchoolDays || [],
+      afterSchoolDays: transition.afterSchoolDays || [],
+      classes: transition.classes || [],
     }));
   } catch (error) {
     showAlert(error, 'error');

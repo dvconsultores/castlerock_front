@@ -205,6 +205,35 @@
     }
   }
 
+  .div-container-transitions-card{
+    min-width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    .card-new-transitions{
+      background-color: #F0F0F0;
+      border-radius: 8px;
+      width: 100%;
+      border: 1px solid #7583D9;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      position: relative;
+
+      .v-icon{
+        position: absolute;
+        z-index: 2;
+        border-radius: 50%;
+        font-size: 24px;
+        padding: 10px;
+        top: 4px;
+        right: 4px;
+        cursor: pointer;
+      }
+    }
+  }
+
   .card-error{
     border: 2px solid red;
   } 

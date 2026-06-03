@@ -181,52 +181,87 @@ const getStudents = async () => {
           ageDisplay = `${months} M`;
         }
 
-        const start = student.startDateOfClasses ? dayjs(student.startDateOfClasses).utc().startOf('day') : null;
-        const transition = student.startDateOfClassesTransition ? dayjs(student.startDateOfClassesTransition).utc().startOf('day') : null;
-
+        // Obtener todas las fechas candidatas (startDateOfClasses y transitions pendientes)
         const candidates = [];
-        if (start && !start.isBefore(now)) {
-          candidates.push({ type: 'start', date: start });
+        
+        // Fecha de inicio de clases actual
+        if (student.startDateOfClasses) {
+          const startDate = dayjs(student.startDateOfClasses).utc().startOf('day');
+          candidates.push({ 
+            type: 'start', 
+            date: startDate,
+            transitionData: null // Sin datos de transición
+          });
         }
-        if (transition && !transition.isBefore(now)) {
-          candidates.push({ type: 'transition', date: transition });
+        
+        // Fechas de transiciones pendientes
+        if (student.transitions && student.transitions.length > 0) {
+          student.transitions.forEach(transition => {
+            if (transition.startDate && transition.status === 'PENDING') {
+              const transitionDate = dayjs(transition.startDate).utc().startOf('day');
+              candidates.push({ 
+                type: 'transition', 
+                date: transitionDate,
+                transitionData: transition // Guardar el objeto de transición completo
+              });
+            }
+          });
         }
 
+        // Si no hay candidatos, omitir este estudiante
         if (candidates.length === 0) return null;
 
-        candidates.sort((a, b) => a.date - b.date);
-        const chosen = candidates[0];
+        // Filtrar solo fechas futuras o actuales
+        const futureCandidates = candidates.filter(candidate => 
+          !candidate.date.isBefore(now)
+        );
 
-        // LÓGICA CORREGIDA:
+        // Si no hay fechas futuras, omitir este estudiante
+        if (futureCandidates.length === 0) return null;
+
+        // Ordenar por fecha más cercana
+        futureCandidates.sort((a, b) => a.date - b.date);
+        const chosen = futureCandidates[0];
+
         let classesForChosen = '';  // New/Assigned Class
         let otherClasses = '';       // Transition Classes
 
         if (chosen.type === 'start') {
-          // Para fecha de inicio: mostrar classes en New/Assigned Class
-          classesForChosen = Array.isArray(student.classes) 
+          // Para fecha de inicio: mostrar classes actuales
+          classesForChosen = Array.isArray(student.classes) && student.classes.length > 0
             ? student.classes.map(c => c.name).join('<br>') 
-            : '';
+            : 'No classes assigned';
           // Transition Classes queda vacío para nuevos ingresos
           otherClasses = '';
         } else {
-          // Para transición: mostrar classesTransition en New/Assigned Class y classes en Transition Classes
-          otherClasses = Array.isArray(student.classesTransition) 
-            ? student.classesTransition.map(c => c.name).join('<br>') 
-            : '';
-          classesForChosen = Array.isArray(student.classes) 
-            ? student.classes.map(c => c.name).join('<br>') 
-            : '';
+          // Para transición:
+            // - En New/Assigned Class: mostrar la clase actual (desde donde transiciona)
+            // - En Transition Classes: mostrar las clases de la transición (nuevas clases)
+
+            // Clases de la transición (nuevas clases a las que transiciona)
+            const transitionClasses = chosen.transitionData?.classes || [];
+
+            // Clases actuales (desde donde transiciona) -> mostrar en la columna "classes"
+            classesForChosen = Array.isArray(student.classes) && student.classes.length > 0
+              ? student.classes.map(c => c.name).join('<br>')
+              : 'No classes assigned';
+
+            // Clases de la transición -> mostrar en la columna "nextClasses"
+            otherClasses = transitionClasses.length > 0
+              ? transitionClasses.map(c => c.name).join('<br>')
+              : 'No transition classes assigned';
         }
 
         return {
           id: student.id,
           student_img: student.image || avatarImg,
-          name: student.firstName + ' ' + student.lastName,
+          name: `${student.firstName} ${student.lastName}`,
           age: ageDisplay,
           gender: student.gender,
           dateOfTransitionRaw: chosen.date.format('YYYY-MM-DD'),
           dateOfTransition: chosen.date.format('MM-DD-YYYY'),
           center: student.campus ? student.campus.name : '',
+          classroom: student.campus ? student.campus.name : '', // Añadido para la tabla
           classes: classesForChosen,        // New/Assigned Class
           nextClasses: otherClasses,        // Transition Classes
           actions: ''
@@ -241,6 +276,7 @@ const getStudents = async () => {
       .map((student, index) => ({ ...student, id_student: index + 1 }));
   } catch (error) {
     console.error('Failed to load students', error);
+    showAlert('Failed to load students', 'error');
   }
 };
 

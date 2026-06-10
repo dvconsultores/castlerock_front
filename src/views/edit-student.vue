@@ -254,11 +254,46 @@
           </div>
         </v-col>
 
+        <v-col cols="12" sm="12" class="mt-2" id="transition_scroll">
+          <v-row class="container-checkboxes mb-3" :class="{'container-checkboxes': true}">
+            <v-col cols="12" align="left">
+              <span class="font2 f24 tleft" style="color: #262262;">Upcoming Transitions</span>
+            </v-col>
+
+            <div v-for="(item, index) in dataForNewTransitions" :key="index" class="mb-2 div-container-transitions-card">
+              <v-card class="pa-3 card-new-transitions" flat outlined>
+                <v-icon class="pointer" @click="confirmDeleteTransition(index)">mdi-trash-can-outline</v-icon>
+                <div>
+                  <strong>Transition Date:</strong>
+                  <span>{{ item.startDate }}</span>
+                </div>
+                <div>
+                  <strong>Enrolled Days:</strong>
+                  <span>{{ item.daysEnrolled && item.daysEnrolled.length ? item.daysEnrolled.join(', ') : 'N/A' }}</span>
+                </div>
+                <div>
+                  <strong>Before School Days:</strong>
+                  <span>{{ item.beforeSchoolDays && item.beforeSchoolDays.length ? item.beforeSchoolDays.join(', ') : 'N/A' }}</span>
+                </div>
+                <div>
+                  <strong>After School Days:</strong>
+                  <span>{{ item.afterSchoolDays && item.afterSchoolDays.length ? item.afterSchoolDays.join(', ') : 'N/A' }}</span>
+                </div>
+                <div>
+                  <strong>Classes:</strong>
+                  <span>
+                    {{ item.classes && item.classes.length ? item.classes.map(cls => cls.name).join(', ') : 'N/A' }}
+                  </span>
+                </div>
+              </v-card>
+            </div>
+          </v-row>
+        </v-col>
+
         <v-col cols="12" align="left" class="pa-2 jspace">
           <h3 class="font2 tleft" style="color: #262B63;">
-            Transition
+            Create New Transition
           </h3>
-          <v-btn class="btn" style="text-transform: none;" @click="clearTransitionDate">Clear Transition</v-btn>
         </v-col>
 
         <v-col cols="12" sm="12" class="pa-2">
@@ -498,6 +533,10 @@
           </v-btn>
         </v-col>
       </v-row>
+
+      <v-row class="fullw mt-10 justify-end">
+        <v-btn class="btn" style="text-transform: none;" :loading="loadingAddTransition" @click="addNewTransitionBtn()">Add Transition</v-btn>
+      </v-row>
     </template>
 
     <template v-if="billing_btn">
@@ -579,6 +618,17 @@
       </v-col>
     </v-row>
 
+    <v-dialog v-model="dialogConfirmationDeleteTransition" content-class="dialogConfirmationStudent" persistent>
+      <v-card class="card-confirmation">
+        <img src="@/assets/sources/icons/trash.svg" alt="TRASH">
+        <span class="font2 f22 tcenter mt-2" style="line-height: 28px; color: #474649;">Do you want to delete this transition?</span>
+        <div class="btn-divs mt-8">
+          <v-btn flat class="btn1" @click="deleteTransition">Yes</v-btn>
+          <v-btn flat class="btn2" @click="cancelDeleteTransition">No, Cancel</v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
+
     <v-dialog v-model="dialogConfirmationStudent" content-class="dialogConfirmationStudent" persistent>
       <v-card class="card-confirmation">
         <img src="@/assets/sources/icons/celebration.svg" alt="Celebration">
@@ -598,7 +648,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, computed, watch } from 'vue'
+import { ref, inject, onMounted, computed, watch, nextTick } from 'vue'
 import axiosInstance from '@/plugins/axios';
 import { useRoute } from 'vue-router';
 import dayjs from 'dayjs';
@@ -608,6 +658,7 @@ dayjs.extend(utc);
 const enrolled_btn = ref(true);
 const transition_btn = ref(false);
 const billing_btn = ref(false);
+const dialogConfirmationDeleteTransition = ref(false);
 
 function onNumberInputCenter() {
   fathers_number.value = fathers_number.value.replace(/[^0-9]/g, '').slice(0, 10);
@@ -912,6 +963,40 @@ const getClasses = async () => {
   }
 };
 
+const resetTransitionFields = () => {
+  formattedTransitionDate.value = '';
+  transition_date_class.value = null;
+
+  monday_enrolled_transition.value = false;
+  tuesday_enrolled_transition.value = false;
+  wednesday_enrolled_transition.value = false;
+  thursday_enrolled_transition.value = false;
+  friday_enrolled_transition.value = false;
+  saturday_enrolled_transition.value = false;
+  sunday_enrolled_transition.value = false;
+
+  monday_before_transition.value = false;
+  tuesday_before_transition.value = false;
+  wednesday_before_transition.value = false;
+  thursday_before_transition.value = false;
+  friday_before_transition.value = false;
+  saturday_before_transition.value = false;
+  sunday_before_transition.value = false;
+
+  monday_after_transition.value = false;
+  tuesday_after_transition.value = false;
+  wednesday_after_transition.value = false;
+  thursday_after_transition.value = false;
+  friday_after_transition.value = false;
+  saturday_after_transition.value = false;
+  sunday_after_transition.value = false;
+
+  select_class_transition.value = null;
+  dataForClassTransition.value = [
+    { select_class_transition: null },
+  ];
+};
+
 const getCenters = async () => {
   try {
     const response = await axiosInstance.get('/campus');
@@ -925,6 +1010,86 @@ const getCenters = async () => {
   } catch (error) {
     showAlert('Error fetching centers', 'error');
   }
+};
+
+const dataForNewTransitions = ref([]);
+const loadingAddTransition = ref(false);
+
+const scrollToTransitionSection = async () => {
+  await nextTick();
+  const el = document.getElementById('transition_scroll');
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+};
+
+const addNewTransitionBtn = async () => {
+    loadingAddTransition.value = true;
+    dataForNewTransitions.value.push(
+      {
+        startDate: formattedTransitionDate.value,
+        daysEnrolled: [
+          monday_enrolled_transition.value ? 'Monday' : null,
+          tuesday_enrolled_transition.value ? 'Tuesday' : null,
+          wednesday_enrolled_transition.value ? 'Wednesday' : null,
+          thursday_enrolled_transition.value ? 'Thursday' : null,
+          friday_enrolled_transition.value ? 'Friday' : null,
+          saturday_enrolled_transition.value ? 'Saturday' : null,
+          sunday_enrolled_transition.value ? 'Sunday' : null,
+        ].filter(Boolean),
+        beforeSchoolDays: [
+          monday_before_transition.value ? 'Monday' : null,
+          tuesday_before_transition.value ? 'Tuesday' : null,
+          wednesday_before_transition.value ? 'Wednesday' : null,
+          thursday_before_transition.value ? 'Thursday' : null,
+          friday_before_transition.value ? 'Friday' : null,
+          saturday_before_transition.value ? 'Saturday' : null,
+          sunday_before_transition.value ? 'Sunday' : null,
+        ].filter(Boolean),
+        afterSchoolDays: [
+          monday_after_transition.value ? 'Monday' : null,
+          tuesday_after_transition.value ? 'Tuesday' : null,
+          wednesday_after_transition.value ? 'Wednesday' : null,
+          thursday_after_transition.value ? 'Thursday' : null,
+          friday_after_transition.value ? 'Friday' : null,
+          saturday_after_transition.value ? 'Saturday' : null,
+          sunday_after_transition.value ? 'Sunday' : null,
+        ].filter(Boolean),
+        classes: dataForClassTransition.value
+          .map(item => item.select_class_transition)
+          .filter(Boolean)
+          .map(selection => typeof selection === 'object'
+            ? selection
+            : selectClassItems.value.find(item => item.id === selection)
+          )
+          .filter(Boolean),
+      }
+    );
+
+    resetTransitionFields();
+    loadingAddTransition.value = false;
+    await scrollToTransitionSection();
+};
+
+const selectedTransitionIndex = ref(null);
+
+const confirmDeleteTransition = (index) => {
+  selectedTransitionIndex.value = index;
+  dialogConfirmationDeleteTransition.value = true;
+};
+
+const deleteTransition = () => {
+  const index = selectedTransitionIndex.value;
+  if (index !== null && index >= 0 && index < dataForNewTransitions.value.length) {
+    dataForNewTransitions.value.splice(index, 1);
+  }
+  selectedTransitionIndex.value = null;
+  dialogConfirmationDeleteTransition.value = false;
+};
+
+const cancelDeleteTransition = () => {
+  selectedTransitionIndex.value = null;
+  dialogConfirmationDeleteTransition.value = false;
 };
 
 
@@ -943,7 +1108,6 @@ const getDataStudent = async () => {
     weeklyAmount.value = student.weeklyAmount;
     monthlyAmount.value = student.monthlyAmount;
     start_date_class.value = student.startDateOfClasses ? dayjs(student.startDateOfClasses).toDate() : null;
-    transition_date_class.value = student.startDateOfClassesTransition ? dayjs(student.startDateOfClassesTransition).toDate() : null;
     end_date_class.value = student.endDateOfClasses ? dayjs(student.endDateOfClasses).toDate() : null;
     formatDate(dateOfBirth.value);
     formatStartDate(start_date_class.value);
@@ -974,35 +1138,6 @@ const getDataStudent = async () => {
       saturday_after.value = student.afterSchoolDays.includes('Saturday');
       sunday_after.value = student.afterSchoolDays.includes('Sunday');
     }
-
-    if(student.daysEnrolledTransition != null){
-      monday_enrolled_transition.value = student.daysEnrolledTransition.includes('Monday');
-      tuesday_enrolled_transition.value = student.daysEnrolledTransition.includes('Tuesday');
-      wednesday_enrolled_transition.value = student.daysEnrolledTransition.includes('Wednesday');
-      thursday_enrolled_transition.value = student.daysEnrolledTransition.includes('Thursday');
-      friday_enrolled_transition.value = student.daysEnrolledTransition.includes('Friday');
-      saturday_enrolled_transition.value = student.daysEnrolledTransition.includes('Saturday');
-      sunday_enrolled_transition.value = student.daysEnrolledTransition.includes('Sunday');
-    }
-    if (student.beforeSchoolDaysTransition != null) {
-      monday_before_transition.value = student.beforeSchoolDaysTransition.includes('Monday');
-      tuesday_before_transition.value = student.beforeSchoolDaysTransition.includes('Tuesday');
-      wednesday_before_transition.value = student.beforeSchoolDaysTransition.includes('Wednesday');
-      thursday_before_transition.value = student.beforeSchoolDaysTransition.includes('Thursday');
-      friday_before_transition.value = student.beforeSchoolDaysTransition.includes('Friday');
-      saturday_before_transition.value = student.beforeSchoolDaysTransition.includes('Saturday');
-      sunday_before_transition.value = student.beforeSchoolDaysTransition.includes('Sunday');
-    }
-    if (student.afterSchoolDaysTransition != null) {
-      monday_after_transition.value = student.afterSchoolDaysTransition.includes('Monday');
-      tuesday_after_transition.value = student.afterSchoolDaysTransition.includes('Tuesday');
-      wednesday_after_transition.value = student.afterSchoolDaysTransition.includes('Wednesday');
-      thursday_after_transition.value = student.afterSchoolDaysTransition.includes('Thursday');
-      friday_after_transition.value = student.afterSchoolDaysTransition.includes('Friday');
-      saturday_after_transition.value = student.afterSchoolDaysTransition.includes('Saturday');
-      sunday_after_transition.value = student.afterSchoolDaysTransition.includes('Sunday');
-    }
-
     select_center.value = student.campus.id;
     mothers_name.value = student.contacts.find(contact => contact.relation === 'Mother')?.fullName || '';
     mothers_number.value = student.contacts.find(contact => contact.relation === 'Mother')?.phone || '';
@@ -1028,8 +1163,13 @@ const getDataStudent = async () => {
     dataForClass.value = student.classes.map(classe => ({
       select_class: classe.id,
     }));
-    dataForClassTransition.value = student.classesTransition.map(classe => ({
-      select_class_transition: classe.id,
+    dataForNewTransitions.value = student.transitions.map(transition => ({
+      id: transition.id,
+      startDate: transition.startDate ? dayjs(transition.startDate).format('MM-DD-YYYY') : '',
+      daysEnrolled: transition.daysEnrolled || [],
+      beforeSchoolDays: transition.beforeSchoolDays || [],
+      afterSchoolDays: transition.afterSchoolDays || [],
+      classes: transition.classes || [],
     }));
   } catch (error) {
     showAlert(error, 'error');
@@ -1203,6 +1343,21 @@ const updateStudent = async () => {
         })
         .filter(id => id !== null && id !== undefined && id !== '' && id !== 'Select Class' && !isNaN(Number(id)));
       formData.append('classIdsTransition', currentClassTransitionIds);
+
+      const transitionsPayload = dataForNewTransitions.value.map(transition => ({
+        ...(transition.id ? { id: transition.id } : {}),
+        studentId: studentId.value,
+        startDate: transition.startDate,
+        daysEnrolled: transition.daysEnrolled || [],
+        beforeSchoolDays: transition.beforeSchoolDays || [],
+        afterSchoolDays: transition.afterSchoolDays || [],
+        classIds: Array.isArray(transition.classes)
+          ? transition.classes
+              .map(cls => (typeof cls === 'object' ? cls.id : cls))
+              .filter(Boolean)
+          : [],
+      }));
+      formData.append('transitions', JSON.stringify(transitionsPayload));
 
       // select_center puede ser objeto o id directo
       let campusId = select_center.value;

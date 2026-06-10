@@ -58,7 +58,7 @@ const router = createRouter({
           path: 'students',
           name: 'students',
           component: () => import('@/views/students.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER', 'TEACHER'] }
         },
         {
           path: 'student-registration',
@@ -88,7 +88,7 @@ const router = createRouter({
           path: 'programs',
           name: 'programs',
           component: () => import('@/views/programs.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER', 'TEACHER'] }
         },
         {
           path: 'additional-program',
@@ -124,7 +124,7 @@ const router = createRouter({
           path: 'new-weekly-schedule',
           name: 'new-weekly-schedule',
           component: () => import('@/views/new-weekly-schedule.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER', 'TEACHER'] }
         },
         {
           path: 'report',
@@ -136,13 +136,13 @@ const router = createRouter({
           path: 'edit-weekly-schedule/:id',
           name: 'edit-weekly-schedule',
           component: () => import('@/views/edit-weekly-schedule.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER', 'TEACHER'] }
         },
         {
           path: 'daily-schedule/',
           name: 'daily-schedule',
           component: () => import('@/views/daily-schedule.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER', 'TEACHER'] }
         },
         {
           path: 'edit-daily-schedule/',
@@ -184,7 +184,7 @@ const router = createRouter({
           path: 'student-profile/:id',
           name: 'student-profile',
           component: () => import('@/views/student-profile.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER', 'TEACHER'] }
         },
         {
           path: 'edit-student/:id',
@@ -196,7 +196,7 @@ const router = createRouter({
           path: 'centers',
           name: 'centers',
           component: () => import('@/views/centers.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER', 'TEACHER'] }
         },
         {
           path: 'new-center',
@@ -214,13 +214,13 @@ const router = createRouter({
           path: 'view-center/:id',
           name: 'view-center',
           component: () => import('@/views/view-center.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER', 'TEACHER'] }
         },
         {
           path: 'teachers',
           name: 'teachers',
           component: () => import('@/views/teachers.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER', 'TEACHER'] }
         },
         {
           path: 'new-teacher',
@@ -238,7 +238,7 @@ const router = createRouter({
           path: 'users',
           name: 'users',
           component: () => import('@/views/users.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER', 'TEACHER'] }
         },
         {
           path: 'new-user',
@@ -250,7 +250,7 @@ const router = createRouter({
           path: 'view-user/:id',
           name: 'view-user',
           component: () => import('@/views/view-user.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER', 'TEACHER'] }
         },
         {
           path: 'edit-user/:id',
@@ -262,7 +262,7 @@ const router = createRouter({
           path: 'view-additional-program/:id',
           name: 'view-additional-program',
           component: () => import('@/views/view-additional-program.vue'),
-          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER'] }
+          meta: { requiresAuth: true, allowedRoles: ['ADMIN', 'OWNER', 'TEACHER'] }
         },
         {
           path: 'edit-daily-attendance/:id',

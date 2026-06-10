@@ -141,12 +141,12 @@ const dataClassroomsFiltered = computed(() => {
 const getDataClassrooms = async () => {
   try {
     const response = await axiosInstance.get('/classes');
-    dataClassrooms.value = response.data.result.map((classes, index) =>{
+    dataClassrooms.value = response.data.result.map((classes, index) => {
       return {
         id: classes.id,
         id_classroom: index + 1,
         name: classes.name,
-        program: classes.program,
+        program: classes.program === 'PRIMARY' ? 'PRESCHOOL' : classes.program,
         center: classes.campus.name,
         number_students: classes.maxCapacity,
         classroom_img: classes.image,

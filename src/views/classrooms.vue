@@ -146,7 +146,11 @@ const getDataClassrooms = async () => {
         id: classes.id,
         id_classroom: index + 1,
         name: classes.name,
-        program: classes.program === 'PRIMARY' ? 'PRESCHOOL' : classes.program,
+        program: classes.program === 'PRIMARY'
+          ? 'PRESCHOOL'
+          : classes.program === 'TODDLER'
+            ? 'Infant & Toddler'
+            : classes.program,
         center: classes.campus.name,
         number_students: classes.maxCapacity,
         classroom_img: classes.image,

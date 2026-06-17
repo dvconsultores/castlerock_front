@@ -542,7 +542,7 @@
     <template v-if="billing_btn">
       <v-row class="container-checkboxes mb-3 mt-0">
         <v-col cols="12" align="left" class="pb-1 pl-0">
-          <span class="font2 f24 tleft" style="color: #262262;">Amount Invoice Weekly</span>
+          <span class="font2 f24 tleft" style="color: #262262;">Weekly Invoice</span>
         </v-col>
 
         <v-col cols="12" class="jspace pl-0">
@@ -554,7 +554,7 @@
 
       <v-row class="container-checkboxes mb-0 mt-3">
         <v-col cols="12" align="left" class="pb-1 pl-0">
-          <span class="font2 f24 tleft" style="color: #262262;">Amount Invoice Monthly</span>
+          <span class="font2 f24 tleft" style="color: #262262;">Monthly Invoice</span>
         </v-col>
 
         <v-col cols="12" class="jspace pl-0">

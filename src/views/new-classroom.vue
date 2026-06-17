@@ -173,7 +173,7 @@ const maxCapacity = ref('');
 const program = ref(null);
 const programItems = [
   { label: 'PRESCHOOL', value: 'PRIMARY' },
-  { label: 'TODDLER', value: 'TODDLER' },
+  { label: 'INFANT & TODDLER', value: 'TODDLER' },
   { label: 'INFANTS', value: 'INFANTS' },
 ];
 const select_center = ref(null);

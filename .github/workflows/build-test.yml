@@ -28,6 +28,9 @@ jobs:
           echo "VITE_BASE_URL_API=${{ secrets.VITE_BASE_URL_API_TEST }}" >> .env
           echo "VITE_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }}" >> .env
 
+      - name: Set backend host in nginx.conf
+        run: sed -i 's|__BACKEND_HOST__|castlerock-test:3010|g' nginx.conf
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:

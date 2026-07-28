@@ -107,6 +107,8 @@
 <script setup>
 import { ref, computed, onMounted, inject } from 'vue';
 import { useRouter } from 'vue-router';
+import { logger } from '@/utils/logger';
+import { getSessionRole } from '@/utils/authState';
 
 const router = useRouter();
 const showAlert = inject('showAlert');
@@ -157,7 +159,7 @@ const selectCenter = async (item) => {
     
     
   } catch (error) {
-    console.error('Error selecting center:', error);
+    logger.error('Error selecting center');
     showAlert && showAlert('Error selecting center', 'error');
   }
 };
@@ -183,9 +185,10 @@ const headers = ref([
 const searchQuery = ref('');
 
 
-const isAdmin = localStorage.getItem('userRole') === 'ADMIN';
-const isTeacher = localStorage.getItem('userRole') === 'TEACHER';
-const isOwner = localStorage.getItem('userRole') === 'OWNER';
+const userRole = getSessionRole();
+const isAdmin = userRole === 'ADMIN';
+const isTeacher = userRole === 'TEACHER';
+const isOwner = userRole === 'OWNER';
 const dataNotes = ref([]);
 const hasUnreadNotes = computed(() => {
   return dataNotes.value.some(note => note.status === 'unread');
@@ -205,7 +208,7 @@ const getNotes = async () => {
     });;
     return response.data;
   } catch (error) {
-    console.error('Error fetching notifications:', error);
+    logger.error('Error fetching notifications');
   }
 };
 
@@ -216,7 +219,7 @@ const editStatus = async (item) => {
     });
     getNotes();
   } catch (error) {
-    console.error('Error updating status:', error);
+    logger.error('Error updating notification status');
   }
 };
 
@@ -225,7 +228,7 @@ const deleteNote = async (item) => {
     const response = await axiosInstance.delete(`/notifications/${item.id}`);
     getNotes();
   } catch (error) {
-    console.error('Error updating status:', error);
+    logger.error('Error deleting notification');
   }
 };
 
@@ -345,7 +348,7 @@ onMounted(() => {
   getNotes();
   getImg();
   // Si el usuario es ADMIN y no tiene campusIdForAdmin, abrir el diálogo de selección de campus
-  const userRole = localStorage.getItem('userRole');
+  const userRole = getSessionRole();
   const campusIdForAdmin = localStorage.getItem('campusIdForAdmin');
   if (userRole === 'ADMIN' && (!campusIdForAdmin || campusIdForAdmin === 'null' || campusIdForAdmin === 'undefined')) {
     openDialogCampus();

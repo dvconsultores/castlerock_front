@@ -281,10 +281,12 @@ const router = createRouter({
   ]
 })
 
+import { clearAuthState, getSessionRole } from '@/utils/authState';
+
 // Guard de navegación global
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('accessToken')
-  const userRole = localStorage.getItem('userRole')
+  const userRole = getSessionRole()
 
   // Rutas que no requieren autenticación
   if (!to.meta.requiresAuth) {
@@ -301,17 +303,12 @@ router.beforeEach((to, from, next) => {
     // JWT formato: header.payload.signature
     const payload = JSON.parse(atob(token.split('.')[1]))
     if (payload.exp && Date.now() / 1000 > payload.exp) {
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('userRole')
-      localStorage.removeItem('statusSuscription')
-      // Puedes limpiar otros datos si es necesario
+      clearAuthState()
       return next({ name: 'LoginPage' })
     }
   } catch (e) {
     // Si el token no es válido, forzar logout
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('userRole')
-    localStorage.removeItem('statusSuscription')
+    clearAuthState()
     return next({ name: 'LoginPage' })
   }
 

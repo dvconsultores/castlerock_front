@@ -270,6 +270,7 @@ import locale from 'dayjs/locale/en';
 import imgUser from '@/assets/sources/images/user.png';
 import imgStudent from '@/assets/sources/images/avatar.svg';
 import { useRouter } from 'vue-router';
+import { logger } from '@/utils/logger';
 dayjs.extend(weekOfYear);
 dayjs.extend(isLeapYear);
 dayjs.locale(locale);
@@ -314,21 +315,16 @@ const router = useRouter();
 
 const handleNewDay = (day, weekIndex) => {
   if (day.no_click.value === true || day.dailyScheduleId || (day.students && day.students.length > 0) || (day.teachers && day.teachers.length > 0)) {
-    console.warn('This day has existing schedule or data and cannot be modified');
+      logger.warn('Attempted to modify a day with existing schedule');
     return;
   }
     
   const weekData = monthlySchedule.value[weekIndex];
   if (!weekData?.planningId) {
-    console.error('No planningId found for week', weekIndex + 1);
+    logger.error('No planningId found for week ' + (weekIndex + 1));
     return;
   }
-
-  const dayName = day.date.split(',')[0].trim();
-
-  localStorage.setItem('idCenter', select_center.value);
-  localStorage.setItem('centerName', selectCenterItems.value.find(c => c.id === select_center.value)?.name || '');
-  localStorage.setItem('idClass', select_class.value);
+    
   localStorage.setItem('className', selectedClassItems.value.find(c => c.id === select_class.value)?.name || '');
   localStorage.setItem('idYear', year.value?.id);
   localStorage.setItem('yearName', year.value?.name || '');
@@ -348,7 +344,7 @@ const handleNewDay = (day, weekIndex) => {
 const handleEditDay = (day, weekIndex) => {
   const weekData = monthlySchedule.value[weekIndex];
   if (!weekData?.planningId) {
-    console.error('No planningId found for week', weekIndex + 1);
+    logger.error('No planningId found for week ' + (weekIndex + 1));
     return;
   }
 
@@ -377,7 +373,7 @@ const handleEditDay = (day, weekIndex) => {
 const handleViewDay = (day, weekIndex) => {
   const weekData = monthlySchedule.value[weekIndex];
   if (!weekData?.planningId) {
-    console.error('No planningId found for week', weekIndex + 1);
+    logger.error('No planningId found for week ' + (weekIndex + 1));
     return;
   }
 
@@ -561,7 +557,7 @@ const transformResponseToMonthlySchedule = (response) => {
 
     // Verificar que startDate sea Lunes (1)
     if (startDate.day() !== 1) {
-      console.warn(`La startDate (${startDate.format('YYYY-MM-DD')}) de la semana ${planning.week} no es Lunes.`);
+      logger.warn(`Week ${planning.week} startDate is not a Monday`);
     }
 
     // Crear array de días (Lunes a Viernes o Lunes a Domingo, según prefieras)

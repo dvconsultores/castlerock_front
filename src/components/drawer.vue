@@ -57,26 +57,20 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { isDrawerVisible } from '@/store/drawerState.js';
+import { clearAuthState, getSessionRole } from '@/utils/authState';
 
 const route = useRoute();
-const isAdmin = localStorage.getItem('userRole') === 'ADMIN';
-const isTeacher = localStorage.getItem('userRole') === 'TEACHER';
-const isOwner = localStorage.getItem('userRole') === 'OWNER';
+const userRole = getSessionRole();
+const isAdmin = userRole === 'ADMIN';
+const isTeacher = userRole === 'TEACHER';
+const isOwner = userRole === 'OWNER';
 
 const isRouteActive = (path) => {
   return route.path === path
 };
 
 const logOut = () => {
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('idUser');
-  localStorage.removeItem('userRole');
-  localStorage.removeItem('userImage');
-  localStorage.removeItem('statusSuscription');
-  localStorage.removeItem('campusId');
-  localStorage.removeItem('billingCycle');
-  localStorage.removeItem('planId');
-  localStorage.removeItem('campusIdForAdmin');
+  clearAuthState();
   window.location.href = '/';
 };
 </script>

@@ -185,6 +185,7 @@
 import { ref, inject, onMounted, computed } from 'vue';
 import axiosInstance from '@/plugins/axios';
 import { useRoute } from 'vue-router';
+import { logger } from '@/utils/logger';
 
 // const fileInput = ref(null);
 // const selectedImgTeacher = ref(null);
@@ -269,7 +270,7 @@ const updateTeacher = async () => {
   } catch(error) {
     showAlert('Failed to update teacher', 'error');
     loadingCreate.value = false;
-    console.error("Error details:", error.response?.data); // Para debug
+    logger.error('Failed to update teacher');
   }
 };
 
@@ -309,7 +310,7 @@ const getTeacher = async () => {
       }));
     }
   } catch (error) {
-    console.error('Failed to load center data', error);
+    logger.error('Failed to load center data');
   }
 };
 

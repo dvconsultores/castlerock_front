@@ -36,8 +36,11 @@
         </div>
       </template>
 
+      <!-- Security: structural rendering instead of v-html. No user HTML is rendered. -->
       <template v-slot:item.classes="{ item }">
-        <div class="center" v-html="item.classes"></div>
+        <div class="center">
+          <div v-for="(name, i) in item.classes" :key="i">{{ name }}</div>
+        </div>
       </template>
 
       <template v-slot:item.actions="{ item }">
@@ -90,6 +93,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
 import utc from 'dayjs/plugin/utc';
 import avatarImg from '@/assets/sources/images/avatar.svg';
+import { logger } from '@/utils/logger';
 
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
@@ -188,14 +192,14 @@ const getStudents = async () => {
           dateOfEndRaw: endRaw ? endRaw.format('YYYY-MM-DD') : null,
           dateOfEnd: endRaw ? endRaw.format('MM-DD-YYYY') : '',
           center: student.campus ? student.campus.name : '',
-          classes: Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '',
+          classes: Array.isArray(student.classes) ? student.classes.map(c => c.name) : [],
           actions: ''
         };
       })
       .filter(s => s !== null)
       .map((student, index) => ({ ...student, id_student: index + 1 }));
   } catch (error) {
-    console.error('Failed to load students', error);
+    logger.error('Failed to load students');
   }
 };
 

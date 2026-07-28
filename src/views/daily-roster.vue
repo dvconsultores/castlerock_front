@@ -150,8 +150,6 @@ const getDailyScheduleToday = async () => {
         totalMaxCapacity: 0 
     });
 
-    console.log('Datos Procesados del Día:', processedData);
-
     dataStudents.value = processedData.allStudents.map(student => ({
       student_img: student.image || imgAvatar,
       student_name: `${student.firstName} ${student.lastName}`,

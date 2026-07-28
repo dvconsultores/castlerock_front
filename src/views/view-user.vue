@@ -111,6 +111,7 @@
 import { ref, inject, onMounted } from 'vue';
 import axiosInstance from '@/plugins/axios';
 import { useRoute } from 'vue-router';
+import { logger } from '@/utils/logger';
 
 const route = useRoute();
 const idUsers = ref(route.params.id);
@@ -141,7 +142,7 @@ const loadUserData = async () => {
     
   } catch (error) {
     showAlert(error.response?.data?.message || 'Error loading user data', 'error');
-    console.error('Error loading user:', error);
+    logger.error('Error loading user');
   }
 };
 

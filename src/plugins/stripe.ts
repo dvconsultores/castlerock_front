@@ -1,4 +1,5 @@
 import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { logger } from '@/utils/logger';
 
 let stripePromise: Promise<Stripe | null> | null = null;
 
@@ -7,7 +8,7 @@ export const getStripe = (): Promise<Stripe | null> => {
     const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string;
     
     if (!publishableKey) {
-      console.error('VITE_STRIPE_PUBLISHABLE_KEY is not defined in environment variables');
+      logger.error('Stripe publishable key is missing from environment');
       return Promise.resolve(null);
     }
     

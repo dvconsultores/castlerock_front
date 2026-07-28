@@ -273,6 +273,7 @@
 <script setup>
 import { ref, onMounted, inject, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { logger } from '@/utils/logger';
 import axiosInstance from '@/plugins/axios';
 import avatarImg from '@/assets/sources/images/avatar.svg';
 
@@ -539,7 +540,7 @@ const fetchPlanningData = async () => {
     transformDatesYear()
     transformDatesMonth()
   } catch (error) {
-    console.error('Error fetching planning data:', error);
+    logger.error('Error fetching planning data');
   }
 };
 

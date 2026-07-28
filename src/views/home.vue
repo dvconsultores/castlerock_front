@@ -234,6 +234,8 @@ import isLeapYear from 'dayjs/plugin/isLeapYear';
 import 'dayjs/locale/en';
 import avatarImg from '@/assets/sources/images/avatar.svg';
 import { useRouter } from 'vue-router';
+import { logger } from '@/utils/logger';
+import { getSessionRole } from '@/utils/authState';
 
 const router = useRouter();  
 const showAlert = inject('showAlert');
@@ -286,7 +288,7 @@ const isLoading = ref(true);
 const loadUserData = async () => {
   const userId = localStorage.getItem('idUser');
   if (!userId) {
-    console.error('No user ID found in localStorage');
+    logger.error('No user ID found in session');
     isLoading.value = false;
     return;
   }
@@ -299,10 +301,10 @@ const loadUserData = async () => {
       userName.value = userData.firstName || userData.firstname || '';
       userLastName.value = userData.lastName || userData.lastname || '';
     } else {
-      console.error('Unexpected response format:', response.data);
+      logger.error('Unexpected response format from user endpoint');
     }
   } catch (error) {
-    console.error('Failed to load user data:', error.response?.data || error.message);
+    logger.error('Failed to load user data');
   } finally {
     isLoading.value = false;
   }
@@ -429,7 +431,6 @@ const loadDaily = async () => {
     const today = currentDate.value.format('YYYY-MM-DD');
     const response = await axiosInstance.get(`/daily-schedules?date=${today}`);
     const todayClasses = response.data?.result || [];
-    console.log('Today Classes:', todayClasses);
     scheduleData.value = todayClasses;
     dataClasses.value = todayClasses.map(item => ({
       id: item.id,
@@ -518,7 +519,7 @@ onMounted(() => {
   loadDaily();
   loadDailyBefore();
   getAttendance();
-  isTeacher.value = localStorage.getItem('userRole') === 'TEACHER';
+  isTeacher.value = getSessionRole() === 'TEACHER';
 });
 </script>
 

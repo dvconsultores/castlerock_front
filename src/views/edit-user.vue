@@ -145,6 +145,8 @@
 import { ref, inject, onMounted } from 'vue';
 import axiosInstance from '@/plugins/axios';
 import { useRoute } from 'vue-router';
+import { logger } from '@/utils/logger';
+import { getSessionRole } from '@/utils/authState';
 
 const route = useRoute();
 const idUsers = ref(route.params.id);
@@ -154,7 +156,7 @@ const imagePreview = ref(null);
 const loadingUser = ref(false);
 const showAlert = inject('showAlert');
 let itemsRole = ref(['TEACHER', 'OWNER']);
-const userRole = localStorage.getItem('userRole');
+const userRole = getSessionRole();
 if (userRole === 'ADMIN') {
   itemsRole.value = ['TEACHER', 'OWNER', 'ADMIN'];
 } else {
@@ -240,7 +242,7 @@ const loadUserData = async () => {
     
   } catch (error) {
     showAlert(error.response?.data?.message || 'Error loading user data', 'error');
-    console.error('Error loading user:', error);
+    logger.error('Error loading user');
   }
 };
 

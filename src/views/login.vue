@@ -106,6 +106,7 @@ import { ref, inject, computed } from 'vue';
 import axiosInstance from '@/plugins/axios';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { logger } from '@/utils/logger';
 
 
 const router = useRouter();
@@ -163,7 +164,7 @@ const loginFunction = async () => {
     router.push('/home');
   } catch (error) {
     loadingLogin.value = false;
-    console.error('Login failed', error);
+    logger.error('Login failed');
     showAlert('Invalid Credentials', 'error');
   }
   } else {

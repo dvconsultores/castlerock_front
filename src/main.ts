@@ -3,6 +3,7 @@ import App from './App.vue';
 import router from './router/router';
 import { createVuetify } from 'vuetify';
 import 'vuetify/styles'; // Import Vuetify styles
+import '@mdi/font/css/materialdesignicons.min.css'; // Bundled locally (was CDN)
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import { aliases, mdi } from 'vuetify/iconsets/mdi';

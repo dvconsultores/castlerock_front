@@ -769,6 +769,7 @@
 import { ref, inject, onMounted, computed, watch, nextTick } from 'vue'
 import axiosInstance from '@/plugins/axios';
 import { useRoute } from 'vue-router';
+import { logger } from '@/utils/logger';
 import present from '@/assets/sources/icons/attendance.svg';
 import absent from '@/assets/sources/icons/absent.svg';
 import late from '@/assets/sources/icons/late.svg';
@@ -1120,7 +1121,7 @@ const loadCenterData = async () => {
     address.value = center.address;
     currentImage.value = center.image;
   } catch (error) {
-    console.error('Failed to load center data', error);
+    logger.error('Failed to load center data');
   }
 };
 

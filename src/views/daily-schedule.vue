@@ -275,6 +275,7 @@ import { ref, onMounted, inject, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axiosInstance from '@/plugins/axios';
 import avatarImg from '@/assets/sources/images/avatar.svg';
+import { logger } from '@/utils/logger';
 
 const dialogConfirmationDaily = ref(false);
 const dialogAddPlanning = ref(false);
@@ -540,7 +541,7 @@ const fetchPlanningData = async () => {
     transformDatesYear()
     transformDatesMonth()
   } catch (error) {
-    console.error('Error fetching planning data:', error);
+    logger.error('Error fetching planning data');
   }
 };
 

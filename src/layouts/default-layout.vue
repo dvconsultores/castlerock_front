@@ -14,7 +14,7 @@
     />
   </v-app>
 </template>
-<!-- some -->
+<!-- some other comments -->
 <script setup>
 import { ref, provide } from 'vue';
 import '@/assets/styles/layouts/default-layout.scss'

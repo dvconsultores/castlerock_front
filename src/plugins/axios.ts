@@ -39,6 +39,9 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // Prevent browser caching of API responses (304 stale cache issue)
+    config.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+    config.headers['Pragma'] = 'no-cache';
     // Añadir campus-id cuando el usuario es ADMIN y existe campusIdForAdmin
     try {
       const userRole = getSessionRole();

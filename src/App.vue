@@ -7,6 +7,7 @@
 <script>
 export default {
   name: 'App',
+  // coments
   // mounted() {
   //   window.addEventListener('beforeunload', this.handleBeforeUnload);
   // },

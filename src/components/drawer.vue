@@ -57,6 +57,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { isDrawerVisible } from '@/store/drawerState.js';
+import { clearAuthState } from '@/utils/authState';
 
 const route = useRoute();
 const isAdmin = localStorage.getItem('userRole') === 'ADMIN';
@@ -68,15 +69,7 @@ const isRouteActive = (path) => {
 };
 
 const logOut = () => {
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('idUser');
-  localStorage.removeItem('userRole');
-  localStorage.removeItem('userImage');
-  localStorage.removeItem('statusSuscription');
-  localStorage.removeItem('campusId');
-  localStorage.removeItem('billingCycle');
-  localStorage.removeItem('planId');
-  localStorage.removeItem('campusIdForAdmin');
+  clearAuthState();
   window.location.href = '/';
 };
 </script>

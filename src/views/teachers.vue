@@ -23,8 +23,11 @@
         </div>
       </template>
 
-       <template v-slot:item.classes="{ item }">
-        <div class="center" v-html="item.classes"></div>
+      <!-- Security: structural rendering instead of v-html. No user HTML is rendered. -->
+      <template v-slot:item.classes="{ item }">
+        <div class="center">
+          <div v-for="(name, i) in item.classes" :key="i">{{ name }}</div>
+        </div>
       </template>
 
       <template v-slot:item.actions="{ item }">
@@ -148,7 +151,7 @@ const getTeachers = async () => {
         id_teacher: index + 1,
         teacher_name: teacher.user.firstName + ' ' + teacher.user.lastName,
         center: teacher.campus.name,
-        classes: Array.isArray(teacher.classes) ? teacher.classes.map(c => c.name).join('<br>') : '',
+        classes: Array.isArray(teacher.classes) ? teacher.classes.map(c => c.name) : [],
         teacher_img: teacher.user.image,
         actions: ''
       };

@@ -36,12 +36,17 @@
         </div>
       </template>
 
+      <!-- Security: structural rendering instead of v-html. No user HTML is rendered. -->
       <template v-slot:item.classes="{ item }">
-        <div class="center" v-html="item.classes"></div>
+        <div class="center">
+          <div v-for="(name, i) in item.classes" :key="i">{{ name }}</div>
+        </div>
       </template>
 
       <template v-slot:item.nextClasses="{ item }">
-        <div class="center" v-html="item.nextClasses"></div>
+        <div class="center">
+          <div v-for="(name, i) in item.nextClasses" :key="i">{{ name }}</div>
+        </div>
       </template>
 
       <template v-slot:item.actions="{ item }">
@@ -243,13 +248,12 @@ const getStudents = async () => {
 
             // Clases actuales (desde donde transiciona) -> mostrar en la columna "classes"
             classesForChosen = Array.isArray(student.classes) && student.classes.length > 0
-              ? student.classes.map(c => c.name).join('<br>')
-              : 'No classes assigned';
-
+              ? student.classes.map(c => c.name)
+              : [];
             // Clases de la transición -> mostrar en la columna "nextClasses"
             otherClasses = transitionClasses.length > 0
-              ? transitionClasses.map(c => c.name).join('<br>')
-              : 'No transition classes assigned';
+              ? transitionClasses.map(c => c.name)
+              : [];
         }
 
         return {

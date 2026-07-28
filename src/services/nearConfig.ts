@@ -3,7 +3,7 @@ import { connect, keyStores, WalletConnection } from 'near-api-js';
 type NearNetwork = 'testnet' | 'mainnet';
 
 // Get the environment variable
-const env: NearNetwork = (process.env.VITE_NEAR_NETWORK as NearNetwork) || 'testnet'; // Default to 'testnet' if not defined
+const env: NearNetwork = (import.meta.env.VITE_NEAR_NETWORK as NearNetwork) || 'testnet'; // Default to 'testnet' if not defined
 
 const config: Record<NearNetwork, {
   networkId: string;

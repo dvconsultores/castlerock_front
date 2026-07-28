@@ -36,8 +36,11 @@
         </div>
       </template>
 
+      <!-- Security: structural rendering instead of v-html. No user HTML is rendered. -->
       <template v-slot:item.classes="{ item }">
-        <div class="center" v-html="item.classes"></div>
+        <div class="center">
+          <div v-for="(name, i) in item.classes" :key="i">{{ name }}</div>
+        </div>
       </template>
 
       <template v-slot:item.actions="{ item }">
@@ -184,7 +187,7 @@ const getStudents = async () => {
           dateOfEndRaw: student.endDateOfClasses,
           dateOfEnd: student.endDateOfClasses ? dayjs(student.endDateOfClasses).format('MM-DD-YYYY') : '',
           center: student.campus ? student.campus.name : '',
-          classes: Array.isArray(student.classes) ? student.classes.map(c => c.name).join('<br>') : '',
+          classes: Array.isArray(student.classes) ? student.classes.map(c => c.name) : [],
           actions: ''
         };
       })

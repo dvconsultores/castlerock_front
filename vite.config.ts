@@ -4,8 +4,8 @@ import path from 'path'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineConfig(({ mode }) => {
-  // Load all env variables starting with VITE_
-  const env = loadEnv(mode, process.cwd())
+  // Load only VITE_-prefixed env variables (security: prevents non-public vars leaking to client)
+  const env = loadEnv(mode, process.cwd(), 'VITE_')
 
   return {
     base: env.VITE_BASE_URL || '/', // Set the base URL from the environment variable
@@ -30,8 +30,6 @@ export default defineConfig(({ mode }) => {
     },
     define: {
       global: 'window',
-      // Expose all VITE_* environment variables to client
-      'process.env': env
     },
     css: {
       preprocessorOptions: {

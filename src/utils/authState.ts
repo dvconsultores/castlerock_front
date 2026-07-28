@@ -36,3 +36,45 @@ export function clearAuthState(): void {
     }
   });
 }
+
+/**
+ * Decode the role claim from the stored JWT access token.
+ *
+ * Client-side only. This gates UI rendering, NOT access.
+ * Authorization is enforced by the backend on every request.
+ *
+ * @returns The role string (e.g. 'ADMIN', 'TEACHER', 'OWNER') or null if the
+ *          token is missing, malformed, expired, or has no role claim.
+ */
+export function getSessionRole(): string | null {
+  try {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return null;
+
+    // JWT format: header.payload.signature
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+
+    // Base64url-decode the payload (JWT uses base64url, not standard base64)
+    let payload = parts[1];
+    payload = payload.replace(/-/g, '+').replace(/_/g, '/');
+    // Pad to a multiple of 4
+    while (payload.length % 4 !== 0) {
+      payload += '=';
+    }
+
+    const decoded = JSON.parse(atob(payload));
+
+    // Check expiry
+    if (decoded.exp && Date.now() / 1000 > decoded.exp) {
+      clearAuthState();
+      return null;
+    }
+
+    return decoded.role || null;
+  } catch {
+    // Token is malformed — treat as unauthenticated
+    clearAuthState();
+    return null;
+  }
+}

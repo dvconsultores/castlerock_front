@@ -157,6 +157,7 @@
 <script setup>
 import { ref, inject } from 'vue';
 import axiosInstance from '@/plugins/axios';
+import { getSessionRole } from '@/utils/authState';
 
 const fileInput = ref(null);
 const selectedImgUser = ref(null);
@@ -164,7 +165,7 @@ const imagePreview = ref(null);
 const loadingUser = ref(false);
 const showAlert = inject('showAlert');
 let itemsRole = ref(['TEACHER', 'OWNER']);
-const userRole = localStorage.getItem('userRole');
+const userRole = getSessionRole();
 if (userRole === 'ADMIN') {
   itemsRole.value = ['TEACHER', 'OWNER', 'ADMIN'];
 } else {

@@ -138,6 +138,7 @@
 import { ref, inject, onMounted, computed } from 'vue';
 import axiosInstance from '@/plugins/axios';
 import { useRoute } from 'vue-router';
+import { logger } from '@/utils/logger';
 
 const route = useRoute();
 const programId = ref(route.params.id);
@@ -282,7 +283,7 @@ const loadDataProgram = async () => {
       }
     });
   } catch (error) {
-    console.error('Failed to load center data', error);
+    logger.error('Failed to load center data');
   }
 }
 

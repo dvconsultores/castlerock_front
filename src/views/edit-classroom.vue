@@ -162,6 +162,7 @@
 import { ref, inject, onMounted } from 'vue';
 import axiosInstance from '@/plugins/axios';
 import { useRoute } from 'vue-router';
+import { logger } from '@/utils/logger';
 
 const fileInput = ref(null);
 const selectedImgClassroom = ref(null);
@@ -244,7 +245,7 @@ const loadClassroomData = async () => {
     select_center.value = classroom.campus.id;
     classType.value = selectClassTypeItems.value.find(item => item.id === classroom.classType) || null;
   } catch (error) {
-    console.error('Failed to load center data', error);
+    logger.error('Failed to load center data');
   }
 };
 

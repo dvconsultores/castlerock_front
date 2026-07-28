@@ -281,12 +281,12 @@ const router = createRouter({
   ]
 })
 
-import { clearAuthState } from '@/utils/authState';
+import { clearAuthState, getSessionRole } from '@/utils/authState';
 
 // Guard de navegación global
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('accessToken')
-  const userRole = localStorage.getItem('userRole')
+  const userRole = getSessionRole()
 
   // Rutas que no requieren autenticación
   if (!to.meta.requiresAuth) {

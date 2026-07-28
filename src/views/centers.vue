@@ -72,6 +72,8 @@
 <script setup>
 import { ref, onMounted, computed, inject } from 'vue';
 import axiosInstance from '@/plugins/axios';
+import { logger } from '@/utils/logger';
+import { getSessionRole } from '@/utils/authState';
 
 const page = ref(1);
 const dialogDeleteCenter = ref(false);
@@ -82,9 +84,10 @@ const loadingDelete = ref(false);
 const showAlert = inject('showAlert');
 const dataCenters = ref([]);
 const searchQuery = ref('');
-const isAdmin = localStorage.getItem('userRole') === 'ADMIN';
-const isTeacher = localStorage.getItem('userRole') === 'TEACHER';
-const isOwner = localStorage.getItem('userRole') === 'OWNER';
+const userRole = getSessionRole();
+const isAdmin = userRole === 'ADMIN';
+const isTeacher = userRole === 'TEACHER';
+const isOwner = userRole === 'OWNER';
 
 const closeDelete = () => {
   dialogDeleteCenter.value = false;
@@ -106,7 +109,7 @@ const openConfirmation = async () => {
     loadingDelete.value = false;
     getCenters();
   } catch (error) {
-    console.error('Failed to delete center', error);
+    logger.error('Failed to delete center');
     showAlert('Failed to delete center. Please try again.', 'error');
     dialogDeleteCenter.value = false;
     loadingDelete.value = false;

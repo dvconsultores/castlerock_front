@@ -16,6 +16,7 @@
 import { VueStripeCardElement } from '@vue-stripe/vue-stripe';
 import { useStripe, useStripeElements } from '@vue-stripe/vue-stripe';
 import { onMounted, watch, ref } from 'vue';
+import { logger } from '@/utils/logger';
 
 const props = defineProps<{
   cardOptions: any
@@ -30,20 +31,11 @@ const hasEmittedReady = ref(false);
 
 // Cuando stripe y elements estén disponibles, emitimos ready con las instancias
 watch([stripe, elements], ([newStripe, newElements]) => {
-  console.log('Stripe/Elements watch triggered:', { 
-    stripe: !!newStripe, 
-    elements: !!newElements,
-    hasEmitted: hasEmittedReady.value 
-  });
-  
   if (newStripe && newElements && !hasEmittedReady.value) {
-    console.log('Stripe and Elements available in child');
-    
     // Intentar obtener el card element inmediatamente
     const cardElement = newElements.getElement('card');
     
     if (cardElement) {
-      console.log('Card element found immediately');
       hasEmittedReady.value = true;
       emit('ready', {
         stripe: newStripe,
@@ -51,12 +43,10 @@ watch([stripe, elements], ([newStripe, newElements]) => {
         card: cardElement
       });
     } else {
-      console.warn('Card element not found immediately, will retry...');
       // Intentar obtener el card element después de un breve delay
       const retryInterval = setInterval(() => {
         const retryCardElement = newElements.getElement('card');
         if (retryCardElement && !hasEmittedReady.value) {
-          console.log('Card element found after retry');
           clearInterval(retryInterval);
           hasEmittedReady.value = true;
           emit('ready', {
@@ -71,7 +61,7 @@ watch([stripe, elements], ([newStripe, newElements]) => {
       setTimeout(() => {
         clearInterval(retryInterval);
         if (!hasEmittedReady.value) {
-          console.error('Failed to find card element after retries');
+          logger.error('Stripe card element initialization failed');
           emit('error', 'Failed to initialize card element');
         }
       }, 5000);
@@ -79,22 +69,17 @@ watch([stripe, elements], ([newStripe, newElements]) => {
   }
 }, { immediate: true });
 
-const onCardReady = (element: any) => {
-  console.log('Card element mounted in child');
-  // No emitimos ready aquí porque esperamos a que stripe y elements estén listos
-  // pero guardamos la referencia por si acaso
+const onCardReady = (_element: any) => {
+  // Card element is mounted — ready event handled by the watch above
 };
 
 const onCardChange = (event: any) => {
-  console.log('Card change event in child:', event);
   emit('change', event);
 };
 
 // Verificar que todo esté bien al montar
 onMounted(() => {
-  console.log('StripePaymentForm mounted');
-  console.log('stripe from useStripe:', stripe.value);
-  console.log('elements from useStripeElements:', elements.value);
+  // Stripe payment form mounted
 });
 </script>
 

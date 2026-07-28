@@ -179,6 +179,7 @@
 <script setup>
 import { ref, inject, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { logger } from '@/utils/logger';
 import axiosInstance from '@/plugins/axios';
 
 const route = useRoute();
@@ -259,7 +260,7 @@ const loadCenterData = async () => {
     next_billing_date.value = sub ? formatDate(sub.nextBillingDate) : null;
     subscription_status.value = sub ? capitalizeFirst(sub.status) : null;
   } catch (error) {
-    console.error('Failed to load center data', error);
+    logger.error('Failed to load center data');
   }
 };
 

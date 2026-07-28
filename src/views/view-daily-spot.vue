@@ -141,7 +141,7 @@ const getDailySchedule = async () => {
       try {
         const response = await axiosInstance.get(`/planning/${program_id.value}`);
         const planningData = response.data.result;
-        console.log('Planning data:', planningData);
+
 
         dailySchedules.value = daysOfWeek.map(dayName => {
           const dailySchedule = planningData.dailySchedules.find(ds => ds.day === dayName);

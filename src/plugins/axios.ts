@@ -41,7 +41,7 @@ axiosInstance.interceptors.request.use(
     }
     // Añadir campus-id cuando el usuario es ADMIN y existe campusIdForAdmin
     try {
-      const userRole = localStorage.getItem('userRole');
+      const userRole = getSessionRole();
       const campusId = localStorage.getItem('campusIdForAdmin');
       if (userRole === 'ADMIN' && campusId) {
         config.headers['campus-id'] = campusId;

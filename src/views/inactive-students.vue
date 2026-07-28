@@ -92,6 +92,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
 import avatarImg from '@/assets/sources/images/avatar.svg';
+import { logger } from '@/utils/logger';
 
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
@@ -202,7 +203,7 @@ const getStudents = async () => {
       })
       .map((student, index) => ({ ...student, id_student: index + 1 }));
   } catch (error) {
-    console.error('Failed to load students', error);
+    logger.error('Failed to load students');
   }
 };
 

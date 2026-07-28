@@ -340,6 +340,7 @@ import { VueStripeProvider, VueStripeElements } from '@vue-stripe/vue-stripe';
 import StripePaymentForm from '@/components/StripePaymentForm.vue';
 import Pay from '@/components/pay.vue';
 import type { StripeCardChangeEvent, StripeCardOptions } from '@/plugins/stripe';
+import { logger } from '@/utils/logger';
 
 // Features for membership plans
 const featureList = [
@@ -485,7 +486,6 @@ const stripeFullyReady = computed<boolean>(() => elementsReady.value && cardRead
 
 // Handlers para Stripe
 const onStripeReady = (payload: StripeReadyPayload): void => {
-  console.log('Stripe ready in payment-renewal:', payload);
   stripeInstance.value = payload.stripe;
   elementsInstance.value = payload.elements;
   cardElement.value = payload.card;
@@ -499,7 +499,6 @@ const onCardChange = (event: StripeCardChangeEvent): void => {
 };
 
 const onCardError = (error: string): void => {
-  console.error('Card error:', error);
   cardError.value = error;
 };
 
@@ -524,7 +523,7 @@ const createPaymentMethod = async (): Promise<string> => {
 
     return paymentMethod.id;
   } catch (error: any) {
-    console.error('Error creating payment method:', error);
+    logger.error('Stripe payment method creation failed');
     cardError.value = error.message || 'Error creating payment method';
     throw error;
   }
@@ -543,7 +542,7 @@ const cancelSubscription = async (): Promise<void> => {
     showAlert('Subscription canceled successfully!', 'success');
 
   } catch (error: any) {
-    console.error('Error canceling subscription:', error);
+    logger.error('Subscription cancellation failed');
     const errorMessage = error.response?.data?.message || 
                         error.response?.data?.error || 
                         error.message || 
@@ -606,7 +605,7 @@ const activateSubscription = async (): Promise<void> => {
     showAlert('Subscription activated successfully!', 'success');
 
   } catch (error: any) {
-    console.error('Error activating subscription:', error);
+    logger.error('Subscription activation failed');
     const errorMessage = error.response?.data?.message || 
                         error.response?.data?.error || 
                         error.message || 
@@ -660,7 +659,7 @@ const renewSubscription = async (): Promise<void> => {
     showAlert('Subscription renewed successfully!', 'success');
 
   } catch (error: any) {
-    console.error('Error renewing subscription:', error);
+    logger.error('Subscription renewal failed');
     const errorMessage = error.response?.data?.message || 
                         error.response?.data?.error || 
                         error.message || 
@@ -692,7 +691,7 @@ const getPlans = async (): Promise<void> => {
     setMembershipFromCurrentPlan();
 
   } catch (error) {
-    console.error('Failed to fetch plans', error);
+    logger.error('Failed to fetch plans');
   }
 };
 
@@ -788,7 +787,7 @@ const loadCenterData = async (): Promise<void> => {
       statusSubscription.value = sub.status;
     }
   } catch (error) {
-    console.error('Failed to load center data', error);
+    logger.error('Failed to load center data');
   }
 };
 
@@ -842,14 +841,6 @@ onMounted((): void => {
     dialogSelectPlan.value = true;
   }
 
-  // Log para debug
-  console.log('User context:', {
-    billingCycle: planBillingCycle.value,
-    planId: planId.value,
-    status: statusSubscription.value,
-    isTrial: isTrialUser.value,
-    isActive: isSubscriptionActive.value
-  });
 });
 </script>
 

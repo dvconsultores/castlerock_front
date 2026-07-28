@@ -271,6 +271,7 @@ import StripePaymentForm from '@/components/StripePaymentForm.vue';
 import type { StripeCardChangeEvent, StripeCardOptions } from '@/plugins/stripe';
 import axiosInstance from '@/plugins/axios';
 import { useRouter } from 'vue-router';
+import { logger } from '@/utils/logger';
 
 // Permitir solo números en los inputs de teléfono
 function onNumberInput(field: 'phone' | 'school_phone') {
@@ -435,51 +436,23 @@ const registerButtonText = computed<string>(() => {
 
 // Handlers para el componente hijo
 const onStripeReady = (payload: { stripe: any; elements: any; card: any }) => {
-  console.log('🔥 onStripeReady RECEIVED in parent:', { 
-    hasStripe: !!payload.stripe, 
-    hasElements: !!payload.elements, 
-    hasCard: !!payload.card 
-  });
-  
   stripeInstance.value = payload.stripe;
   elementsInstance.value = payload.elements;
   cardElement.value = payload.card;
   elementsReady.value = true;
   cardReady.value = true;
-  
-  console.log('✅ stripeFullyReady should now be true');
 };
 
 const onCardChange = (event: StripeCardChangeEvent) => {
-  console.log('💳 Card change event in parent:', { 
-    complete: event.complete, 
-    hasError: !!event.error 
-  });
   cardComplete.value = event.complete;
   cardError.value = event.error?.message || '';
 };
 
 const onCardError = (error: string) => {
-  console.error('❌ Card error in parent:', error);
   cardError.value = error;
 };
 
-// Debug watches mejorados
-watch(elementsReady, (ready) => {
-  console.log('📊 elementsReady changed:', ready);
-});
 
-watch(cardReady, (ready) => {
-  console.log('📊 cardReady changed:', ready);
-});
-
-watch(stripeFullyReady, (ready) => {
-  console.log('🎯 stripeFullyReady:', ready);
-});
-
-watch(cardComplete, (complete) => {
-  console.log('💳 cardComplete changed:', complete);
-});
 
 // Limpiar error de email automáticamente cuando los emails coincidan y sean válidos
 watch([email, email_confirmation], ([newEmail, newEmailConf]) => {
@@ -496,10 +469,6 @@ watch([email, email_confirmation], ([newEmail, newEmailConf]) => {
 // Función para crear PaymentMethod (simplificada)
 const createPaymentMethod = async (): Promise<string> => {
   try {
-    console.log('Creating payment method...');
-    console.log('Stripe instance:', stripeInstance.value);
-    console.log('Card element:', cardElement.value);
-    
     if (!stripeInstance.value || !cardElement.value) {
       throw new Error('Stripe or Card element not initialized');
     }
@@ -515,14 +484,13 @@ const createPaymentMethod = async (): Promise<string> => {
     });
 
     if (error) {
-      console.error('Error creating payment method:', error);
+      logger.error('Stripe payment method creation failed');
       throw error;
     }
 
-    console.log('Payment method created:', paymentMethod.id);
     return paymentMethod.id;
   } catch (error: any) {
-    console.error('Error in createPaymentMethod:', error);
+    logger.error('Stripe payment method creation failed');
     cardError.value = error.message || 'Error creating payment method';
     throw error;
   }
@@ -595,10 +563,6 @@ const createRegister = async (): Promise<void> => {
     const isTrial = selectedPlan?.billingCycle === 'trial';
     const isPaidPlan = selectedPlan?.billingCycle === 'monthly' || selectedPlan?.billingCycle === 'yearly';
     
-    console.log('Plan seleccionado:', selectedPlan);
-    console.log('Es trial:', isTrial);
-    console.log('Es plan de pago:', isPaidPlan);
-    
     // Procesar Stripe solo si es un plan de pago
     if (plan_id.value && isPaidPlan) {
       if (!cardComplete.value) {
@@ -609,10 +573,6 @@ const createRegister = async (): Promise<void> => {
       
       // Verificar que Stripe esté completamente listo
       if (!stripeFullyReady.value) {
-        console.log('Stripe not fully ready:', {
-          elementsReady: elementsReady.value,
-          cardReady: cardReady.value
-        });
         showAlert('Payment system is still initializing. Please wait a moment.', 'warning');
         loadingReset.value = false;
         return;
@@ -721,19 +681,6 @@ watch(plan_id, (newVal: string | null) => {
     elementsInstance.value = null;
     cardElement.value = null;
   }
-});
-
-// Debug watches
-watch(elementsReady, (ready) => {
-  console.log('elementsReady changed:', ready);
-});
-
-watch(cardReady, (ready) => {
-  console.log('cardReady changed:', ready);
-});
-
-watch(stripeFullyReady, (ready) => {
-  console.log('stripeFullyReady:', ready);
 });
 
 onMounted((): void => {

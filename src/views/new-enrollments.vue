@@ -229,16 +229,16 @@ const getStudents = async () => {
         futureCandidates.sort((a, b) => a.date - b.date);
         const chosen = futureCandidates[0];
 
-        let classesForChosen = '';  // New/Assigned Class
-        let otherClasses = '';       // Transition Classes
+        let classesForChosen = [];  // New/Assigned Class
+        let otherClasses = [];       // Transition Classes
 
         if (chosen.type === 'start') {
           // Para fecha de inicio: mostrar classes actuales
           classesForChosen = Array.isArray(student.classes) && student.classes.length > 0
-            ? student.classes.map(c => c.name).join('<br>') 
-            : 'No classes assigned';
+            ? student.classes.map(c => c.name)
+            : ['No classes assigned'];
           // Transition Classes queda vacío para nuevos ingresos
-          otherClasses = '';
+          otherClasses = [];
         } else {
           // Para transición:
             // - En New/Assigned Class: mostrar la clase actual (desde donde transiciona)

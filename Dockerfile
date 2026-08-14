@@ -22,12 +22,11 @@ FROM nginx:stable-alpine
 # Copy the built files from the build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Substitute the backend host placeholder at build time (production: Railway
-# private network host). GitHub Actions workflows already pre-replace
-# __BACKEND_HOST__ before this build, in which case this sed is a no-op.
-RUN sed -i 's|__BACKEND_HOST__|castlerockback.railway.internal|g' /etc/nginx/conf.d/default.conf
+# Use the official nginx image's template mechanism: at container start the
+# entrypoint runs envsubst on *.template files, substituting ${BACKEND_HOST}
+# from the BACKEND_HOST environment variable (set in Railway variables).
+COPY nginx.conf /etc/nginx/templates/default.conf.template
+RUN sed -i 's|__BACKEND_HOST__|${BACKEND_HOST}|g' /etc/nginx/templates/default.conf.template
 
 EXPOSE 80
 

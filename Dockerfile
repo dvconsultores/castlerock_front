@@ -24,8 +24,10 @@ COPY --from=build /app/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy custom nginx configuration if needed
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Substitute the backend host placeholder at build time (production: Railway
+# private network host). GitHub Actions workflows already pre-replace
+# __BACKEND_HOST__ before this build, in which case this sed is a no-op.
+RUN sed -i 's|__BACKEND_HOST__|castlerockback.railway.internal|g' /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
